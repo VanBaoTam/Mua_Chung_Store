@@ -1,0 +1,48 @@
+import { ProductModel } from "../models";
+export const listProducts: ProductModel[] = [
+  {
+    id: 1,
+    imgProduct: "Shirt_1.jpg",
+    nameProduct: "Pink Shirt",
+    salePrice: 250,
+    retailPrice: 250,
+    description: "Pink Shirt",
+    type: "Shirt",
+  },
+  {
+    id: 2,
+    imgProduct: "Shirt_2.jpg",
+    nameProduct: "White Shirt",
+    salePrice: 250,
+    retailPrice: 250,
+    description: "White Shirt",
+    type: "Shirt",
+  },
+  {
+    id: 3,
+    imgProduct: "Shirt_3.jpg",
+    nameProduct: "Black Shirt",
+    salePrice: 250,
+    retailPrice: 250,
+    description: "Black Shirt",
+    type: "Shirt",
+  },
+  {
+    id: 4,
+    imgProduct: "Pant_1.jpg",
+    nameProduct: "Black Pant",
+    salePrice: 250,
+    retailPrice: 250,
+    description: "Black Pant",
+    type: "Pant",
+  },
+  {
+    id: 5,
+    imgProduct: "Pant_2.jpg",
+    nameProduct: "Brown Pant",
+    salePrice: 250,
+    retailPrice: 250,
+    description: "Brown Pant",
+    type: "Pant",
+  },
+];

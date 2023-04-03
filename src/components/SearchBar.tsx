@@ -1,18 +1,20 @@
 import React from "react";
-import { Input } from "zmp-ui";
+import { Box, Input } from "zmp-ui";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const SearchBar = () => {
   return (
-    <div className="flex items-center">
-      <Input.Search
-        placeholder="Tìm kiếm sản phẩm"
-        onSearch={(text) => console.log(text)}
-      />
-      <button className="w-8 bg-white h-12 rounded-lg">
+    <Box flex alignItems="center" p={1} justifyContent="space-between">
+      <div className="w-10/12">
+        <Input.Search
+          placeholder="Tìm kiếm sản phẩm"
+          onSearch={(text) => console.log(text)}
+        />
+      </div>
+      <button className="w-10 bg-white h-12 rounded-lg">
         <FontAwesomeIcon icon={faCartShopping} />
       </button>
-    </div>
+    </Box>
   );
 };
 
