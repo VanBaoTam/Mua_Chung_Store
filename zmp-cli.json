@@ -12,6 +12,5 @@
     "darkTheme": false,
     "fillBars": false
   },
-  "customBuild": false,
-  "stateManagement": "recoil"
+  "customBuild": false
 }

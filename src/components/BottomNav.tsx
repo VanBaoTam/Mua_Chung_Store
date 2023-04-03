@@ -15,18 +15,21 @@ const BottomNav = () => {
           label="Trang chủ"
           icon={<Icon icon="zi-home" />}
           activeIcon={<Icon icon="zi-home" />}
+          linkTo="/"
         />
         <BottomNavigation.Item
           label="Khám phá"
           key="discovery"
           icon={<Icon icon="zi-more-grid" />}
           activeIcon={<Icon icon="zi-more-grid-solid" />}
+          linkTo="/discovery"
         />
         <BottomNavigation.Item
           key="me"
           label="Cá nhân"
           icon={<Icon icon="zi-user" />}
           activeIcon={<Icon icon="zi-user-solid" />}
+          linkTo="/user"
         />
       </BottomNavigation>
     </Page>
