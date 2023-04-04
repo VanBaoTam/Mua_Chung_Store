@@ -4,7 +4,7 @@ import IMAGES from "../static/products/index";
 import { useNavigate } from "react-router-dom";
 const Product = (props) => {
   const navigate = useNavigate();
-  const imagePos = "p" + props.id;
+
   return (
     <Box
       className="bg-white rounded-lg"
@@ -12,7 +12,7 @@ const Product = (props) => {
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
       <h1>{props.nameProduct}</h1>
-      <img src={IMAGES[imagePos]} alt="test" />
+      <img src={IMAGES["p" + props.id]} alt="test" />
       <span>{props.salePrice}</span>
     </Box>
   );
