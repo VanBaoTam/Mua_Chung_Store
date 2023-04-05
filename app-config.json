@@ -3,7 +3,7 @@
     "title": "Mua Chung Store",
     "headerColor": "#1843EF",
     "textColor": "white",
-    "actionBarHidden": true,
+    "actionBarHidden": false,
     "leftButton": "back"
   },
   "debug": false,

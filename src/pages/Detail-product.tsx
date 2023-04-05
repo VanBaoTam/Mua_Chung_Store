@@ -21,17 +21,23 @@ const DetailProduct = () => {
         className="w-3/4 rounded-lg mx-auto "
       />
       <section className="bg-white rounded-lg mt-2 p-2">
-        <h2>{product.nameProduct}</h2>
-        <p style={{ borderBottom: "0.5px solid grey" }} className="pb-3">
-          <span className="text-red-600 pr-2">{product.salePrice}.000VNĐ</span>|
-          <span className="text-gray-500 text-xs pl-2">
-            {product.retailPrice}.000VNĐ
-          </span>
-        </p>
-        <section className="bg-white py-3">
+        <div className="px-2">
+          <h2>{product.nameProduct}</h2>
+          <p style={{ borderBottom: "0.5px solid grey" }} className="pb-3">
+            <span className="text-red-600 pr-2">
+              {product.salePrice}.000VNĐ
+            </span>
+            |
+            <span className="text-gray-500 text-xs pl-2">
+              {product.retailPrice}.000VNĐ
+            </span>
+          </p>
+        </div>
+        <section className="bg-white pt-3 px-2 text-justify">
           <p>{product.description}</p>
         </section>
       </section>
+      <div className="h-10"></div>
     </Page>
   );
 };

@@ -16,7 +16,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "White Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "White Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -25,7 +26,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -34,7 +36,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
   {
@@ -43,7 +46,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Brown Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Brown Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
   {
@@ -52,7 +56,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Pink Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "Pink Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -61,7 +66,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "White Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "White Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -70,7 +76,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -79,7 +86,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
   {
@@ -88,7 +96,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Brown Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Brown Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
   {
@@ -97,7 +106,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Pink Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "Pink Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -106,7 +116,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "White Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "White Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -115,7 +126,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Shirt",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Shirt",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Shirt",
   },
   {
@@ -124,7 +136,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Black Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Black Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
   {
@@ -133,7 +146,8 @@ export const listProducts: ProductModel[] = [
     nameProduct: "Brown Pant",
     salePrice: 250,
     retailPrice: 250,
-    description: "Brown Pant",
+    description:
+      "Pink Shirt Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque at blanditiis nulla eveniet sapiente nobis exercitationem, facilis nemo, ipsum ea ratione nesciunt architecto consequatur, repudiandae doloremque minima a inventore numquam.",
     type: "Pant",
   },
 ];

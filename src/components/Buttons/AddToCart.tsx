@@ -3,15 +3,16 @@ import { Button } from "zmp-ui";
 import ProductSheet from "../ProductSheet";
 const AddToCart = () => {
   const [isShown, setIsShown] = useState(false);
-      
+  function handleShown() {
+    setTimeout(() => {
+      setIsShown(false);
+    }, 300);
+  }
+
   return (
     <>
-      {isShown ? <ProductSheet /> : null}
-      <Button
-        fullWidth
-        size="medium"
-        onClick={() => setIsShown((prev) => !prev)}
-      >
+      {isShown ? <ProductSheet handleShown={handleShown} /> : null}
+      <Button fullWidth size="medium" onClick={() => setIsShown(() => true)}>
         Thêm vào giỏ
       </Button>
     </>

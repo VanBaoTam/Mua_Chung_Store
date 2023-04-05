@@ -7,13 +7,15 @@ const Product = (props) => {
 
   return (
     <Box
+      px={2}
+      pb={3}
       className="bg-white rounded-lg"
       style={{ width: "47%" }}
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
-      <h1>{props.nameProduct}</h1>
       <img src={IMAGES["p" + props.id]} alt="test" />
-      <span>{props.salePrice}</span>
+      <h1 className="font-semibold text-xl">{props.nameProduct}</h1>
+      <span className="text-red-400">{props.salePrice}.000VNĐ</span>
     </Box>
   );
 };
