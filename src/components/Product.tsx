@@ -15,7 +15,9 @@ const Product = (props) => {
     >
       <img src={IMAGES["p" + props.id]} alt="test" />
       <h1 className="font-semibold text-xl">{props.nameProduct}</h1>
-      <span className="text-red-400">{props.salePrice}.000VNĐ</span>
+      <span className="text-red-400 font-semibold">
+        {props.salePrice}.000VNĐ
+      </span>
     </Box>
   );
 };

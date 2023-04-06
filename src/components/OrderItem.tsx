@@ -2,6 +2,7 @@ import React from "react";
 import IMAGES from "../static/products";
 import { Box } from "zmp-ui";
 import { OrderModel } from "../models";
+import { ConvertPrice } from "../utils/ConvertPrice";
 const OrderItem = (props: OrderModel) => {
   return (
     <Box
@@ -24,7 +25,10 @@ const OrderItem = (props: OrderModel) => {
         x<h4 className="font-semibold">{props.nameProduct}</h4>
       </div>
       <div>
-        <p className="text-xs font-semibold">{props.salePrice}.000VNĐ</p>
+        <p className="text-xs font-semibold">
+          {" "}
+          {ConvertPrice(Number(props.salePrice), props.quantity)}
+        </p>
       </div>
     </Box>
   );
