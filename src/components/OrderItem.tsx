@@ -25,8 +25,7 @@ const OrderItem = (props: OrderModel) => {
         x<h4 className="font-semibold">{props.nameProduct}</h4>
       </div>
       <div>
-        <p className="text-xs font-semibold">
-          {" "}
+        <p className="text-xs font-semibold text-red-400">
           {ConvertPrice(Number(props.salePrice), props.quantity)}
         </p>
       </div>

@@ -17,3 +17,13 @@ export type OrderModel = {
   color: string;
   quantity: number;
 };
+export type CodeModel = {
+  id: string;
+  model: {
+    id: string;
+    subId: string[];
+    createDate: Date;
+    delayDate: Date;
+  };
+  amount: number;
+};

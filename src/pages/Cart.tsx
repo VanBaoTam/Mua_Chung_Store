@@ -3,19 +3,19 @@ import { Box, Button, Icon, Input, Page, Select, Text } from "zmp-ui";
 import { useAppSelector } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll } from "../utils/ConvertPrice";
-
+import { getUser } from "../apis/User";
 const { Option } = Select;
 
 function uniqueId() {
   return "id-" + Math.random().toString(36).substring(2, 16);
 }
-
 const newCode = <Input value={uniqueId()}></Input>;
 const inputCode = <Input placeholder="Nhập mã mua chung"></Input>;
 
 const Cart = () => {
   const [isShown, setShown] = useState(false);
   const orders = useAppSelector((store) => store.orders);
+  const codes = useAppSelector((store) => store.codes);
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
