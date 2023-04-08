@@ -15,3 +15,17 @@ export const getUser = () => {
     },
   });
 };
+import { login } from "zmp-sdk/apis";
+
+export const handleLogin = () => {
+  login({
+    success: () => {
+      // login thành công
+      console.log("Login success!");
+    },
+    fail: (error) => {
+      // login thất bại
+      console.log("Login error with code: " + error);
+    },
+  });
+};

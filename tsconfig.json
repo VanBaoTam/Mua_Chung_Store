@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "target": "es6", 
+    "target": "es2017", 
     "module": "esnext", 
     "noImplicitAny": false,
     "preserveConstEnums": true,

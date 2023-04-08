@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Box, Button, Icon, Input, Page, Select, Text } from "zmp-ui";
 import { useAppSelector } from "../hooks/hooks";
+
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll } from "../utils/ConvertPrice";
-import { getUser } from "../apis/User";
+import { totalPrice } from "../utils/TotalPrice";
+
+import { pay } from "../apis/Order";
+
 const { Option } = Select;
 
 function uniqueId() {
@@ -15,11 +19,15 @@ const inputCode = <Input placeholder="Nhập mã mua chung"></Input>;
 const Cart = () => {
   const [isShown, setShown] = useState(false);
   const orders = useAppSelector((store) => store.orders);
-  const codes = useAppSelector((store) => store.codes);
+
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
   });
+
+  const fee = 30;
+  const description = "Thanh toán đơn hàng của USERNAME cho Mua Chung Store";
+
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
       <Icon icon="zi-minus-circle" />
@@ -128,7 +136,7 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>30.000VNĐ</span>
+            <span>{fee}.000VNĐ</span>
           </Box>
           <Box
             mx={4}
@@ -139,7 +147,13 @@ const Cart = () => {
             justifyContent="center"
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
-            <Button>Thanh toán</Button>
+            <Button
+              onClick={() =>
+                pay(fee + totalPrice(orders.Products), description)
+              }
+            >
+              Thanh toán
+            </Button>
           </Box>
           <Box mx={4} my={2} px={4} py={1}></Box>{" "}
         </>
