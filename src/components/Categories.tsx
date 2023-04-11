@@ -8,6 +8,7 @@ const Categories = () => {
   const productList = products.Products.map((productItem) => {
     return <Product key={productItem.id} {...productItem}></Product>;
   });
+  console.log(products.Products);
   return (
     <>
       <Box flex flexWrap justifyContent="space-between" className="gap-3">

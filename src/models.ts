@@ -4,7 +4,6 @@ export type ProductModel = {
   nameProduct: string;
   salePrice: number;
   description: string;
-  type: string;
 };
 export type OrderModel = {
   id: string;
@@ -12,7 +11,6 @@ export type OrderModel = {
   nameProduct: string;
   salePrice: number;
   description: string;
-  type: string;
   size: string;
   color: string;
   quantity: number;

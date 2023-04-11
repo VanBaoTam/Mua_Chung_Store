@@ -4,11 +4,17 @@
     "headerColor": "#1843EF",
     "textColor": "white",
     "actionBarHidden": false,
-    "leftButton": "back"
+    "leftButton": "back",
+    "statusBarColor": "",
+    "hideAndroidBottomNavigationBar": false,
+    "hideIOSSafeAreaBottom": false,
+    "selfControlLoading": false,
+    "statusBar": "normal"
   },
   "debug": false,
   "listCSS": [],
   "listSyncJS": [],
   "listAsyncJS": [],
-  "pages": []
+  "pages": [],
+  "template": {}
 }

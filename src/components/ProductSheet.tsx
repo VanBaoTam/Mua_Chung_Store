@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Radio, Sheet } from "zmp-ui";
-import IMAGES from "../static/products";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import { useNavigate } from "react-router";
 import { ConvertPrice } from "../utils/ConvertPrice";
@@ -47,11 +46,7 @@ const ProductSheet = (props) => {
       title="Chọn chi tiết"
     >
       <Box flex p={4}>
-        <img
-          src={IMAGES["p" + product.id]}
-          alt="Product's image"
-          className="w-1/3"
-        />
+        <img src={product.imgProduct} alt="Product's image" className="w-1/3" />
         <div className="grow text-base">
           <h4 className="font-bold h-3 text-lg">{product.nameProduct}</h4>
           <p className="text-red-600 mt-4 text-sm "></p>

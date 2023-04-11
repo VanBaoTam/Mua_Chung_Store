@@ -2,7 +2,6 @@ import React from "react";
 import { Page } from "zmp-ui";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../hooks/hooks";
-import IMAGES from "../static/products";
 import AddToCart from "../components/Buttons/AddToCart";
 const DetailProduct = () => {
   const param = useParams();
@@ -16,7 +15,7 @@ const DetailProduct = () => {
         </div>
       </div>
       <img
-        src={IMAGES["p" + product.id]}
+        src={product.imgProduct}
         alt="Product's image"
         className="w-3/4 rounded-lg mx-auto "
       />
@@ -24,9 +23,7 @@ const DetailProduct = () => {
         <div className="px-2">
           <h2>{product.nameProduct}</h2>
           <p style={{ borderBottom: "0.5px solid grey" }} className="pb-3">
-            <span className="text-red-600 pr-2">
-              {product.salePrice}.000VNĐ
-            </span>
+            <span className="text-red-600 pr-2">{product.salePrice}.VNĐ</span>
           </p>
         </div>
         <section className="bg-white pt-3 px-2 text-justify">

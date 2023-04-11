@@ -1,6 +1,5 @@
 import React from "react";
 import { Box } from "zmp-ui";
-import IMAGES from "../static/products/index";
 import { useNavigate } from "react-router-dom";
 const Product = (props) => {
   const navigate = useNavigate();
@@ -13,11 +12,9 @@ const Product = (props) => {
       style={{ width: "47%" }}
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
-      <img src={IMAGES["p" + props.id]} alt="test" />
+      <img src={props.imgProduct} alt="Product's img" />
       <h1 className="font-semibold text-xl">{props.nameProduct}</h1>
-      <span className="text-red-400 font-semibold">
-        {props.salePrice}.000VNĐ
-      </span>
+      <span className="text-red-400 font-semibold">{props.salePrice}.VNĐ</span>
     </Box>
   );
 };
