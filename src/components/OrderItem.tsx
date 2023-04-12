@@ -1,8 +1,8 @@
 import React from "react";
 import { Box } from "zmp-ui";
-import { OrderModel } from "../models";
+import { CartProductModel } from "../models";
 import { ConvertPrice } from "../utils/ConvertPrice";
-const OrderItem = (props: OrderModel) => {
+const OrderItem = (props: CartProductModel) => {
   return (
     <Box
       flex
@@ -22,7 +22,9 @@ const OrderItem = (props: OrderModel) => {
           {props.quantity}
         </p>
         x
-        <h4 className="font-semibold overflow-hidden maxw">{props.nameProduct}</h4>
+        <h4 className="font-semibold overflow-hidden maxw">
+          {props.nameProduct}
+        </h4>
       </div>
       <div>
         <p className="text-xs font-semibold text-red-400">

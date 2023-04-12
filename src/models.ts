@@ -5,7 +5,7 @@ export type ProductModel = {
   salePrice: number;
   description: string;
 };
-export type OrderModel = {
+export type CartProductModel = {
   id: string;
   imgProduct: string;
   nameProduct: string;
@@ -14,6 +14,19 @@ export type OrderModel = {
   size: string;
   color: string;
   quantity: number;
+};
+export type OrderInfoModel = {
+  id: string;
+  nameProduct: string;
+  salePrice: number;
+};
+export type OrderModel = {
+  user: string;
+  products: OrderInfoModel[];
+  totalCost: number;
+  discount: number;
+  finalCost: number;
+  status: boolean;
 };
 export type CodeModel = {
   id: string;
@@ -24,4 +37,13 @@ export type CodeModel = {
     delayDate: Date;
   };
   amount: number;
+};
+
+export type AddressFormType = {
+  name: "detail" | "city" | "district" | "ward";
+  label: string;
+  type: "text" | "select";
+  placeholder: string;
+  isValidate: boolean;
+  errorMessage?: string;
 };

@@ -1,4 +1,4 @@
-import { OrderModel } from "../models";
+import { CartProductModel } from "../models";
 
 export const ConvertPrice = (price: number, amount: number): string => {
   let convertedPrice = price * amount + "";
@@ -16,7 +16,7 @@ export const ConvertPrice = (price: number, amount: number): string => {
   return final.split("").reverse().join("") + ".000VNĐ";
 };
 
-export const ConvertPriceAll = (OrderArr: OrderModel[]): string => {
+export const ConvertPriceAll = (OrderArr: CartProductModel[]): string => {
   let temp = 0;
   OrderArr.forEach((Product) => {
     temp += Product.salePrice * Product.quantity;

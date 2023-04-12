@@ -3,12 +3,12 @@ import { Page } from "zmp-ui";
 import SearchBar from "../components/SearchBar";
 import Categories from "../components/Categories";
 import { useAppDispatch } from "../hooks/hooks";
-import { getProducts } from "../features/Products/Product";
+// import { getProducts } from "../features/Products/ProductSlice";
 const HomePage: React.FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getProducts());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getProducts());
+  // }, []);
   return (
     <Page hideScrollbar={true} className="p-3">
       <SearchBar />

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { listOrders } from "../../dummy/list-Order";
-import { OrderModel } from "../../models";
+import { CartProductModel } from "../../models";
 const initialState = {
   Products: listOrders,
 };
@@ -11,7 +11,7 @@ const orderSlice = createSlice({
     clearCart: (state) => {
       state.Products = [];
     },
-    addProduct: (state, product: PayloadAction<OrderModel>) => {
+    addProduct: (state, product: PayloadAction<CartProductModel>) => {
       state.Products = [...state.Products, product.payload];
     },
   },

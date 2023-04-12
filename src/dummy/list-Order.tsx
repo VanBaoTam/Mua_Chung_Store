@@ -1,2 +1,2 @@
-import { OrderModel } from "../models";
-export const listOrders: OrderModel[] = [];
+import { CartProductModel } from "../models";
+export const listOrders: CartProductModel[] = [];

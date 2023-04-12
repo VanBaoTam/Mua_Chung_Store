@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import { useNavigate } from "react-router";
 import { ConvertPrice } from "../utils/ConvertPrice";
 import { addProduct } from "../features/Order/OrderSlice";
-import { OrderModel } from "../models";
+import { CartProductModel } from "../models";
 const ProductSheet = (props) => {
   let size = "S",
     color = "Đỏ";
@@ -20,7 +20,7 @@ const ProductSheet = (props) => {
   const param = useParams();
   const product = productList.Products.find((item) => item.id === param.id)!;
   function handleAdd() {
-    let orderProduct: OrderModel = {
+    let orderProduct: CartProductModel = {
       ...product,
       size: size,
       color: color,
