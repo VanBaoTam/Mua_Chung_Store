@@ -32,7 +32,7 @@ export type CodeModel = {
   id: string;
   model: {
     id: string;
-    subId: string[];
+    subId: OrderModel[];
     createDate: Date;
     delayDate: Date;
   };

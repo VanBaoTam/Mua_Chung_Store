@@ -15,7 +15,16 @@ const codeSlice = createSlice({
         id: payload.code,
         model: {
           id: payload.code,
-          subId: ["User's ID"],
+          subId: [
+            {
+              user: "1111111111111111111",
+              products: [],
+              totalCost: 0,
+              discount: 0,
+              finalCost: 0,
+              status: false,
+            },
+          ],
           createDate: today,
           delayDate: new Date(today.getTime() + 24 * 60 * 60 * 1000),
         },
@@ -27,7 +36,14 @@ const codeSlice = createSlice({
       const codeList = state.code.find((item) => item.id == payload.code)!;
       console.log(codeList);
       codeList.amount++;
-      codeList.model.subId.push("New User's ID");
+      codeList.model.subId.push({
+        user: "1111111111111111111",
+        products: [],
+        totalCost: 0,
+        discount: 0,
+        finalCost: 0,
+        status: false,
+      });
       console.log(codeList);
     },
   },
