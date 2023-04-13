@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { codeList } from "../../dummy/list-Code";
 import { CodeModel } from "../../models";
 const initialState = {
@@ -18,10 +18,10 @@ const codeSlice = createSlice({
           subId: [
             {
               user: "1111111111111111111",
-              products: [],
-              totalCost: 0,
+              products: payload.products,
+              totalCost: payload.total,
               discount: 0,
-              finalCost: 0,
+              finalCost: payload.final,
               status: false,
             },
           ],
@@ -34,17 +34,17 @@ const codeSlice = createSlice({
     },
     addUser: (state, { payload }) => {
       const codeList = state.code.find((item) => item.id == payload.code)!;
-      console.log(codeList);
+      console.log(current(codeList));
       codeList.amount++;
       codeList.model.subId.push({
-        user: "1111111111111111111",
-        products: [],
-        totalCost: 0,
+        user: payload.id,
+        products: payload.products,
+        totalCost: payload.total,
         discount: 0,
-        finalCost: 0,
+        finalCost: payload.final,
         status: false,
       });
-      console.log(codeList);
+      console.log(current(codeList));
     },
   },
 });

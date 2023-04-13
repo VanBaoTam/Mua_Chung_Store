@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, Button, Radio, Sheet } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import { useNavigate } from "react-router";
-import { ConvertPrice } from "../utils/ConvertPrice";
+import { ConvertPrice } from "../utils/Prices";
 import { addProduct } from "../features/Order/OrderSlice";
 import { CartProductModel } from "../models";
 const ProductSheet = (props) => {
@@ -18,7 +18,7 @@ const ProductSheet = (props) => {
   }
   const productList = useAppSelector((store) => store.products);
   const param = useParams();
-  const product = productList.Products.find((item) => item.id === param.id)!;
+  const product = productList.Products.find((item) => item.id === param.code)!;
   function handleAdd() {
     let orderProduct: CartProductModel = {
       ...product,
@@ -36,7 +36,7 @@ const ProductSheet = (props) => {
   }
   return (
     <Sheet
-      height={500}
+      height={400}
       visible={sheetVisible}
       onClose={handleClose}
       autoHeight
@@ -46,9 +46,13 @@ const ProductSheet = (props) => {
       title="Chọn chi tiết"
     >
       <Box flex p={4}>
-        <img src={product.imgProduct} alt="Product's image" className="w-1/3" />
-        <div className="grow text-base">
-          <h4 className="font-bold h-3 text-lg">{product.nameProduct}</h4>
+        <img
+          src={product.photo_links}
+          alt="Product's image"
+          className="w-1/3"
+        />
+        <div className="grow text-base px-2 ">
+          <h4 className="font-bold text-lg">{product.name}</h4>
           <p className="text-red-600 mt-4 text-sm "></p>
           <div className="mt-3">
             <span>Số lượng</span>
@@ -66,12 +70,12 @@ const ProductSheet = (props) => {
           <div className="mt-3">
             <span>Tổng tiền: </span>
             <span className="text-red-400">
-              {ConvertPrice(Number(product.salePrice), amount)}
+              {ConvertPrice(Number(product.price), amount)}VNĐ
             </span>
           </div>
         </div>
       </Box>
-
+      {/* 
       <Box py={1} px={3} flex flexDirection="column" flexWrap={true}>
         <h4>Size:</h4>
         <Radio.Group
@@ -117,7 +121,7 @@ const ProductSheet = (props) => {
             className="p-2"
           />
         </Radio.Group>
-      </Box>
+      </Box> */}
       <Box
         flex
         justifyContent="space-around"

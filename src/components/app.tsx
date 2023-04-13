@@ -8,7 +8,6 @@ import DetailProduct from "../pages/Detail-product";
 import Page404 from "../pages/page404";
 import Cart from "../pages/Cart";
 import Header from "./Header";
-
 const MyApp = () => {
   return (
     <Provider store={store}>
@@ -18,7 +17,7 @@ const MyApp = () => {
             <Header />
             <AnimationRoutes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/detail-product/:id" element={<DetailProduct />} />
+              <Route path="/detail-product/:code" element={<DetailProduct />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>

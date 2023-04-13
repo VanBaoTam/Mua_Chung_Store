@@ -1,14 +1,18 @@
 import { Payment } from "zmp-sdk";
 import appConfig from "../../app-config.json";
-import { OrderModel } from "../models";
-import { useAppSelector } from "../hooks/hooks";
 // tạo yêu cầu thanh toán
 
-const pay = (amount: number, description?: string, order?: OrderModel) =>
+const pay = (
+  amount: number,
+  description?: string,
+  products?: Record<string, any>[]
+) =>
   new Promise((resolve, reject) => {
+    console.log(products);
+    console.log(amount);
     Payment.createOrder({
       desc: description ?? `Thanh toán cho ${appConfig.app.title}`,
-      item: [],
+      item: products!,
       amount: amount,
       success: (data) => {
         console.log("success: ", data);

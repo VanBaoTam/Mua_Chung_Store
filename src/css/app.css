@@ -1,8 +1,9 @@
-body{
-  height:auto;
+body {
+  height: auto;
 }
-img { 
+img {
   width: 100%;
   min-height: 30%;
   max-height: 80%;
+  border-radius: 8px;
 }

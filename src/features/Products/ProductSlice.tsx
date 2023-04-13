@@ -25,7 +25,7 @@ export const getProducts = createAsyncThunk(
           },
         }
       );
-      return resp.data;
+      return resp.data.data.products;
     } catch (error) {
       console.log(error);
     }

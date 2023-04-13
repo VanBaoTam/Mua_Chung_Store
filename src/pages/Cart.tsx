@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { Box, Button, Icon, Input, Page, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
-import { ConvertPriceAll } from "../utils/ConvertPrice";
-import { totalPrice } from "../utils/TotalPrice";
+import { ConvertPriceAll, SumPrice } from "../utils/Prices";
 import locationVN from "../dummy/location";
 import pay from "../apis/Order";
 import { AddressFormType, CartProductModel, CodeModel } from "../models";
 import AddressForm from "../dummy/address-form";
 import { addUser, createCode } from "../features/Code/CodeSlice";
+import {
+  ConvertArrToRecords,
+  ConvertCartProductModelsToOrderInfoModels,
+} from "../utils/ConvertOrder";
 const { Option } = Select;
 
 function uniqueId() {
@@ -142,7 +145,7 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Tổng tiền</span>
-            <span>{ConvertPriceAll(orders.Products)}</span>
+            <span>{ConvertPriceAll(orders.Products)}VNĐ</span>
           </Box>
           <Box
             mx={4}
@@ -232,16 +235,18 @@ const Cart = () => {
       )}
     </Page>
   );
-  function StoringOrder() {
+  function CreatingOrder(products) {
+    let total = SumPrice(orders.Products),
+      final = total;
     let tempCode: CodeModel | undefined = codeList.code.find((SameCode) => {
       return SameCode.id == code;
     });
     if (tempCode !== undefined && tempCode !== null) {
       if (tempCode.model.delayDate < new Date())
         console.log("Quá thời gian 24h của code");
-      else dispatch(addUser({ code }));
+      else dispatch(addUser({ code, products, total, final }));
     } else {
-      dispatch(createCode({ code }));
+      dispatch(createCode({ initCode, products, total, final }));
     }
     console.log(
       "Địa chỉ: " +
@@ -255,8 +260,13 @@ const Cart = () => {
     );
   }
   function handleCreateOrder() {
-    StoringOrder();
-    pay(fee + totalPrice(orders.Products), description);
+    let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
+    CreatingOrder(products);
+    pay(
+      fee * 1000 + SumPrice(orders.Products),
+      description,
+      ConvertArrToRecords(products)
+    );
   }
 };
 

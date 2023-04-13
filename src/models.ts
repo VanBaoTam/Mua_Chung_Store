@@ -1,24 +1,29 @@
 export type ProductModel = {
   id: string;
-  imgProduct: string;
-  nameProduct: string;
-  salePrice: number;
+  code: string;
+  photo_links: string;
+  name: string;
+  price: number;
   description: string;
 };
+
 export type CartProductModel = {
-  id: string;
-  imgProduct: string;
-  nameProduct: string;
-  salePrice: number;
+  code: string;
+  photo_links: string;
+  name: string;
+  price: number;
   description: string;
   size: string;
   color: string;
   quantity: number;
 };
 export type OrderInfoModel = {
-  id: string;
-  nameProduct: string;
-  salePrice: number;
+  key: string;
+  info: {
+    code: string;
+    quantity: number;
+    price: number;
+  };
 };
 export type OrderModel = {
   user: string;

@@ -1,5 +1,12 @@
 import { CartProductModel } from "../models";
 
+export const SumPrice = (OrderArr: CartProductModel[]): number => {
+  let result = 0;
+  OrderArr.forEach((Product) => {
+    result += Product.price * Product.quantity;
+  });
+  return result;
+};
 export const ConvertPrice = (price: number, amount: number): string => {
   let convertedPrice = price * amount + "";
   let final: string = "";
@@ -13,13 +20,13 @@ export const ConvertPrice = (price: number, amount: number): string => {
     index++;
   }
 
-  return final.split("").reverse().join("") + ".000VNĐ";
+  return final.split("").reverse().join("");
 };
 
 export const ConvertPriceAll = (OrderArr: CartProductModel[]): string => {
   let temp = 0;
   OrderArr.forEach((Product) => {
-    temp += Product.salePrice * Product.quantity;
+    temp += Product.price * Product.quantity;
   });
   let convertedPrice = temp + "";
   let final: string = "";
@@ -33,5 +40,5 @@ export const ConvertPriceAll = (OrderArr: CartProductModel[]): string => {
     index++;
   }
 
-  return final.split("").reverse().join("") + ".000VNĐ";
+  return final.split("").reverse().join("");
 };

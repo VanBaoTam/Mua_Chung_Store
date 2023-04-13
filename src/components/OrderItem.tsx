@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "zmp-ui";
 import { CartProductModel } from "../models";
-import { ConvertPrice } from "../utils/ConvertPrice";
+import { ConvertPrice } from "../utils/Prices";
 const OrderItem = (props: CartProductModel) => {
   return (
     <Box
@@ -13,7 +13,7 @@ const OrderItem = (props: CartProductModel) => {
       className="bg-white rounded-lg"
     >
       <img
-        src={props.imgProduct}
+        src={props.photo_links}
         alt="Order Item's image"
         className="w-10 rounded-lg"
       />
@@ -21,14 +21,11 @@ const OrderItem = (props: CartProductModel) => {
         <p className="rounded-full bg-gray-200 text-blue-600 block w-8 text-center">
           {props.quantity}
         </p>
-        x
-        <h4 className="font-semibold overflow-hidden maxw">
-          {props.nameProduct}
-        </h4>
+        x<h4 className="font-semibold overflow-hidden maxw">{props.name}</h4>
       </div>
       <div>
         <p className="text-xs font-semibold text-red-400">
-          {ConvertPrice(Number(props.salePrice), props.quantity)}
+          {ConvertPrice(Number(props.price), props.quantity)}VNĐ
         </p>
       </div>
     </Box>
