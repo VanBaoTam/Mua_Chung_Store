@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { listOrders } from "../../dummy/list-Order";
 import { CartProductModel } from "../../models";
+const listOrders: CartProductModel[] = [];
 const initialState = {
   Products: listOrders,
 };

@@ -8,8 +8,6 @@ const pay = (
   products?: Record<string, any>[]
 ) =>
   new Promise((resolve, reject) => {
-    console.log(products);
-    console.log(amount);
     Payment.createOrder({
       desc: description ?? `Thanh toán cho ${appConfig.app.title}`,
       item: products!,
@@ -24,4 +22,5 @@ const pay = (
       },
     });
   });
+
 export default pay;

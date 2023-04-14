@@ -24,7 +24,6 @@ export const ConvertArrToRecords = (
   let result: Record<string, any>[] = [];
   OrderArr.forEach((item) => {
     let temp: Record<string, any> = { id: item.key, info: item.info };
-    console.log(temp);
     result.push(temp);
   });
   return result;

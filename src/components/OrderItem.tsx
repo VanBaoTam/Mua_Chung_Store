@@ -15,13 +15,14 @@ const OrderItem = (props: CartProductModel) => {
       <img
         src={props.photo_links}
         alt="Order Item's image"
-        className="w-10 rounded-lg"
+        className="w-16 rounded-lg"
       />
-      <div className="grow px-4 flex justify-around">
-        <p className="rounded-full bg-gray-200 text-blue-600 block w-8 text-center">
+      <div className="grow px-2 flex justify-around items-center">
+        <p className="rounded-full bg-gray-200 text-blue-600 block w-8 h-6 text-center">
           {props.quantity}
         </p>
-        x<h4 className="font-semibold overflow-hidden maxw">{props.name}</h4>
+        <span className="px-1">x</span>
+        <h4 className="font-semibold overflow-hidden maxw">{props.name}</h4>
       </div>
       <div>
         <p className="text-xs font-semibold text-red-400">

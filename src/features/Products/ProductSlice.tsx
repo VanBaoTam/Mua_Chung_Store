@@ -21,10 +21,11 @@ export const getProducts = createAsyncThunk(
           headers: {
             "Content-Type": "application/json",
             access_token:
-              "e4LRDEqA9qwZG5qww0ydGgP3MJlf5tK7-5flBU5I5bJeQsnWz4PpVlXHQ7tLNrDfpszCL_vzVa76VdnOsri6PSrmVa-6IsbxjsjfKlbuLd-rBtq7ypDDUTyAC6hhA3Li_HepOV8K3MZ36GPTZ2mNV9q99WJRDZa3bYKZDTi093NZJY4yrKKS2SeE7YcCMG5LWMazLxjA67If06DwY2uQ1Rij1mRn4ZqCwXupDS0o94dT4HumpILc7_ebVHdeEsC1-0fwAkapSKlw0rzZrn5ZRkepSaF_F6aws2X9FFGZLp_ERr4On4yhRD1v6K74LI5ws7eaV_Su2s3pBHfkoMKP4dvwI4pg4I5B",
+              "LzLKF1l0YcHKq58o7iMAQ57JLZCVtVuSL95UFbF5yoDdkdiLBQdPBIlzUXaTkiCj1zH42qopvZH5s5u3JeB-MWJ4S7uhYDnM7CHZI2gAm6i1s5v26wd_Vb7XKs1Pfur9JEu8IbQUeqDBp7j9QzoeKrEw9cT6y8HCVPnNGN64_dL9o6HGSSN0Hbg26HrtbByHHFeYCt2xcJH0-IKfQUsASbA11cvwswzwV8u2O5QRtczYYKPBMC3YJd-MOX5HnxeR6jKMEn23o3OevNSePgtGAoZWTJSVhz5l0Q88C4Vqj6jAf0f23VMkQnkb2JGUyQSqBO5qDYZIfcuniJL7J6X_8Efk7DkCOG",
           },
         }
       );
+
       return resp.data.data.products;
     } catch (error) {
       console.log(error);
@@ -47,7 +48,7 @@ const productSlice = createSlice({
         state.Products = products.payload;
       }
     );
-    builder.addCase(getProducts.rejected, (state, action) => {
+    builder.addCase(getProducts.rejected, (state) => {
       state.isLoaded = false;
     });
   },

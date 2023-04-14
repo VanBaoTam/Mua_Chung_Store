@@ -12,8 +12,8 @@ import {
   ConvertArrToRecords,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
-const { Option } = Select;
 
+const { Option } = Select;
 function uniqueId() {
   return "id-" + Math.random().toString(36).substring(2, 16);
 }
@@ -238,35 +238,36 @@ const Cart = () => {
   function CreatingOrder(products) {
     let total = SumPrice(orders.Products),
       final = total;
+    let address =
+      "Địa chỉ: " +
+      currentAddress +
+      ", " +
+      currentWard.name +
+      ", " +
+      currentDistrict.name +
+      ", " +
+      currentCity.name;
+
     let tempCode: CodeModel | undefined = codeList.code.find((SameCode) => {
       return SameCode.id == code;
     });
     if (tempCode !== undefined && tempCode !== null) {
-      if (tempCode.model.delayDate < new Date())
+      if (tempCode.model.delayTime < new Date())
         console.log("Quá thời gian 24h của code");
-      else dispatch(addUser({ code, products, total, final }));
+      else dispatch(addUser({ code, products, total, final, address }));
     } else {
-      dispatch(createCode({ initCode, products, total, final }));
+      dispatch(createCode({ initCode, products, total, final, address }));
     }
-    console.log(
-      "Địa chỉ: " +
-        currentAddress +
-        ", " +
-        currentWard.name +
-        ", " +
-        currentDistrict.name +
-        ", " +
-        currentCity.name
-    );
   }
   function handleCreateOrder() {
     let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
-    CreatingOrder(products);
     pay(
       fee * 1000 + SumPrice(orders.Products),
       description,
       ConvertArrToRecords(products)
-    );
+    )
+      .then(() => CreatingOrder(products))
+      .catch((error) => console.log(error));
   }
 };
 
