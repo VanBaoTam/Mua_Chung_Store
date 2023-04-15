@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ProductModel } from "../../models";
+
 const initArr: ProductModel[] = [];
 const initialState = {
   Products: initArr,
