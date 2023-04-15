@@ -43,7 +43,7 @@ export type OrderModel = {
 export type CodeModel = {
   //Mã mua chung
   id: string;
-  model: {
+  orders: {
     //mã mua chung (dùng để nhận dạng đơn hàng của các user thuộc về mã mua chung nào)
     id: string;
     //List các user tham gia mã mua chung, subId[0] = người tạo.

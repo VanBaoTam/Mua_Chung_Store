@@ -5,7 +5,7 @@ import axios from "axios";
 const codeList: CodeModel[] = [];
 let codeTemp: CodeModel = {
   id: "",
-  model: {
+  orders: {
     id: "",
     subId: [],
     createTime: new Date(),
@@ -19,7 +19,7 @@ const initialState = {
 };
 let User = await getUser();
 export const DeleteAll = createAsyncThunk(
-  "code/getCodes",
+  "code/DeleteAll",
   async (name, thunk) => {
     try {
       await axios.post(
@@ -35,7 +35,7 @@ export const DeleteAll = createAsyncThunk(
           headers: {
             "Content-Type": "application/json",
             "api-key":
-              "2bpoJ0huNAPs08X52ZzUhvWXDZoGi8qGgDHlTBA8mFjtz74Tlu6DQYcwe4GIYqk0",
+              "jopHw9msuJVNtAoYgYcgx6rZyvzARugm6hgsJNysCQilqjIOnzEOd4vZ2SqZki4H",
           },
         }
       );
@@ -54,9 +54,9 @@ async function handleCreateNew() {
       collection: "groupbuys",
       document: {
         id: codeTemp.id,
-        model: codeTemp.model.subId,
-        createTime: codeTemp.model.createTime,
-        delayTime: codeTemp.model.delayTime,
+        orders: codeTemp.orders.subId,
+        createTime: codeTemp.orders.createTime,
+        delayTime: codeTemp.orders.delayTime,
         amount: codeTemp.amount,
       },
     },
@@ -64,39 +64,36 @@ async function handleCreateNew() {
       headers: {
         "Content-Type": "application/json",
         "api-key":
-          "2bpoJ0huNAPs08X52ZzUhvWXDZoGi8qGgDHlTBA8mFjtz74Tlu6DQYcwe4GIYqk0",
+          "jopHw9msuJVNtAoYgYcgx6rZyvzARugm6hgsJNysCQilqjIOnzEOd4vZ2SqZki4H",
       },
     }
   );
 }
-export const getCodes = createAsyncThunk(
-  "code/getCodes",
-  async (name, thunk) => {
-    try {
-      const resp = await axios.post(
-        "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/find",
-        // '{\n      "dataSource": "MuaChung",\n      "database": "test",\n      "collection": "groupbuys",\n      "filter": {\n      }\n  }',
-        {
-          dataSource: "MuaChung",
-          database: "test",
-          collection: "groupbuys",
-          filter: {},
+export const getCodes = createAsyncThunk("code/getCodes", async () => {
+  try {
+    const resp = await axios.post(
+      "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/find",
+      // '{\n      "dataSource": "MuaChung",\n      "database": "test",\n      "collection": "groupbuys",\n      "filter": {}\n  }',
+      {
+        dataSource: "MuaChung",
+        database: "test",
+        collection: "groupbuys",
+        filter: {},
+      },
+      {
+        headers: {
+          "Content-Type": "application/ejson",
+          "api-key":
+            "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "api-key":
-              "2bpoJ0huNAPs08X52ZzUhvWXDZoGi8qGgDHlTBA8mFjtz74Tlu6DQYcwe4GIYqk0",
-          },
-        }
-      );
-      console.log(resp.data.documents);
-      return resp.data.document;
-    } catch (error) {
-      console.log(error);
-    }
+      }
+    );
+    console.log(resp);
+    return resp.data.document;
+  } catch (error) {
+    console.log(error);
   }
-);
+});
 
 const codeSlice = createSlice({
   name: "code",
@@ -107,7 +104,7 @@ const codeSlice = createSlice({
       const newCode: CodeModel = {
         amount: 1,
         id: payload.initCode,
-        model: {
+        orders: {
           id: payload.initCode,
           subId: [
             {
@@ -130,7 +127,7 @@ const codeSlice = createSlice({
     addUser: (state, { payload }) => {
       const codeList = state.code.find((item) => item.id == payload.code)!;
       codeList.amount++;
-      codeList.model.subId.push({
+      codeList.orders.subId.push({
         user: payload.id,
         products: payload.products,
         totalCost: payload.total,
@@ -147,7 +144,6 @@ const codeSlice = createSlice({
     });
     builder.addCase(getCodes.fulfilled, (state, codes) => {
       state.isLoaded = true;
-
       state.code = codeList;
     });
     builder.addCase(getCodes.rejected, (state) => {

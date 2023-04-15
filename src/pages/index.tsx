@@ -10,7 +10,7 @@ const HomePage: React.FunctionComponent = () => {
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getCodes());
-  }, []);
+  },[]);
   return (
     <Page hideScrollbar={true} className="p-3">
       <SearchBar />
