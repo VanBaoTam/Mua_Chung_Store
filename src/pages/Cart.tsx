@@ -29,7 +29,7 @@ const Cart = () => {
       onChange={(e) => setCode(e.target.value)}
     ></Input>
   );
-
+  const [paymentMethod, setpaymentMethod] = useState<string>("COD");
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [currentCity, setCurrentCity] = useState<any>(locationVN[0]);
   const [currentDistrict, setCurrentDistrict] = useState<any>(
@@ -103,7 +103,6 @@ const Cart = () => {
   });
 
   const fee = 30;
-  const description = "Thanh toán đơn hàng của USERNAME cho Mua Chung Store";
 
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
@@ -213,6 +212,37 @@ const Cart = () => {
             px={4}
             py={2}
             flex
+            flexDirection="column"
+            className="bg-white rounded-lg text-red-400 font-semibold"
+          >
+            <Text
+              size="large"
+              bold
+              className="text-black font-semibold    border-b py-3 mb-0 w-full"
+            >
+              Phương thức thanh toán
+            </Text>
+            <div>
+              <Select
+                placeholder={paymentMethod}
+                defaultValue={paymentMethod}
+                closeOnSelect={true}
+                onChange={() => {
+                  (e) => setpaymentMethod(e.target.value);
+                }}
+              >
+                <Option value="COD" title="COD" />
+                <Option value="Momo" title="Momo" />
+                <Option value="Zalo Pay" title="Zalo Pay" />
+              </Select>
+            </div>
+          </Box>
+          <Box
+            mx={4}
+            my={2}
+            px={4}
+            py={2}
+            flex
             justifyContent="space-between"
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
@@ -230,7 +260,7 @@ const Cart = () => {
           >
             <Button onClick={handleCreateOrder}>Thanh toán</Button>
           </Box>
-          <Box mx={4} my={2} px={4} py={1}></Box>{" "}
+          <Box mx={4} my={2} px={4} py={1}></Box>
         </>
       )}
     </Page>
@@ -252,7 +282,7 @@ const Cart = () => {
       return SameCode.id == code;
     });
     if (tempCode !== undefined && tempCode !== null) {
-      if (tempCode.model.delayTime < new Date())
+      if (tempCode.orders.delayTime < new Date())
         console.log("Quá thời gian 24h của code");
       else dispatch(addUser({ code, products, total, final, address }));
     } else {
@@ -261,11 +291,7 @@ const Cart = () => {
   }
   function handleCreateOrder() {
     let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
-    pay(
-      fee * 1000 + SumPrice(orders.Products),
-      description,
-      ConvertArrToRecords(products)
-    )
+    pay(fee * 1000 + SumPrice(orders.Products), ConvertArrToRecords(products))
       .then(() => CreatingOrder(products))
       .catch((error) => console.log(error));
   }
