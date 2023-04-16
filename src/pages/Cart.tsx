@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Icon, Input, Page, Select, Text } from "zmp-ui";
+import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, SumPrice } from "../utils/Prices";
@@ -12,24 +12,28 @@ import {
   ConvertArrToRecords,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
+import AddressRequired from "../components/Modal/AddressRequired";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 function uniqueId() {
-  return "id-" + Math.random().toString(36).substring(2, 16);
+  return "MC" + Math.random().toString(36).substring(2);
 }
 const initCode = uniqueId();
 const Cart = () => {
   const [code, setCode] = useState<string>(initCode);
   const codeList = useAppSelector((store) => store.codes);
   const dispatch = useAppDispatch();
-  const newCode = <Input value={initCode}></Input>;
+  const newCode = <Input value={uniqueId()}></Input>;
   const inputCode = (
     <Input
       placeholder="Nhập mã mua chung"
       onChange={(e) => setCode(e.target.value)}
     ></Input>
   );
-  const [paymentMethod, setpaymentMethod] = useState<string>("COD");
+  const navigate = useNavigate();
+  const [paymentMethod, setpaymentMethod] = useState<any>("COD");
+  const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [currentCity, setCurrentCity] = useState<any>(locationVN[0]);
   const [currentDistrict, setCurrentDistrict] = useState<any>(
@@ -103,7 +107,6 @@ const Cart = () => {
   });
 
   const fee = 30;
-
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
       <Icon icon="zi-minus-circle" />
@@ -116,6 +119,7 @@ const Cart = () => {
         EmptyCart
       ) : (
         <>
+          {addressRequired ? <AddressRequired /> : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
             mx={4}
@@ -175,7 +179,7 @@ const Cart = () => {
                     <Box className="relative" m={0}>
                       {item.type === "select" ? (
                         <Select
-                          // key={value}
+                          key={value}
                           id={item.name}
                           placeholder={item.placeholder}
                           name={item.name}
@@ -222,20 +226,37 @@ const Cart = () => {
             >
               Phương thức thanh toán
             </Text>
-            <div>
-              <Select
-                placeholder={paymentMethod}
-                defaultValue={paymentMethod}
-                closeOnSelect={true}
-                onChange={() => {
-                  (e) => setpaymentMethod(e.target.value);
-                }}
-              >
-                <Option value="COD" title="COD" />
-                <Option value="Momo" title="Momo" />
-                <Option value="Zalo Pay" title="Zalo Pay" />
-              </Select>
-            </div>
+
+            <Radio.Group
+              onChange={(e) => {
+                setpaymentMethod(e);
+              }}
+              defaultValue={"COD"}
+              name={paymentMethod}
+              className="text-black font-semibold flex flex-col"
+            >
+              <Box flex p={4} flexDirection="column">
+                <Radio
+                  className="mt-2"
+                  defaultChecked
+                  name="COD"
+                  value={"COD"}
+                  label="COD"
+                />
+                <Radio
+                  className="mt-2"
+                  name="Momo"
+                  value={"Momo"}
+                  label="Momo"
+                />
+                <Radio
+                  className="mt-2"
+                  name="Zalo Pay"
+                  value={"Zalo Pay"}
+                  label="Zalo Pay"
+                />
+              </Box>
+            </Radio.Group>
           </Box>
           <Box
             mx={4}
@@ -277,23 +298,41 @@ const Cart = () => {
       currentDistrict.name +
       ", " +
       currentCity.name;
-
+    console.log(codeList.code);
     let tempCode: CodeModel | undefined = codeList.code.find((SameCode) => {
       return SameCode.id == code;
     });
     if (tempCode !== undefined && tempCode !== null) {
-      if (tempCode.orders.delayTime < new Date())
+      if (tempCode.delayTime < new Date())
         console.log("Quá thời gian 24h của code");
-      else dispatch(addUser({ code, products, total, final, address }));
+      else {
+        dispatch(
+          addUser({ code, products, total, final, address, paymentMethod })
+        );
+        navigate("/");
+      }
     } else {
-      dispatch(createCode({ initCode, products, total, final, address }));
+      dispatch(
+        createCode({ initCode, products, total, final, address, paymentMethod })
+      );
+      navigate("/");
     }
   }
   function handleCreateOrder() {
-    let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
-    pay(fee * 1000 + SumPrice(orders.Products), ConvertArrToRecords(products))
-      .then(() => CreatingOrder(products))
-      .catch((error) => console.log(error));
+    if (currentAddress == "" || currentAddress == null) {
+      setAddressRequired(true);
+      setTimeout(() => {
+        setAddressRequired(false);
+      }, 3000);
+    } else if (paymentMethod == "COD") {
+      let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
+      CreatingOrder(products);
+    } else {
+      let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
+      pay(fee * 1000 + SumPrice(orders.Products), ConvertArrToRecords(products))
+        .then(() => CreatingOrder(products))
+        .catch((error) => console.log(error));
+    }
   }
 };
 
