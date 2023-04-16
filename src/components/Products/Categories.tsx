@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "zmp-ui";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppSelector } from "../../hooks/hooks";
 import Product from "./Product";
 
 const Categories = () => {

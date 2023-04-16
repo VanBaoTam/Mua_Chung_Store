@@ -36,9 +36,10 @@ export type OrderModel = {
   discount: number;
   //Thực trả
   finalCost: number;
+  address: string;
+  paymentMethod: string;
   //Tình trạng (true = đã thanh toán| false = chưa thanh toán)
   status: boolean;
-  address: string;
 };
 export type CodeModel = {
   //Mã mua chung
@@ -48,12 +49,12 @@ export type CodeModel = {
     id: string;
     //List các user tham gia mã mua chung, subId[0] = người tạo.
     subId: OrderModel[];
-    //Ngày khởi tạo mã mua chung
-    createTime: Date;
-    //Ngày kết thúc mã mua chung (default = 1 ngày sau ngày createDate
-    // delay = createDate's miliseconds + 86,400,000)
-    delayTime: Date;
   };
+  //Ngày khởi tạo mã mua chung
+  createTime: Date;
+  //Ngày kết thúc mã mua chung (default = 1 ngày sau ngày createDate
+  // delay = createDate's miliseconds + 86,400,000)
+  delayTime: Date;
   amount: number;
 };
 

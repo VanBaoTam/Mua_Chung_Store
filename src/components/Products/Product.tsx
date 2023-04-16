@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
-import { ConvertPrice } from "../utils/Prices";
+import { ConvertPrice } from "../../utils/Prices";
 const Product = (props) => {
   const navigate = useNavigate();
 

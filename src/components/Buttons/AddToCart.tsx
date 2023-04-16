@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button } from "zmp-ui";
-import ProductSheet from "../ProductSheet";
+import ProductSheet from "../Products/ProductSheet";
 import { useNavigate } from "react-router-dom";
 const AddToCart = (props) => {
   const navigate = useNavigate();

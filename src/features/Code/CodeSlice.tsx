@@ -1,70 +1,102 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import { CodeModel } from "../../models";
 import { getUser } from "../../apis/User";
 import axios from "axios";
-const codeList: CodeModel[] = [];
-let codeTemp: CodeModel = {
-  id: "",
-  orders: {
-    id: "",
-    subId: [],
-    createTime: new Date(),
-    delayTime: new Date(),
-  },
-  amount: 0,
-};
+let codeList: CodeModel[] = [];
 const initialState = {
   code: codeList,
   isLoaded: false,
 };
 let User = await getUser();
-export const DeleteAll = createAsyncThunk(
-  "code/DeleteAll",
-  async (name, thunk) => {
-    try {
-      await axios.post(
-        "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
-        // '{\n      "dataSource": "MuaChung",\n      "database": "test",\n      "collection": "groupbuys",\n      "filter": {}\n  }',
-        {
-          dataSource: "MuaChung",
-          database: "test",
-          collection: "groupbuys",
-          filter: {},
+export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
+  try {
+    await axios.post(
+      "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
+      {
+        dataSource: "MuaChung",
+        database: "test",
+        collection: "groupbuys",
+        filter: {},
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "api-key":
+            "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "api-key":
-              "jopHw9msuJVNtAoYgYcgx6rZyvzARugm6hgsJNysCQilqjIOnzEOd4vZ2SqZki4H",
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
+      }
+    );
+  } catch (error) {
+    console.log(error);
   }
-);
-async function handleCreateNew() {
-  const CreateNew = await axios.post(
-    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/insertOne",
-    // '{\n      "dataSource": "Cluster0",\n      "database": "todo",\n      "collection": "tasks",\n      "document": {\n        "status": "open",\n        "text": "Do the dishes"\n      }\n  }',
+});
+async function handleAddUser(code: CodeModel) {
+  await axios.post(
+    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/updateOne",
     {
       dataSource: "MuaChung",
       database: "test",
       collection: "groupbuys",
-      document: {
-        id: codeTemp.id,
-        orders: codeTemp.orders.subId,
-        createTime: codeTemp.orders.createTime,
-        delayTime: codeTemp.orders.delayTime,
-        amount: codeTemp.amount,
+      filter: {
+        id: code,
+      },
+      update: {
+        $set: {
+          amount: code.amount,
+          orders: code.orders,
+        },
       },
     },
     {
       headers: {
         "Content-Type": "application/json",
         "api-key":
-          "jopHw9msuJVNtAoYgYcgx6rZyvzARugm6hgsJNysCQilqjIOnzEOd4vZ2SqZki4H",
+          "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
+      },
+    }
+  );
+}
+async function handleCreateNew(newCode: CodeModel) {
+  await axios.post(
+    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/insertOne",
+    {
+      dataSource: "MuaChung",
+      database: "test",
+      collection: "groupbuys",
+      document: {
+        id: newCode.id,
+        orders: newCode.orders.subId,
+        createTime: newCode.createTime,
+        delayTime: newCode.delayTime,
+        amount: newCode.amount,
+      },
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "api-key":
+          "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
+      },
+    }
+  );
+}
+
+async function handleCreateNewOrders(newCode: CodeModel) {
+  await axios.post(
+    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/insertOne",
+    {
+      dataSource: "MuaChung",
+      database: "test",
+      collection: "Orders",
+      document: {
+        orders: newCode.orders,
+      },
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "api-key":
+          "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
       },
     }
   );
@@ -82,14 +114,23 @@ export const getCodes = createAsyncThunk("code/getCodes", async () => {
       },
       {
         headers: {
-          "Content-Type": "application/ejson",
+          "Content-Type": "application/json",
           "api-key":
             "HpiSqIvrTYzHMkTM6SSrRbxZv1yY1PaWj65mBcYw2moPFIh69SFruJOzQcIEZW2q",
         },
       }
     );
-    console.log(resp);
-    return resp.data.document;
+    resp.data.documents.forEach((item) => {
+      const tempo: CodeModel = {
+        id: item.id,
+        orders: item.orders,
+        createTime: item.createTime,
+        delayTime: item.delayTime,
+        amount: item.amount,
+      };
+      codeList = [...codeList, tempo];
+      console.log(codeList);
+    });
   } catch (error) {
     console.log(error);
   }
@@ -115,34 +156,43 @@ const codeSlice = createSlice({
               finalCost: payload.final,
               status: false,
               address: payload.address,
+              paymentMethod: payload.paymentMethod,
             },
           ],
-          createTime: today,
-          delayTime: new Date(today.getTime() + 24 * 60 * 60 * 1000),
         },
+        createTime: today,
+        delayTime: new Date(today.getTime() + 24 * 60 * 60 * 1000),
       };
-      codeTemp = newCode;
-      handleCreateNew();
+      handleCreateNew(newCode);
+      handleCreateNewOrders(newCode);
     },
     addUser: (state, { payload }) => {
-      const codeList = state.code.find((item) => item.id == payload.code)!;
-      codeList.amount++;
-      codeList.orders.subId.push({
-        user: payload.id,
-        products: payload.products,
-        totalCost: payload.total,
-        discount: 0,
-        finalCost: payload.final,
-        status: false,
-        address: payload.address,
-      });
+      const code = state.code.find((item) => item.id == payload.code)!;
+      code.amount++;
+      console.log("CURRENT" + current(code));
+      code.orders.subId = [
+        ...code.orders.subId,
+        {
+          user: payload.id,
+          products: payload.products,
+          totalCost: payload.total,
+          discount: 0,
+          finalCost: payload.final,
+          status: false,
+          address: payload.address,
+          paymentMethod: payload.paymentMethod,
+        },
+      ];
+      console.log(code.orders.subId);
+      handleAddUser(code);
+      handleCreateNewOrders(code);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getCodes.pending, (state) => {
       state.isLoaded = false;
     });
-    builder.addCase(getCodes.fulfilled, (state, codes) => {
+    builder.addCase(getCodes.fulfilled, (state) => {
       state.isLoaded = true;
       state.code = codeList;
     });
