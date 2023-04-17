@@ -27,7 +27,7 @@ export type OrderInfoModel = {
 };
 export type OrderModel = {
   //Zalo User's id
-  user: string;
+  userId: string;
   //Đơn hàng của user
   products: OrderInfoModel[];
   //Tổng tiền

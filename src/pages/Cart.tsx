@@ -14,24 +14,24 @@ import {
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
 import { useNavigate } from "react-router-dom";
-
+import { getUser } from "../apis/User";
+import { clearCart } from "../features/Order/OrderSlice";
+import OrderSuccess from "../components/Modal/OrderSucess";
+import CodeRequired from "../components/Modal/CodeRequired";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
 }
-const initCode = uniqueId();
+const fee = 30;
+let user = await getUser();
+let initCode = uniqueId();
 const Cart = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [code, setCode] = useState<string>(initCode);
   const codeList = useAppSelector((store) => store.codes);
-  const dispatch = useAppDispatch();
-  const newCode = <Input value={uniqueId()}></Input>;
-  const inputCode = (
-    <Input
-      placeholder="Nhập mã mua chung"
-      onChange={(e) => setCode(e.target.value)}
-    ></Input>
-  );
-  const navigate = useNavigate();
+  const [codeRequired, setCodeRequired] = useState<boolean>(false);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
   const [paymentMethod, setpaymentMethod] = useState<any>("COD");
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
@@ -98,15 +98,20 @@ const Cart = () => {
     }
     return { listOptions, value, handleOnSelect };
   };
-  const [isShown, setShown] = useState(false);
-  const orders = useAppSelector((store) => store.orders);
 
+  const orders = useAppSelector((store) => store.orders);
+  function NewCode() {
+    initCode = uniqueId();
+    setCode(initCode);
+  }
+  function handleInputChange(event) {
+    setCode(event.target.value);
+  }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
   });
 
-  const fee = 30;
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
       <Icon icon="zi-minus-circle" />
@@ -120,6 +125,8 @@ const Cart = () => {
       ) : (
         <>
           {addressRequired ? <AddressRequired /> : null}
+          {codeRequired ? <CodeRequired /> : null}
+          {orderSuccess ? <OrderSuccess /> : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
             mx={4}
@@ -133,10 +140,14 @@ const Cart = () => {
           >
             <h4 className="text-black pb-4">Mã mua chung</h4>
             <div className="flex justify-around pb-3">
-              <Button onClick={() => setShown(true)}>Tạo mã mới</Button>
-              <Button onClick={() => setShown(false)}>Nhập mã</Button>
+              <Button onClick={NewCode}>Tạo mã mới</Button>
             </div>
-            {isShown ? newCode : inputCode}
+            <Input
+              helperText='Mã mua chung bắt đầu = "MC"'
+              value={code}
+              placeholder="Nhập mã mua chung"
+              onChange={handleInputChange}
+            ></Input>
           </Box>
           <Box
             mx={4}
@@ -286,7 +297,7 @@ const Cart = () => {
       )}
     </Page>
   );
-  function CreatingOrder(products) {
+  async function CreatingOrder(products) {
     let total = SumPrice(orders.Products),
       final = total;
     let address =
@@ -298,40 +309,53 @@ const Cart = () => {
       currentDistrict.name +
       ", " +
       currentCity.name;
-    console.log(codeList.code);
-    let tempCode: CodeModel | undefined = codeList.code.find((SameCode) => {
-      return SameCode.id == code;
-    });
-    if (tempCode !== undefined && tempCode !== null) {
-      if (tempCode.delayTime < new Date())
-        console.log("Quá thời gian 24h của code");
-      else {
-        dispatch(
-          addUser({ code, products, total, final, address, paymentMethod })
-        );
-        navigate("/");
-      }
-    } else {
-      dispatch(
-        createCode({ initCode, products, total, final, address, paymentMethod })
-      );
-      navigate("/");
-    }
+    dispatch(
+      createCode({
+        user,
+        code,
+        products,
+        total,
+        final,
+        address,
+        paymentMethod,
+      })
+    );
+
+    dispatch(clearCart());
+    navigate("/");
   }
-  function handleCreateOrder() {
+  async function handleCreateOrder() {
+    if (code.substring(0, 2) != "MC") {
+      setCodeRequired(true);
+      setTimeout(() => {
+        setCodeRequired(false);
+      }, 3000);
+    }
     if (currentAddress == "" || currentAddress == null) {
       setAddressRequired(true);
       setTimeout(() => {
         setAddressRequired(false);
       }, 3000);
-    } else if (paymentMethod == "COD") {
-      let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
-      CreatingOrder(products);
-    } else {
-      let products = ConvertCartProductModelsToOrderInfoModels(orders.Products);
-      pay(fee * 1000 + SumPrice(orders.Products), ConvertArrToRecords(products))
-        .then(() => CreatingOrder(products))
-        .catch((error) => console.log(error));
+    }
+    if (code.substring(0, 2) == "MC") {
+      if (currentAddress != "" && currentAddress != null) {
+        if (paymentMethod == "COD") {
+          let products = ConvertCartProductModelsToOrderInfoModels(
+            orders.Products
+          );
+          CreatingOrder(products);
+        } else {
+          let products = ConvertCartProductModelsToOrderInfoModels(
+            orders.Products
+          );
+          pay(
+            fee * 1000 + SumPrice(orders.Products),
+            ConvertArrToRecords(products)
+          )
+            .then(() => CreatingOrder(products))
+            .catch((error) => console.log(error));
+        }
+      }
     }
   }
 };

@@ -1,13 +1,17 @@
 import React, { useEffect } from "react";
 import { useAppDispatch } from "../hooks/hooks";
 import { getProducts } from "../features/Products/ProductSlice";
-import { getCodes } from "../features/Code/CodeSlice";
-const Initializer = () => {
+import { getCodes, DeleteAll} from "../features/Code/CodeSlice";
+const Initializer = ({ type }) => {
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getProducts());
-    dispatch(getCodes());
-  }, []);
+  if (type == "Products")
+    useEffect(() => {
+      dispatch(getProducts());
+    }, []);
+  if (type == "Codes")
+    useEffect(() => {
+      dispatch(getCodes());
+    }, []);
   return <></>;
 };
 

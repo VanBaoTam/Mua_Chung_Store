@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import { CodeModel } from "../../models";
-import { getUser } from "../../apis/User";
+import { CodeModel, OrderModel } from "../../models";
+
 import axios from "axios";
 let codeList: CodeModel[] = [];
+let initCodeList: CodeModel[] = [];
 const initialState = {
-  code: codeList,
+  code: initCodeList,
   isLoaded: false,
 };
-let User = await getUser();
+
 export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
   try {
     await axios.post(
@@ -30,21 +31,15 @@ export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
     console.log(error);
   }
 });
-async function handleAddUser(code: CodeModel) {
+async function handleAddUser(orders: OrderModel) {
   await axios.post(
-    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/updateOne",
+    "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/insertOne",
     {
       dataSource: "MuaChung",
       database: "test",
       collection: "groupbuys",
-      filter: {
-        id: code,
-      },
-      update: {
-        $set: {
-          amount: code.amount,
-          orders: code.orders,
-        },
+      document: {
+        orders: orders,
       },
     },
     {
@@ -55,6 +50,7 @@ async function handleAddUser(code: CodeModel) {
       },
     }
   );
+  console.log("ADD USER");
 }
 async function handleCreateNew(newCode: CodeModel) {
   await axios.post(
@@ -79,9 +75,10 @@ async function handleCreateNew(newCode: CodeModel) {
       },
     }
   );
+  console.log("CREATE NEW");
 }
 
-async function handleCreateNewOrders(newCode: CodeModel) {
+async function handleCreateNewOrders(orders: OrderModel) {
   await axios.post(
     "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/insertOne",
     {
@@ -89,7 +86,7 @@ async function handleCreateNewOrders(newCode: CodeModel) {
       database: "test",
       collection: "Orders",
       document: {
-        orders: newCode.orders,
+        orders: orders,
       },
     },
     {
@@ -100,12 +97,12 @@ async function handleCreateNewOrders(newCode: CodeModel) {
       },
     }
   );
+  console.log("CREATE NEW ORDERS");
 }
 export const getCodes = createAsyncThunk("code/getCodes", async () => {
   try {
     const resp = await axios.post(
       "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/find",
-      // '{\n      "dataSource": "MuaChung",\n      "database": "test",\n      "collection": "groupbuys",\n      "filter": {}\n  }',
       {
         dataSource: "MuaChung",
         database: "test",
@@ -129,8 +126,8 @@ export const getCodes = createAsyncThunk("code/getCodes", async () => {
         amount: item.amount,
       };
       codeList = [...codeList, tempo];
-      console.log(codeList);
     });
+    console.log(codeList);
   } catch (error) {
     console.log(error);
   }
@@ -144,12 +141,12 @@ const codeSlice = createSlice({
       const today = new Date();
       const newCode: CodeModel = {
         amount: 1,
-        id: payload.initCode,
+        id: payload.code,
         orders: {
-          id: payload.initCode,
+          id: payload.code,
           subId: [
             {
-              user: User,
+              userId: payload.user,
               products: payload.products,
               totalCost: payload.total,
               discount: 0,
@@ -164,28 +161,31 @@ const codeSlice = createSlice({
         delayTime: new Date(today.getTime() + 24 * 60 * 60 * 1000),
       };
       handleCreateNew(newCode);
-      handleCreateNewOrders(newCode);
+      handleCreateNewOrders({
+        userId: payload.user,
+        products: payload.products,
+        totalCost: payload.total,
+        discount: 0,
+        finalCost: payload.final,
+        status: false,
+        address: payload.address,
+        paymentMethod: payload.paymentMethod,
+      });
     },
     addUser: (state, { payload }) => {
-      const code = state.code.find((item) => item.id == payload.code)!;
-      code.amount++;
-      console.log("CURRENT" + current(code));
-      code.orders.subId = [
-        ...code.orders.subId,
-        {
-          user: payload.id,
-          products: payload.products,
-          totalCost: payload.total,
-          discount: 0,
-          finalCost: payload.final,
-          status: false,
-          address: payload.address,
-          paymentMethod: payload.paymentMethod,
-        },
-      ];
-      console.log(code.orders.subId);
-      handleAddUser(code);
-      handleCreateNewOrders(code);
+      const orders: OrderModel = {
+        userId: payload.user,
+        products: payload.products,
+        totalCost: payload.total,
+        discount: 0,
+        finalCost: payload.final,
+        status: false,
+        address: payload.address,
+        paymentMethod: payload.paymentMethod,
+      };
+
+      handleAddUser(orders);
+      handleCreateNewOrders(orders);
     },
   },
   extraReducers: (builder) => {
@@ -193,8 +193,8 @@ const codeSlice = createSlice({
       state.isLoaded = false;
     });
     builder.addCase(getCodes.fulfilled, (state) => {
+      console.log("FULLFILLED");
       state.isLoaded = true;
-      state.code = codeList;
     });
     builder.addCase(getCodes.rejected, (state) => {
       state.isLoaded = false;
