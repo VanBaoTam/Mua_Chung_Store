@@ -1,38 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
-import { ConvertPriceAll, SumPrice } from "../utils/Prices";
+import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import locationVN from "../dummy/location";
-import pay from "../apis/Order";
+import pay from "../services/Order";
 import { AddressFormType, CartProductModel, CodeModel } from "../models";
 import AddressForm from "../dummy/address-form";
-import { addUser, createCode } from "../features/Code/CodeSlice";
+import { addUser, createCode, getCodes } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../apis/User";
+import { getUser } from "../services/User";
 import { clearCart } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Modal/OrderSucess";
 import CodeRequired from "../components/Modal/CodeRequired";
+import PaymentMethodRequired from "../components/Modal/PaymentMethodRequired";
+import {
+  HandleUpGetShipmentFee,
+  HandleUploadNewShipMent,
+} from "../services/Shipment";
+import Loading from "../components/Modal/Loading";
+
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
 }
-const fee = 30;
-let user = await getUser();
+let user;
+(async () => {
+  user = await getUser();
+})();
+
 let initCode = uniqueId();
 const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const [code, setCode] = useState<string>(initCode);
-  const codeList = useAppSelector((store) => store.codes);
+  // const codeList = useAppSelector((store) => store.codes);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [ShipmentFee, setShipmentFee] = useState<number>(0);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [paymentMethod, setpaymentMethod] = useState<any>("COD");
+  const [paymentMethod, setPaymentMethod] = useState<any>("TEMP");
+  const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
+    useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [currentCity, setCurrentCity] = useState<any>(locationVN[0]);
@@ -107,6 +122,21 @@ const Cart = () => {
   function handleInputChange(event) {
     setCode(event.target.value);
   }
+  async function handleShipmentFee() {
+    setLoading(true);
+    const temp = await HandleUpGetShipmentFee();
+    setShipmentFee(temp);
+    console.log("SHIPMENT FEE: " + temp);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
+  }
+  // async function handleOrderOnGHTK() {
+  //   const resp = await HandleUploadNewShipMent(code, ShipmentFee);
+  //   if () // true
+  //   return true;
+  //   return false;
+  // }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
@@ -124,8 +154,10 @@ const Cart = () => {
         EmptyCart
       ) : (
         <>
+          {isLoading ? <Loading /> : null}
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
+          {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
           {orderSuccess ? <OrderSuccess /> : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
@@ -149,18 +181,7 @@ const Cart = () => {
               onChange={handleInputChange}
             ></Input>
           </Box>
-          <Box
-            mx={4}
-            my={2}
-            px={4}
-            py={2}
-            flex
-            justifyContent="space-between"
-            className="bg-white rounded-lg text-red-400 font-semibold"
-          >
-            <span>Tổng tiền</span>
-            <span>{ConvertPriceAll(orders.Products)}VNĐ</span>
-          </Box>
+
           <Box
             mx={4}
             mt={4}
@@ -240,20 +261,14 @@ const Cart = () => {
 
             <Radio.Group
               onChange={(e) => {
-                setpaymentMethod(e);
+                setPaymentMethod(e);
+                handleShipmentFee();
               }}
-              defaultValue={"COD"}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
             >
               <Box flex p={4} flexDirection="column">
-                <Radio
-                  className="mt-2"
-                  defaultChecked
-                  name="COD"
-                  value={"COD"}
-                  label="COD"
-                />
+                <Radio className="mt-2" name="COD" value={"COD"} label="COD" />
                 <Radio
                   className="mt-2"
                   name="Momo"
@@ -279,7 +294,19 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>{fee}.000VNĐ</span>
+            <span>{ConvertShipmentFee(ShipmentFee)}VNĐ</span>
+          </Box>
+          <Box
+            mx={4}
+            my={2}
+            px={4}
+            py={2}
+            flex
+            justifyContent="space-between"
+            className="bg-white rounded-lg text-red-400 font-semibold"
+          >
+            <span>Tổng tiền</span>
+            <span>{ConvertPriceAll(orders.Products, ShipmentFee)}VNĐ</span>
           </Box>
           <Box
             mx={4}
@@ -320,40 +347,53 @@ const Cart = () => {
         paymentMethod,
       })
     );
-
-    dispatch(clearCart());
-    navigate("/");
+    setOrderSuccess(true);
+    setTimeout(() => {
+      setOrderSuccess(true);
+      dispatch(clearCart());
+      navigate("/");
+    }, 5000);
   }
   async function handleCreateOrder() {
+    //EXCEPTIONS
     if (code.substring(0, 2) != "MC") {
       setCodeRequired(true);
       setTimeout(() => {
         setCodeRequired(false);
       }, 3000);
-    }
-    if (currentAddress == "" || currentAddress == null) {
+    } else if (currentAddress == "" || currentAddress == null) {
       setAddressRequired(true);
       setTimeout(() => {
         setAddressRequired(false);
       }, 3000);
-    }
-    if (code.substring(0, 2) == "MC") {
+    } else if (paymentMethod == "TEMP") {
+      setIsSettedPaymentMethod(true);
+      setTimeout(() => {
+        setIsSettedPaymentMethod(false);
+      }, 3000);
+    } else {
       if (currentAddress != "" && currentAddress != null) {
         if (paymentMethod == "COD") {
-          let products = ConvertCartProductModelsToOrderInfoModels(
-            orders.Products
-          );
-          CreatingOrder(products);
+          // if(handleOrderOnGHTK())
+          {
+            let products = ConvertCartProductModelsToOrderInfoModels(
+              orders.Products
+            );
+            CreatingOrder(products);
+          }
         } else {
-          let products = ConvertCartProductModelsToOrderInfoModels(
-            orders.Products
-          );
-          pay(
-            fee * 1000 + SumPrice(orders.Products),
-            ConvertArrToRecords(products)
-          )
-            .then(() => CreatingOrder(products))
-            .catch((error) => console.log(error));
+          // if(handleOrderOnGHTK())
+          {
+            let products = ConvertCartProductModelsToOrderInfoModels(
+              orders.Products
+            );
+            pay(
+              ShipmentFee + SumPrice(orders.Products),
+              ConvertArrToRecords(products)
+            )
+              .then(() => CreatingOrder(products))
+              .catch((error) => console.log(error));
+          }
         }
       }
     }

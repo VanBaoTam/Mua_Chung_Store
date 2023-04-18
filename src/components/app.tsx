@@ -9,13 +9,7 @@ import Page404 from "../pages/page404";
 import Cart from "../pages/Cart";
 import Header from "./Header";
 import Initializer from "./Initializer";
-import {
-  HandleUpGetShipmentFee,
-  HandleUploadNewShipMent,
-} from "../apis/Shipment";
-
 const MyApp = () => {
-  // HandleUpGetShipmentFee();
   return (
     <Provider store={store}>
       <App>

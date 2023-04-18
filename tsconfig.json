@@ -6,7 +6,7 @@
     "noImplicitAny": false,
     "preserveConstEnums": true,
     "jsx": "react", 
-    "lib": ["dom", "es5", "es6", "es7", "es2017"],
+    "lib": ["dom","es6", "es7", "es2017"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "allowJs": true,
