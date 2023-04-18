@@ -9,7 +9,6 @@ import Page404 from "../pages/page404";
 import Cart from "../pages/Cart";
 import Header from "./Header";
 import Initializer from "./Initializer";
-
 const MyApp = () => {
   return (
     <Provider store={store}>
@@ -17,7 +16,7 @@ const MyApp = () => {
         <SnackbarProvider>
           <ZMPRouter>
             <Header />
-            <Initializer />
+            <Initializer type="Products" />
             <AnimationRoutes>
               <Route path="/" element={<HomePage />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />

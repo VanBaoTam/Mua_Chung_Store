@@ -5,8 +5,13 @@
     "module": "esnext",
     "noImplicitAny": false,
     "preserveConstEnums": true,
+<<<<<<< HEAD
     "jsx": "react",
     "lib": ["dom", "es5", "es6", "es7", "es2017"],
+=======
+    "jsx": "react", 
+    "lib": ["dom","es6", "es7", "es2017"],
+>>>>>>> 2617ec3877025a23810b33ae03b08b0263625278
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "allowJs": true,
