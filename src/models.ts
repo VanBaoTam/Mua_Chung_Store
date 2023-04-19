@@ -43,10 +43,10 @@ export type OrderModel = {
 };
 export type CodeModel = {
   //Mã mua chung
-  id: string;
+  groupBuyId: string;
   orders: {
     //mã mua chung (dùng để nhận dạng đơn hàng của các user thuộc về mã mua chung nào)
-    id: string;
+    groupBuyId: string;
     //List các user tham gia mã mua chung, subId[0] = người tạo.
     subId: OrderModel[];
   };
@@ -59,7 +59,7 @@ export type CodeModel = {
 };
 
 export type AddressFormType = {
-  name: "detail" | "city" | "district" | "ward";
+  name: "detail" | "province" | "district" | "ward";
   label: string;
   type: "text" | "select";
   placeholder: string;

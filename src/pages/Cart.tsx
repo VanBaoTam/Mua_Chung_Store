@@ -3,11 +3,9 @@ import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
-import locationVN from "../dummy/location";
 import pay from "../services/Order";
-import { AddressFormType, CartProductModel, CodeModel } from "../models";
-import AddressForm from "../dummy/address-form";
-import { addUser, createCode, getCodes } from "../features/Code/CodeSlice";
+import { AddressFormType, CartProductModel } from "../models";
+import { createCode } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
   ConvertCartProductModelsToOrderInfoModels,
@@ -24,7 +22,10 @@ import {
   HandleUploadNewShipMent,
 } from "../services/Shipment";
 import Loading from "../components/Modal/Loading";
-
+import { getDistricts, getProvinces } from "../services/Location";
+import AddressForm from "../dummy/address-form";
+import { getWards } from "../services/Location";
+// getWards, getDistricts,
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -38,7 +39,7 @@ let initCode = uniqueId();
 const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const orders = useAppSelector((store) => store.orders);
   const [code, setCode] = useState<string>(initCode);
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -50,71 +51,82 @@ const Cart = () => {
     useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
-  const [currentCity, setCurrentCity] = useState<any>(locationVN[0]);
-  const [currentDistrict, setCurrentDistrict] = useState<any>(
-    locationVN[0].districts[0]
-  );
-  const [currentWard, setCurrentWard] = useState<any>(
-    locationVN[0].districts[0].wards[0]
-  );
+  const [Provinces, setProvinces] = useState<any>();
+  const [Ditricts, setDitricts] = useState<any>();
+  const [Wards, setWards] = useState<any>();
+  const [currentProvince, setCurrentProvince] = useState<string>("");
+  const [currentDistrict, setCurrentDistrict] = useState<string>("");
+  const [currentWard, setCurrentWard] = useState<string>("");
+  useEffect(() => {
+    handleGetProvinces();
+    handleGetDistricts(1);
+    handleGetWards(1);
+  }, []);
 
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(
-    locationVN[0].districts[0].id
-  );
-  const [selectedWardId, setSelectedWardId] = useState<string | null>(
-    locationVN[0].districts[0].wards[0].id
-  );
+  async function handleGetProvinces() {
+    getProvinces().then((resp) => {
+      setProvinces(resp);
+    });
+  }
+  async function handleGetDistricts(provinceId: number) {
+    getDistricts(provinceId).then((resp) => {
+      setDitricts(resp.districts);
+    });
+  }
 
-  const filterSelectionInput = (item: AddressFormType) => {
-    let listOptions: any = locationVN;
-    let value;
-    let handleOnSelect: (id: string) => void;
+  async function handleGetWards(DistrictId: number) {
+    getWards(DistrictId).then((resp) => {
+      setWards(resp.wards);
+    });
+  }
+  function filterLocation(item: AddressFormType) {
+    let listOptions;
+    let value = " ";
+    let handleSelect: (id: number) => void;
 
     switch (item.name) {
-      case "city":
-        listOptions = locationVN;
-        value = currentCity.id;
-        handleOnSelect = (cityId) => {
-          const indexCity = Number(cityId) - 1 > -1 ? Number(cityId) - 1 : 0;
-          const firstDistrict = locationVN[indexCity].districts[0];
-          const firstWard = firstDistrict.wards[0];
-          setCurrentCity(locationVN[indexCity]);
-          setCurrentDistrict(firstDistrict);
-          setSelectedDistrictId(firstDistrict.id);
-          setCurrentWard(firstWard);
-          setSelectedWardId(firstWard.id);
+      case "province":
+        listOptions = Provinces;
+        value = currentProvince;
+        handleSelect = (provinceId: number) => {
+          const province = listOptions.find((option) => {
+            return option.code === provinceId;
+          });
+          setCurrentProvince(province.name);
+          handleGetDistricts(provinceId);
+          value = currentProvince;
         };
         break;
       case "district":
-        listOptions = currentCity.districts;
-        value = selectedDistrictId;
-
-        handleOnSelect = (districtId) => {
-          const district = currentCity.districts.find(
-            (currentDistrict) => currentDistrict.id === districtId
-          );
-          const firstWard = district.wards[0];
-          setCurrentDistrict(district);
-          setSelectedDistrictId(districtId);
-          setCurrentWard(firstWard);
-          setSelectedWardId(firstWard.id);
+        listOptions = Ditricts;
+        value = currentDistrict;
+        handleSelect = (districtId: number) => {
+          const district = listOptions.find((option) => {
+            return option.code === districtId;
+          });
+          setCurrentDistrict(district.name);
+          handleGetWards(districtId);
+          value = currentDistrict;
         };
         break;
       case "ward":
-        listOptions = currentDistrict.wards;
-        value = selectedWardId;
-        handleOnSelect = (wardId) => setSelectedWardId(wardId);
+        listOptions = Wards;
+        value = currentWard;
+        handleSelect = (wardId: number) => {
+          const ward = listOptions.find((option) => {
+            return option.code === wardId;
+          });
+          setCurrentWard(ward.name);
+          value = currentWard;
+        };
         break;
       default:
-        listOptions = locationVN;
-        value = undefined;
-        handleOnSelect = () => {};
+        listOptions = Provinces;
+        handleSelect = () => {};
         break;
     }
-    return { listOptions, value, handleOnSelect };
-  };
-
-  const orders = useAppSelector((store) => store.orders);
+    return { value, listOptions, handleSelect };
+  }
   function NewCode() {
     initCode = uniqueId();
     setCode(initCode);
@@ -194,11 +206,9 @@ const Cart = () => {
               <Text size="large" bold className=" border-b py-3 mb-0">
                 Địa chỉ giao hàng
               </Text>
-
               {AddressForm.map((item: AddressFormType) => {
-                const { listOptions, value, handleOnSelect } =
-                  filterSelectionInput(item);
-
+                const { value, listOptions, handleSelect } =
+                  filterLocation(item);
                 return (
                   <div key={item.name}>
                     <Text
@@ -211,20 +221,17 @@ const Cart = () => {
                     <Box className="relative" m={0}>
                       {item.type === "select" ? (
                         <Select
-                          key={value}
+                          key={item.name}
                           id={item.name}
                           placeholder={item.placeholder}
-                          name={item.name}
-                          value={value}
                           closeOnSelect={true}
-                          onChange={(value) => {
-                            handleOnSelect(value as string);
-                          }}
+                          name={item.name}
+                          onChange={(value) => handleSelect(value as number)}
                         >
                           {listOptions?.map((option) => (
                             <Option
-                              key={option.id}
-                              value={option.id}
+                              key={option.code}
+                              value={option.code}
                               title={option.name}
                             />
                           ))}
@@ -233,7 +240,9 @@ const Cart = () => {
                         <Input
                           placeholder="Nhập số nhà, tên đường"
                           clearable
-                          onChange={(e) => setCurrentAddress(e.target.value)}
+                          onChange={(event) =>
+                            setCurrentAddress(event.target.value)
+                          }
                         />
                       )}
                     </Box>
@@ -331,11 +340,12 @@ const Cart = () => {
       "Địa chỉ: " +
       currentAddress +
       ", " +
-      currentWard.name +
+      currentWard +
       ", " +
-      currentDistrict.name +
+      currentDistrict +
       ", " +
-      currentCity.name;
+      currentProvince;
+    console.log(address);
     dispatch(
       createCode({
         user,
@@ -356,6 +366,7 @@ const Cart = () => {
   }
   async function handleCreateOrder() {
     //EXCEPTIONS
+
     if (code.substring(0, 2) != "MC") {
       setCodeRequired(true);
       setTimeout(() => {
