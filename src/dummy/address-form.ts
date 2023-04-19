@@ -10,7 +10,7 @@ const AddressForm: AddressFormType[] = [
     isValidate: true,
   },
   {
-    name: "city",
+    name: "province",
     label: "Tỉnh, thành phố",
     type: "select",
     placeholder: "Chọn tỉnh, thành phố...",
