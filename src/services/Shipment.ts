@@ -13,7 +13,7 @@ export async function HandleUploadNewShipMent(
             name: "b\xFAt",
             weight: 0.1,
             quantity: 1,
-            product_code: 1241,
+            product_code: 1521,
           },
           {
             name: "t\u1EA9y",

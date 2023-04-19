@@ -25,6 +25,7 @@ import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
 import AddressForm from "../dummy/address-form";
 import { getWards } from "../services/Location";
+import LocationRequired from "../components/Modal/LocationRequired";
 // getWards, getDistricts,
 const { Option } = Select;
 function uniqueId() {
@@ -44,9 +45,12 @@ const Cart = () => {
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
+  const [isGettedShipmentFee, setIsGettedShipmentFee] =
+    useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
+  const [locationRequired, setlocationRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [paymentMethod, setPaymentMethod] = useState<any>("TEMP");
+  const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
@@ -57,6 +61,9 @@ const Cart = () => {
   const [currentProvince, setCurrentProvince] = useState<string>("");
   const [currentDistrict, setCurrentDistrict] = useState<string>("");
   const [currentWard, setCurrentWard] = useState<string>("");
+  const [SelectedProvince, setSelectedProvince] = useState<string>("");
+  const [SelectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [SelectedWard, setSelectedWard] = useState<string>("");
   useEffect(() => {
     handleGetProvinces();
     handleGetDistricts(1);
@@ -81,30 +88,35 @@ const Cart = () => {
   }
   function filterLocation(item: AddressFormType) {
     let listOptions;
-    let value = " ";
+    let value: string | undefined;
     let handleSelect: (id: number) => void;
 
     switch (item.name) {
       case "province":
         listOptions = Provinces;
-        value = currentProvince;
+        value = "";
         handleSelect = (provinceId: number) => {
           const province = listOptions.find((option) => {
             return option.code === provinceId;
           });
           setCurrentProvince(province.name);
+          setCurrentDistrict("");
+          setCurrentWard("");
+          setSelectedDistrict("");
+          setSelectedDistrict("");
           handleGetDistricts(provinceId);
           value = currentProvince;
         };
         break;
       case "district":
         listOptions = Ditricts;
-        value = currentDistrict;
+        value = "currentDistrict";
         handleSelect = (districtId: number) => {
           const district = listOptions.find((option) => {
             return option.code === districtId;
           });
           setCurrentDistrict(district.name);
+          setCurrentWard("");
           handleGetWards(districtId);
           value = currentDistrict;
         };
@@ -122,6 +134,7 @@ const Cart = () => {
         break;
       default:
         listOptions = Provinces;
+        value = undefined;
         handleSelect = () => {};
         break;
     }
@@ -138,11 +151,13 @@ const Cart = () => {
     setLoading(true);
     const temp = await HandleUpGetShipmentFee();
     setShipmentFee(temp);
+    setIsGettedShipmentFee(true);
     console.log("SHIPMENT FEE: " + temp);
     setTimeout(() => {
       setLoading(false);
     }, 100);
   }
+
   // async function handleOrderOnGHTK() {
   //   const resp = await HandleUploadNewShipMent(code, ShipmentFee);
   //   if () // true
@@ -169,6 +184,7 @@ const Cart = () => {
           {isLoading ? <Loading /> : null}
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
+          {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
           {orderSuccess ? <OrderSuccess /> : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
@@ -225,6 +241,7 @@ const Cart = () => {
                           id={item.name}
                           placeholder={item.placeholder}
                           closeOnSelect={true}
+                          value={value}
                           name={item.name}
                           onChange={(value) => handleSelect(value as number)}
                         >
@@ -263,15 +280,15 @@ const Cart = () => {
             <Text
               size="large"
               bold
-              className="text-black font-semibold    border-b py-3 mb-0 w-full"
+              className="text-black font-semibold border-b py-3 mb-0 w-full"
             >
               Phương thức thanh toán
             </Text>
 
             <Radio.Group
               onChange={(e) => {
+                // handleShipmentFee();
                 setPaymentMethod(e);
-                handleShipmentFee();
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -303,7 +320,9 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>{ConvertShipmentFee(ShipmentFee)}VNĐ</span>
+            <span>
+              {isGettedShipmentFee ? 0 : ConvertShipmentFee(ShipmentFee)}VNĐ
+            </span>
           </Box>
           <Box
             mx={4}
@@ -377,7 +396,16 @@ const Cart = () => {
       setTimeout(() => {
         setAddressRequired(false);
       }, 3000);
-    } else if (paymentMethod == "TEMP") {
+    } else if (
+      currentProvince == "" ||
+      currentDistrict == "" ||
+      currentWard == ""
+    ) {
+      setlocationRequired(true);
+      setTimeout(() => {
+        setlocationRequired(false);
+      }, 3000);
+    } else if (paymentMethod == "") {
       setIsSettedPaymentMethod(true);
       setTimeout(() => {
         setIsSettedPaymentMethod(false);
