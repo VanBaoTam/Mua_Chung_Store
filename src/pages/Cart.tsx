@@ -23,9 +23,8 @@ import {
 } from "../services/Shipment";
 import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
-import AddressForm from "../dummy/address-form";
 import { getWards } from "../services/Location";
-// getWards, getDistricts,
+import LocationRequired from "../components/Modal/LocationRequired";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -44,84 +43,138 @@ const Cart = () => {
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
+  const [isGettedShipmentFee, setIsGettedShipmentFee] =
+    useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
+  const [locationRequired, setlocationRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [paymentMethod, setPaymentMethod] = useState<any>("TEMP");
+  const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
-  const [Ditricts, setDitricts] = useState<any>();
+  const [Districts, setDistricts] = useState<any>();
   const [Wards, setWards] = useState<any>();
   const [currentProvince, setCurrentProvince] = useState<string>("");
   const [currentDistrict, setCurrentDistrict] = useState<string>("");
   const [currentWard, setCurrentWard] = useState<string>("");
+  const [selectedDistrict, setselectedDistrict] = useState<string>("");
+  const [selectedWard, setselectedWard] = useState<string>("");
   useEffect(() => {
-    handleGetProvinces();
-    handleGetDistricts(1);
-    handleGetWards(1);
+    (async () => {
+      await handleGetProvinces();
+      await handleGetDistricts(1);
+      await handleGetWards(1);
+    })();
   }, []);
-
+  useEffect(() => {
+    if (Districts) {
+      setselectedDistrict(Districts[0].code);
+    }
+  }, [Districts]);
+  useEffect(() => {
+    if (Wards) {
+      console.log(Wards); // log the updated state whenever it changes
+      setselectedWard(Wards[0].code);
+    }
+  }, [Wards]);
+  const addressFormTypes: AddressFormType[] = [
+    {
+      name: "detail",
+      label: "Số nhà, tên đường",
+      type: "text",
+      placeholder: "Nhập số nhà, tên đường ... ",
+      isValidate: true,
+    },
+    {
+      name: "province",
+      label: "Tỉnh (Thành phố) ",
+      type: "select",
+      placeholder: "Chọn Tỉnh (Thành phố) ...  ",
+      isValidate: true,
+      selectedValue: currentProvince,
+    },
+    {
+      name: "district",
+      label: "Quận (Huyện)",
+      type: "select",
+      placeholder: "Select Quận (Huyện) ... ",
+      isValidate: true,
+      selectedValue: selectedDistrict,
+      disabled: !currentProvince,
+    },
+    {
+      name: "ward",
+      label: "Phường (Xã)",
+      type: "select",
+      placeholder: "Select Phường (Xã) ...",
+      isValidate: true,
+      selectedValue: selectedWard,
+      disabled: !currentDistrict,
+    },
+  ];
   async function handleGetProvinces() {
     getProvinces().then((resp) => {
       setProvinces(resp);
     });
   }
   async function handleGetDistricts(provinceId: number) {
-    getDistricts(provinceId).then((resp) => {
-      setDitricts(resp.districts);
-    });
+    const districts = await getDistricts(provinceId);
+    setDistricts(districts);
   }
 
   async function handleGetWards(DistrictId: number) {
-    getWards(DistrictId).then((resp) => {
-      setWards(resp.wards);
-    });
+    const wards = await getWards(DistrictId);
+    setWards(wards);
   }
   function filterLocation(item: AddressFormType) {
     let listOptions;
-    let value = " ";
-    let handleSelect: (id: number) => void;
+    let value: string | undefined;
+    let handleSelect;
 
     switch (item.name) {
       case "province":
         listOptions = Provinces;
-        value = currentProvince;
-        handleSelect = (provinceId: number) => {
+        value = "";
+        handleSelect = async (provinceId: number) => {
           const province = listOptions.find((option) => {
             return option.code === provinceId;
           });
           setCurrentProvince(province.name);
-          handleGetDistricts(provinceId);
+          setCurrentDistrict("");
+          setCurrentWard("");
           value = currentProvince;
+          await handleGetDistricts(provinceId);
         };
         break;
       case "district":
-        listOptions = Ditricts;
-        value = currentDistrict;
-        handleSelect = (districtId: number) => {
+        listOptions = Districts;
+        handleSelect = async (districtId: number) => {
           const district = listOptions.find((option) => {
             return option.code === districtId;
           });
           setCurrentDistrict(district.name);
-          handleGetWards(districtId);
-          value = currentDistrict;
+          setselectedDistrict(district.code);
+          setCurrentWard("");
+          value = selectedDistrict;
+          await handleGetWards(districtId);
         };
         break;
       case "ward":
         listOptions = Wards;
-        value = currentWard;
-        handleSelect = (wardId: number) => {
+        handleSelect = async (wardId: number) => {
           const ward = listOptions.find((option) => {
             return option.code === wardId;
           });
           setCurrentWard(ward.name);
-          value = currentWard;
+          setselectedWard(ward.code);
+          value = selectedWard;
         };
         break;
       default:
         listOptions = Provinces;
+        value = undefined;
         handleSelect = () => {};
         break;
     }
@@ -134,15 +187,14 @@ const Cart = () => {
   function handleInputChange(event) {
     setCode(event.target.value);
   }
-  async function handleShipmentFee() {
-    setLoading(true);
+  async function handleShipmentFee(e) {
     const temp = await HandleUpGetShipmentFee();
-    setShipmentFee(temp);
+    setShipmentFee(30000);
+    setIsGettedShipmentFee(true);
     console.log("SHIPMENT FEE: " + temp);
-    setTimeout(() => {
-      setLoading(false);
-    }, 100);
+    setPaymentMethod(e);
   }
+
   // async function handleOrderOnGHTK() {
   //   const resp = await HandleUploadNewShipMent(code, ShipmentFee);
   //   if () // true
@@ -169,6 +221,7 @@ const Cart = () => {
           {isLoading ? <Loading /> : null}
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
+          {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
           {orderSuccess ? <OrderSuccess /> : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
@@ -206,7 +259,7 @@ const Cart = () => {
               <Text size="large" bold className=" border-b py-3 mb-0">
                 Địa chỉ giao hàng
               </Text>
-              {AddressForm.map((item: AddressFormType) => {
+              {addressFormTypes.map((item: AddressFormType) => {
                 const { value, listOptions, handleSelect } =
                   filterLocation(item);
                 return (
@@ -221,10 +274,20 @@ const Cart = () => {
                     <Box className="relative" m={0}>
                       {item.type === "select" ? (
                         <Select
+                          disabled={item.disabled}
                           key={item.name}
                           id={item.name}
                           placeholder={item.placeholder}
                           closeOnSelect={true}
+                          value={
+                            item.name == "province"
+                              ? value
+                              : item.name == "district"
+                              ? selectedDistrict
+                              : item.name == "ward"
+                              ? selectedWard
+                              : value
+                          } // Province , Dstrict , Wards
                           name={item.name}
                           onChange={(value) => handleSelect(value as number)}
                         >
@@ -263,15 +326,16 @@ const Cart = () => {
             <Text
               size="large"
               bold
-              className="text-black font-semibold    border-b py-3 mb-0 w-full"
+              className="text-black font-semibold border-b py-3 mb-0 w-full"
             >
               Phương thức thanh toán
             </Text>
 
             <Radio.Group
-              onChange={(e) => {
-                setPaymentMethod(e);
-                handleShipmentFee();
+              onChange={async (e) => {
+                // setLoading(true);
+                await handleShipmentFee(e);
+                // setLoading(false);
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -303,7 +367,9 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>{ConvertShipmentFee(ShipmentFee)}VNĐ</span>
+            <span>
+              {isGettedShipmentFee ? ConvertShipmentFee(ShipmentFee) : 0}VNĐ
+            </span>
           </Box>
           <Box
             mx={4}
@@ -377,7 +443,16 @@ const Cart = () => {
       setTimeout(() => {
         setAddressRequired(false);
       }, 3000);
-    } else if (paymentMethod == "TEMP") {
+    } else if (
+      currentProvince == "" ||
+      currentDistrict == "" ||
+      currentWard == ""
+    ) {
+      setlocationRequired(true);
+      setTimeout(() => {
+        setlocationRequired(false);
+      }, 3000);
+    } else if (paymentMethod == "") {
       setIsSettedPaymentMethod(true);
       setTimeout(() => {
         setIsSettedPaymentMethod(false);
