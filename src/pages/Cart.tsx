@@ -147,15 +147,12 @@ const Cart = () => {
   function handleInputChange(event) {
     setCode(event.target.value);
   }
-  async function handleShipmentFee() {
-    setLoading(true);
+  async function handleShipmentFee(e) {
     const temp = await HandleUpGetShipmentFee();
-    setShipmentFee(temp);
+    setShipmentFee(30000);
     setIsGettedShipmentFee(true);
     console.log("SHIPMENT FEE: " + temp);
-    setTimeout(() => {
-      setLoading(false);
-    }, 100);
+    setPaymentMethod(e);
   }
 
   // async function handleOrderOnGHTK() {
@@ -286,9 +283,10 @@ const Cart = () => {
             </Text>
 
             <Radio.Group
-              onChange={(e) => {
-                // handleShipmentFee();
-                setPaymentMethod(e);
+              onChange={async (e) => {
+                // setLoading(true);
+                await handleShipmentFee(e);
+                // setLoading(false);
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -321,7 +319,7 @@ const Cart = () => {
           >
             <span>Phí ship</span>
             <span>
-              {isGettedShipmentFee ? 0 : ConvertShipmentFee(ShipmentFee)}VNĐ
+              {isGettedShipmentFee ? ConvertShipmentFee(ShipmentFee) : 0}VNĐ
             </span>
           </Box>
           <Box
