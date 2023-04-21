@@ -65,6 +65,8 @@ export type AddressFormType = {
   placeholder: string;
   isValidate: boolean;
   errorMessage?: string;
+  selectedValue?: string;
+  disabled?: boolean;
 };
 
 export type DBOrder = {

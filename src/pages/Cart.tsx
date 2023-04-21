@@ -23,10 +23,8 @@ import {
 } from "../services/Shipment";
 import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
-import AddressForm from "../dummy/address-form";
 import { getWards } from "../services/Location";
 import LocationRequired from "../components/Modal/LocationRequired";
-// getWards, getDistricts,
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -56,80 +54,122 @@ const Cart = () => {
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
-  const [Ditricts, setDitricts] = useState<any>();
+  const [Districts, setDistricts] = useState<any>();
   const [Wards, setWards] = useState<any>();
   const [currentProvince, setCurrentProvince] = useState<string>("");
   const [currentDistrict, setCurrentDistrict] = useState<string>("");
   const [currentWard, setCurrentWard] = useState<string>("");
-  const [SelectedProvince, setSelectedProvince] = useState<string>("");
-  const [SelectedDistrict, setSelectedDistrict] = useState<string>("");
-  const [SelectedWard, setSelectedWard] = useState<string>("");
+  const [selectedDistrict, setselectedDistrict] = useState<string>("");
+  const [selectedWard, setselectedWard] = useState<string>("");
   useEffect(() => {
-    handleGetProvinces();
-    handleGetDistricts(1);
-    handleGetWards(1);
+    (async () => {
+      await handleGetProvinces();
+      await handleGetDistricts(1);
+      await handleGetWards(1);
+    })();
   }, []);
-
+  useEffect(() => {
+    if (Districts) {
+      setselectedDistrict(Districts[0].code);
+    }
+  }, [Districts]);
+  useEffect(() => {
+    if (Wards) {
+      console.log(Wards); // log the updated state whenever it changes
+      setselectedWard(Wards[0].code);
+    }
+  }, [Wards]);
+  const addressFormTypes: AddressFormType[] = [
+    {
+      name: "detail",
+      label: "Số nhà, tên đường",
+      type: "text",
+      placeholder: "Nhập số nhà, tên đường ... ",
+      isValidate: true,
+    },
+    {
+      name: "province",
+      label: "Tỉnh (Thành phố) ",
+      type: "select",
+      placeholder: "Chọn Tỉnh (Thành phố) ...  ",
+      isValidate: true,
+      selectedValue: currentProvince,
+    },
+    {
+      name: "district",
+      label: "Quận (Huyện)",
+      type: "select",
+      placeholder: "Select Quận (Huyện) ... ",
+      isValidate: true,
+      selectedValue: selectedDistrict,
+      disabled: !currentProvince,
+    },
+    {
+      name: "ward",
+      label: "Phường (Xã)",
+      type: "select",
+      placeholder: "Select Phường (Xã) ...",
+      isValidate: true,
+      selectedValue: selectedWard,
+      disabled: !currentDistrict,
+    },
+  ];
   async function handleGetProvinces() {
     getProvinces().then((resp) => {
       setProvinces(resp);
     });
   }
   async function handleGetDistricts(provinceId: number) {
-    getDistricts(provinceId).then((resp) => {
-      setDitricts(resp.districts);
-    });
+    const districts = await getDistricts(provinceId);
+    setDistricts(districts);
   }
 
   async function handleGetWards(DistrictId: number) {
-    getWards(DistrictId).then((resp) => {
-      setWards(resp.wards);
-    });
+    const wards = await getWards(DistrictId);
+    setWards(wards);
   }
   function filterLocation(item: AddressFormType) {
     let listOptions;
     let value: string | undefined;
-    let handleSelect: (id: number) => void;
+    let handleSelect;
 
     switch (item.name) {
       case "province":
         listOptions = Provinces;
         value = "";
-        handleSelect = (provinceId: number) => {
+        handleSelect = async (provinceId: number) => {
           const province = listOptions.find((option) => {
             return option.code === provinceId;
           });
           setCurrentProvince(province.name);
           setCurrentDistrict("");
           setCurrentWard("");
-          setSelectedDistrict("");
-          setSelectedDistrict("");
-          handleGetDistricts(provinceId);
           value = currentProvince;
+          await handleGetDistricts(provinceId);
         };
         break;
       case "district":
-        listOptions = Ditricts;
-        value = "currentDistrict";
-        handleSelect = (districtId: number) => {
+        listOptions = Districts;
+        handleSelect = async (districtId: number) => {
           const district = listOptions.find((option) => {
             return option.code === districtId;
           });
           setCurrentDistrict(district.name);
+          setselectedDistrict(district.code);
           setCurrentWard("");
-          handleGetWards(districtId);
-          value = currentDistrict;
+          value = selectedDistrict;
+          await handleGetWards(districtId);
         };
         break;
       case "ward":
         listOptions = Wards;
-        value = currentWard;
-        handleSelect = (wardId: number) => {
+        handleSelect = async (wardId: number) => {
           const ward = listOptions.find((option) => {
             return option.code === wardId;
           });
           setCurrentWard(ward.name);
-          value = currentWard;
+          setselectedWard(ward.code);
+          value = selectedWard;
         };
         break;
       default:
@@ -219,7 +259,7 @@ const Cart = () => {
               <Text size="large" bold className=" border-b py-3 mb-0">
                 Địa chỉ giao hàng
               </Text>
-              {AddressForm.map((item: AddressFormType) => {
+              {addressFormTypes.map((item: AddressFormType) => {
                 const { value, listOptions, handleSelect } =
                   filterLocation(item);
                 return (
@@ -234,11 +274,20 @@ const Cart = () => {
                     <Box className="relative" m={0}>
                       {item.type === "select" ? (
                         <Select
+                          disabled={item.disabled}
                           key={item.name}
                           id={item.name}
                           placeholder={item.placeholder}
                           closeOnSelect={true}
-                          value={value}
+                          value={
+                            item.name == "province"
+                              ? value
+                              : item.name == "district"
+                              ? selectedDistrict
+                              : item.name == "ward"
+                              ? selectedWard
+                              : value
+                          } // Province , Dstrict , Wards
                           name={item.name}
                           onChange={(value) => handleSelect(value as number)}
                         >

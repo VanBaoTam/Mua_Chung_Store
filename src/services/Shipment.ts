@@ -62,7 +62,9 @@ export async function HandleUpGetShipmentFee() {
       {
         headers: {
           Token: "52259eC8d9e3C8CF7a4075aAF31107188924Cb44",
+          
         },
+        withCredentials: true,
       }
     );
     console.log(response.data.fee.fee);
