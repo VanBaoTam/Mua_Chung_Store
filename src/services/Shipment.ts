@@ -67,7 +67,7 @@ export async function HandleUpGetShipmentFee(
   console.log("Trying getting shipment's fee....");
   try {
     const response = await axios.get(
-      "https://App.muachung.co/api/order/orderfee",   
+      "https://App.muachung.co/api/order/orderfee",
       {
         params: {
           pick_province: "Hồ Chí Minh",
