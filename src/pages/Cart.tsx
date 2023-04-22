@@ -39,7 +39,7 @@ const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
-  const [code, setCode] = useState<string>(initCode);
+  const [code, setCode] = useState<string>("");
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
@@ -75,7 +75,6 @@ const Cart = () => {
   }, [Districts]);
   useEffect(() => {
     if (Wards) {
-      console.log(Wards); // log the updated state whenever it changes
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
@@ -188,8 +187,12 @@ const Cart = () => {
     setCode(event.target.value);
   }
   async function handleShipmentFee(e) {
-    const temp = await HandleUpGetShipmentFee();
-    setShipmentFee(30000);
+    const temp = await HandleUpGetShipmentFee(
+      orders.Products,
+      currentProvince,
+      currentDistrict
+    );
+    setShipmentFee(temp);
     setIsGettedShipmentFee(true);
     console.log("SHIPMENT FEE: " + temp);
     setPaymentMethod(e);

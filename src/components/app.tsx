@@ -1,5 +1,5 @@
-import React from "react";
-import { Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from "zmp-ui";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
@@ -9,6 +9,9 @@ import Page404 from "../pages/page404";
 import Cart from "../pages/Cart";
 import Header from "./Header";
 import Initializer from "./Initializer";
+import User from "../pages/User";
+import BottomNavigationPage from "./BottomNavbar";
+
 const MyApp = () => {
   return (
     <Provider store={store}>
@@ -19,10 +22,12 @@ const MyApp = () => {
             <Initializer type="Products" />
             <AnimationRoutes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/user" element={<User />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
+         <BottomNavigationPage />
           </ZMPRouter>
         </SnackbarProvider>
       </App>

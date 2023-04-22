@@ -46,21 +46,32 @@ const initialState = {
 //   },
 // }
 async function handleCreateNew(newCode: CodeModel) {
-  axios
-    .get("https://45.77.157.98/api/all")
-    .then(function (response) {
-      // Handle success
-      console.log(response.data); // Output data to console
-    })
-    .catch(function (error) {
-      // Handle error
-      console.log(error);
-    });
+  console.log("CREATE NEW ORDERS");
+  try {
+    const resp = await axios.post(
+      `https://App.muachung.co/api/groupbuy/create`,
+      {
+        idGroupBuy: newCode.groupBuyId,
+        orders: newCode.orders,
+        createTime: newCode.createTime,
+        delayTime: newCode.delayTime,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("CREATE NEW SUCCESS");
+    console.log(resp.data);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function handleCreateNewOrders(idGroupBuy: string, orders: OrderModel) {
   await axios.post(
-    `http://45.77.157.98/api/${idGroupBuy}/add`,
+    `https://App.muachung.co/api/groupbuy/create`,
     {
       userId: orders.userId,
       products: orders.products,
