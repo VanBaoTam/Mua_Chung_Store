@@ -9,15 +9,13 @@ const DetailProduct = () => {
   const param = useParams();
   const productList = useAppSelector((store) => store.products);
 
-  const dispatch = useAppDispatch();
-  dispatch(setAcceptRenderNavBar(false));
   const product = productList.Products.find((item) => {
     return item.id === param.code;
   })!;
   const htmlString = product.description;
   return (
     <Page hideScrollbar={true} className="pt-4">
-      <div className="fixed bottom-0 z-50 bg-white w-full flex justify-between  px-4 py-1 ">
+      <div className="fixed bottom-0 bg-white w-full flex justify-between  px-4 py-1 ">
         <AddToCart {...product} />
       </div>
       <img

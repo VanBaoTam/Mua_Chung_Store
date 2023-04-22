@@ -1,8 +1,10 @@
 import React from "react";
 import { Page } from "zmp-ui";
+const User = () => {
 
-const Page404 = () => {
-  return <Page hideScrollbar={true}></Page>;
+  return <Page hideScrollbar={true}>
+
+  </Page>;
 };
 
-export default Page404;
+export default User;
