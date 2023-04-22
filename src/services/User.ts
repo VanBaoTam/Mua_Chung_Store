@@ -11,10 +11,10 @@ export const getUser = async (): Promise<any> => {
 };
 import { login } from "zmp-sdk/apis";
 
-export const handleLogin = () => {
-  login({
-    success: () => {
-      // login thành công
+export const handleLogin = async () => {
+  await login({
+    success: async () => {
+      await getUser();
       console.log("Login success!");
     },
     fail: (error) => {

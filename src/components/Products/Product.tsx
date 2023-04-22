@@ -7,7 +7,6 @@ const Product = (props) => {
 
   return (
     <Box
-      px={2}
       pb={3}
       className="bg-white rounded-lg"
       style={{ width: "47%" }}

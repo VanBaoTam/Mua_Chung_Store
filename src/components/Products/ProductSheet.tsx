@@ -36,11 +36,11 @@ const ProductSheet = (props) => {
   }
   return (
     <Sheet
-      height={400}
+      height={600}
       visible={sheetVisible}
       onClose={handleClose}
       autoHeight
-      mask
+ 
       handler
       swipeToClose
       title="Chọn chi tiết"

@@ -2,12 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import productReducer from "../features/Products/ProductSlice";
 import orderReducer from "../features/Order/OrderSlice";
 import codeReducer from "../features/Code/CodeSlice";
-
+import appReducer from "../features/App/AppSlice";
 export const store = configureStore({
   reducer: {
     products: productReducer,
     orders: orderReducer,
     codes: codeReducer,
+    appFeatures: appReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

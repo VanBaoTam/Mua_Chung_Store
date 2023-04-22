@@ -1,22 +1,24 @@
 import React from "react";
 import { Page } from "zmp-ui";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import AddToCart from "../components/Buttons/AddToCart";
 import { ConvertPrice } from "../utils/Prices";
+import { setAcceptRenderNavBar } from "../features/App/AppSlice";
 const DetailProduct = () => {
   const param = useParams();
   const productList = useAppSelector((store) => store.products);
+
+  const dispatch = useAppDispatch();
+  dispatch(setAcceptRenderNavBar(false));
   const product = productList.Products.find((item) => {
     return item.id === param.code;
   })!;
   const htmlString = product.description;
   return (
     <Page hideScrollbar={true} className="pt-4">
-      <div className="absolute bottom-0 bg-white w-full flex justify-around px-4 py-1 ">
-        <div className="w-10/12">
-          <AddToCart {...product} />
-        </div>
+      <div className="fixed bottom-0 z-50 bg-white w-full flex justify-between  px-4 py-1 ">
+        <AddToCart {...product} />
       </div>
       <img
         src={product.photo_links}
@@ -39,7 +41,8 @@ const DetailProduct = () => {
           ></p>
         </section>
       </section>
-      <div className="h-16"></div>
+
+      <div className="h-24"></div>
     </Page>
   );
 };

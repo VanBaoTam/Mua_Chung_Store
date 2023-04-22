@@ -9,6 +9,7 @@ import Page404 from "../pages/page404";
 import Cart from "../pages/Cart";
 import Header from "./Header";
 import Initializer from "./Initializer";
+
 const MyApp = () => {
   return (
     <Provider store={store}>

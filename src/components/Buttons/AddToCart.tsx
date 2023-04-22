@@ -16,7 +16,8 @@ const AddToCart = (props) => {
       flex
       justifyContent="space-around"
       p={4}
-      className="absolute bottom-0 left-0 w-full bg-white"
+
+      className=" left-0 w-full bg-white"
     >
       {isShown ? <ProductSheet {...props} handleShown={handleShown} /> : null}
       <Button
