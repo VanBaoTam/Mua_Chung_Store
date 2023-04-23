@@ -13,9 +13,14 @@ const User = () => {
         flexWrap
       >
         <Box flex>
-          <Avatar  />
-          <Box ml={6}>
-            <Text>Username</Text>
+          <Avatar />
+          <Box ml={6} flex flexDirection="column">
+            <Text size="xLarge" bold={true}>
+              Username
+            </Text>
+            <Text size="small" className="mt-1">
+              Points: 99999
+            </Text>
           </Box>
         </Box>
       </Box>
@@ -27,8 +32,17 @@ const User = () => {
         flex
         className="bg-white rounded-lg  font-semibold"
         flexWrap
+        flexDirection="column"
       >
-        <Text>Group Buy</Text>
+        <Box>
+          <Text>GroupBuy's Detail Box</Text>
+        </Box>
+        <Box mt={5} className="border-gray-300 border-t-gray-300 ">
+          <Text>GroupBuy's Detail Box</Text>
+        </Box>
+        <Box mt={5}>
+          <Text>GroupBuy's Detail Box</Text>
+        </Box>
       </Box>
       <Box
         mx={4}
@@ -39,7 +53,7 @@ const User = () => {
         className="bg-white rounded-lg  font-semibold"
         flexWrap
       >
-        <Text>History</Text>
+        <Text>Order's History</Text>
       </Box>
       <Box
         mx={4}
@@ -50,7 +64,7 @@ const User = () => {
         className="bg-white rounded-lg  font-semibold"
         flexWrap
       >
-        <Text>History</Text>
+        <Text>Tempo</Text>
       </Box>
     </Page>
   );

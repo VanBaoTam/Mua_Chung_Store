@@ -198,12 +198,9 @@ const Cart = () => {
     setPaymentMethod(e);
   }
 
-  // async function handleOrderOnGHTK() {
-  //   const resp = await HandleUploadNewShipMent(code, ShipmentFee);
-  //   if () // true
-  //   return true;
-  //   return false;
-  // }
+  async function handleOrderOnGHTK() {
+    await HandleUploadNewShipMent(user as string, code, ShipmentFee);
+  }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
@@ -336,9 +333,7 @@ const Cart = () => {
 
             <Radio.Group
               onChange={async (e) => {
-                // setLoading(true);
                 await handleShipmentFee(e);
-                // setLoading(false);
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -462,28 +457,29 @@ const Cart = () => {
       }, 3000);
     } else {
       if (currentAddress != "" && currentAddress != null) {
-        if (paymentMethod == "COD") {
-          // if(handleOrderOnGHTK())
-          {
-            let products = ConvertCartProductModelsToOrderInfoModels(
-              orders.Products
-            );
-            CreatingOrder(products);
-          }
-        } else {
-          // if(handleOrderOnGHTK())
-          {
-            let products = ConvertCartProductModelsToOrderInfoModels(
-              orders.Products
-            );
-            pay(
-              ShipmentFee + SumPrice(orders.Products),
-              ConvertArrToRecords(products)
-            )
-              .then(() => CreatingOrder(products))
-              .catch((error) => console.log(error));
-          }
-        }
+        await handleOrderOnGHTK();
+        // if (paymentMethod == "COD") {
+        //    if(handleOrderOnGHTK())
+        //   {
+        //     let products = ConvertCartProductModelsToOrderInfoModels(
+        //       orders.Products
+        //     );
+        //     CreatingOrder(products);
+        //   }
+        // } else {
+        //   // if(handleOrderOnGHTK())
+        //   {
+        //     let products = ConvertCartProductModelsToOrderInfoModels(
+        //       orders.Products
+        //     );
+        //     pay(
+        //       ShipmentFee + SumPrice(orders.Products),
+        //       ConvertArrToRecords(products)
+        //     )
+        //       .then(() => CreatingOrder(products))
+        //       .catch((error) => console.log(error));
+        //   }
+        // }
       }
     }
   }
