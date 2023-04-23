@@ -11,7 +11,6 @@ export async function HandleUploadNewShipMent(
   fetch(" https://app.muachung.co/api/order/createorder", {
     method: "POST",
     body: JSON.stringify({
-      userId: userId,
       products: [
         {
           name: "bút",

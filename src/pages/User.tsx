@@ -1,6 +1,8 @@
 import React from "react";
 import { Avatar, Box, Page, Text } from "zmp-ui";
+import { useAppSelector } from "../hooks/hooks";
 const User = () => {
+  const userInfo = useAppSelector((store) => store.user);
   return (
     <Page hideScrollbar={true}>
       <Box
@@ -13,10 +15,10 @@ const User = () => {
         flexWrap
       >
         <Box flex>
-          <Avatar />
+          <Avatar src={userInfo.userInfo.avatar} size={40} />
           <Box ml={6} flex flexDirection="column">
             <Text size="xLarge" bold={true}>
-              Username
+              {userInfo.userInfo.name}
             </Text>
             <Text size="small" className="mt-1">
               Points: 99999

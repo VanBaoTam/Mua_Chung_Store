@@ -12,7 +12,6 @@ import {
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../services/User";
 import { clearCart } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Modal/OrderSucess";
 import CodeRequired from "../components/Modal/CodeRequired";
@@ -30,15 +29,13 @@ function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
 }
 let user;
-(async () => {
-  user = await getUser();
-})();
-
 let initCode = uniqueId();
 const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
+  const userInfo = useAppSelector((store) => store.user);
+  user = userInfo.userInfo.id;
   const [code, setCode] = useState<string>("");
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -199,7 +196,11 @@ const Cart = () => {
   }
 
   async function handleOrderOnGHTK() {
-    await HandleUploadNewShipMent(user as string, code, ShipmentFee);
+    await HandleUploadNewShipMent(
+      userInfo.userInfo.id as string,
+      code,
+      ShipmentFee
+    );
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -412,7 +413,7 @@ const Cart = () => {
     console.log(address);
     dispatch(
       createCode({
-        user,
+        userInfo,
         code,
         products,
         total,
@@ -458,28 +459,26 @@ const Cart = () => {
     } else {
       if (currentAddress != "" && currentAddress != null) {
         await handleOrderOnGHTK();
-        // if (paymentMethod == "COD") {
-        //    if(handleOrderOnGHTK())
-        //   {
-        //     let products = ConvertCartProductModelsToOrderInfoModels(
-        //       orders.Products
-        //     );
-        //     CreatingOrder(products);
-        //   }
-        // } else {
-        //   // if(handleOrderOnGHTK())
-        //   {
-        //     let products = ConvertCartProductModelsToOrderInfoModels(
-        //       orders.Products
-        //     );
-        //     pay(
-        //       ShipmentFee + SumPrice(orders.Products),
-        //       ConvertArrToRecords(products)
-        //     )
-        //       .then(() => CreatingOrder(products))
-        //       .catch((error) => console.log(error));
-        //   }
-        // }
+        if (paymentMethod == "COD") {
+          {
+            let products = ConvertCartProductModelsToOrderInfoModels(
+              orders.Products
+            );
+            CreatingOrder(products);
+          }
+        } else {
+          {
+            let products = ConvertCartProductModelsToOrderInfoModels(
+              orders.Products
+            );
+            pay(
+              ShipmentFee + SumPrice(orders.Products),
+              ConvertArrToRecords(products)
+            )
+              .then(() => CreatingOrder(products))
+              .catch((error) => console.log(error));
+          }
+        }
       }
     }
   }
