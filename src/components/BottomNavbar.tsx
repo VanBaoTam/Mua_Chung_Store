@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BottomNavigation, Icon } from "zmp-ui";
 import { useLocation } from "react-router-dom";
 const BottomNavigationPage = () => {
   const location = useLocation();
   const allowedRoutes = ["/", "/user"];
-  const [activeTab, setActiveTab] = useState("chat");
+  const [activeTab, setActiveTab] = useState("home");
   const isRouteAllowed = allowedRoutes.includes(location.pathname);
+  useEffect(() => {
+    if (location.pathname == "/") setActiveTab("home");
+    else setActiveTab("me");
+  }, [location]);
   if (isRouteAllowed) {
     return (
       <>

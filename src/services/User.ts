@@ -1,3 +1,4 @@
+import { getAccessToken } from "zmp-sdk";
 import { getUserInfo } from "zmp-sdk/apis";
 
 export const getUser = async (): Promise<any> => {
@@ -22,4 +23,14 @@ export const handleLogin = async () => {
       console.log("Login error with code: " + error);
     },
   });
+};
+
+export const handlegetAccessToken = async () => {
+  try {
+    const accessToken = await getAccessToken({});
+    return accessToken;
+  } catch (error) {
+    // xử lý khi gọi api thất bại
+    console.log(error);
+  }
 };

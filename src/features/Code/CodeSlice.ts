@@ -49,7 +49,7 @@ async function handleCreateNew(newCode: CodeModel) {
   console.log("CREATE NEW ORDERS");
   try {
     const resp = await axios.post(
-      `https://App.muachung.co/api/groupbuy/create`,
+      `https://app.muachung.co/api/groupbuy/create`,
       {
         idGroupBuy: newCode.groupBuyId,
         orders: newCode.orders,

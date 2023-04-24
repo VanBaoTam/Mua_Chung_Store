@@ -3,7 +3,7 @@ const initialState = {
   isAcceptRenderNavBar: true,
 };
 const appSlice = createSlice({
-  name: "orders",
+  name: "app",
   initialState,
   reducers: {
     setAcceptRenderNavBar: (state, action: PayloadAction<boolean>) => {
