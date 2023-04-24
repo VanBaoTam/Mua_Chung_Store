@@ -1,30 +1,24 @@
 //GHTK APIS Config
 import axios from "axios";
-import { CartProductModel } from "../models";
+import { CartProductModel, GHTKModel } from "../models";
 export async function HandleUploadNewShipMent(
-  userId: string,
+  products: GHTKModel[],
+  address: string,
+  province: string,
+  district: string,
+  ward: string,
+  is_freeship: boolean,
+  value: number,
   groupBuysId: string,
   ShipmentFee: number
 ) {
+  const isFreeship: number = is_freeship ? 0 : 1;
   // https://app.muachung.co/api/order/createorder
   // https://cors-anywhere.herokuapp.com/https://services-staging.ghtklab.com/services/shipment/order
   fetch(" https://app.muachung.co/api/order/createorder", {
     method: "POST",
     body: JSON.stringify({
-      products: [
-        {
-          name: "bút",
-          weight: 0.1,
-          quantity: 1,
-          product_code: 1241,
-        },
-        {
-          name: "tẩy",
-          weight: 0.2,
-          quantity: 1,
-          product_code: 1254,
-        },
-      ],
+      products: products,
       order: {
         id: groupBuysId,
         pick_name: "HCM-nội thành", //Tên A
@@ -34,14 +28,14 @@ export async function HandleUploadNewShipMent(
         pick_tel: "0999999999", //Số A
         tel: "0911222333", // Số B
         name: "USERB", //Tên B
-        address: "123 nguyễn chí thanh", //Địa chỉ B
-        province: "TP. Hồ Chí Minh",
-        district: "Quận 1",
-        ward: "Phường Bến Nghé",
+        address: address, //Địa chỉ B
+        province: province,
+        district: district,
+        ward: ward,
         hamlet: "Khác", //Địa chỉ cấp 4 (mặc định để khhác)
+        is_freeship: isFreeship,
         pick_money: ShipmentFee, //Tiền ship
-        value: 3000000, // Giá trị sản phẩm
-        pick_option: "cod", //Hình thức
+        value: value, // Giá trị sản phẩm
       },
     }),
     headers: {
@@ -61,7 +55,6 @@ export async function HandleUpGetShipmentFee(
   order.forEach((product) => {
     weight += product.quantity * 0.2;
   });
-  console.log("Trying getting shipment's fee....");
   try {
     const response = await axios.get(
       "https://App.muachung.co/api/order/orderfee",
@@ -72,11 +65,11 @@ export async function HandleUpGetShipmentFee(
           province: province,
           district: district,
           weight: weight,
+          transport: "road",
           deliver_option: "none",
         },
       }
     );
-    console.log(response.data.fee.fee);
     return response.data.fee.fee;
   } catch (error) {
     console.log(error);

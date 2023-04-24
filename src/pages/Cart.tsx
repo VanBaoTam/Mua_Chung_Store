@@ -4,10 +4,11 @@ import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import pay from "../services/Order";
-import { AddressFormType, CartProductModel } from "../models";
+import { AddressFormType, CartProductModel, GHTKModel } from "../models";
 import { createCode } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
+  ConvertCartProductModelsToGHTK,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
@@ -195,12 +196,23 @@ const Cart = () => {
     setPaymentMethod(e);
   }
 
-  async function handleOrderOnGHTK() {
-    await HandleUploadNewShipMent(
-      userInfo.userInfo.id as string,
+  async function handleOrderOnGHTK(
+    GHTKOrders: GHTKModel[],
+    isFreeship: boolean,
+    totalCost: number
+  ) {
+    const resp = await HandleUploadNewShipMent(
+      GHTKOrders,
+      currentAddress,
+      currentProvince,
+      currentDistrict,
+      currentWard,
+      isFreeship,
+      totalCost,
       code,
       ShipmentFee
     );
+    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -334,7 +346,12 @@ const Cart = () => {
 
             <Radio.Group
               onChange={async (e) => {
-                await handleShipmentFee(e);
+                if (currentProvince == "" || currentDistrict == " ") {
+                  setlocationRequired(true);
+                  setTimeout(() => {
+                    setlocationRequired(false);
+                  }, 3000);
+                } else await handleShipmentFee(e);
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -410,12 +427,12 @@ const Cart = () => {
       currentDistrict +
       ", " +
       currentProvince;
-    console.log(address);
     dispatch(
       createCode({
-        userInfo,
+        user,
         code,
         products,
+
         total,
         final,
         address,
@@ -458,24 +475,29 @@ const Cart = () => {
       }, 3000);
     } else {
       if (currentAddress != "" && currentAddress != null) {
-        await handleOrderOnGHTK();
         if (paymentMethod == "COD") {
           {
+            let total = SumPrice(orders.Products);
             let products = ConvertCartProductModelsToOrderInfoModels(
               orders.Products
             );
-            CreatingOrder(products);
+            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+            await handleOrderOnGHTK(ghtkProducts, false, total);
+            await CreatingOrder(products);
           }
         } else {
           {
+            let total = SumPrice(orders.Products);
             let products = ConvertCartProductModelsToOrderInfoModels(
               orders.Products
             );
+            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+            await handleOrderOnGHTK(ghtkProducts, false, total);
             pay(
               ShipmentFee + SumPrice(orders.Products),
               ConvertArrToRecords(products)
             )
-              .then(() => CreatingOrder(products))
+              .then(async () => await CreatingOrder(products))
               .catch((error) => console.log(error));
           }
         }

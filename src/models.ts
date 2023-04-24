@@ -6,7 +6,11 @@ export type ProductModel = {
   price: number;
   description: string;
 };
-
+export type GHTKModel = {
+  name: string;
+  weight: number;
+  product_code: string;
+};
 export type CartProductModel = {
   code: string;
   photo_links: string;
@@ -18,8 +22,8 @@ export type CartProductModel = {
   quantity: number;
 };
 export type OrderInfoModel = {
-  key: string;
-  info: {
+  orderId: string;
+  orderData: {
     code: string;
     quantity: number;
     price: number;
@@ -44,12 +48,7 @@ export type OrderModel = {
 export type CodeModel = {
   //Mã mua chung
   groupBuyId: string;
-  orders: {
-    //mã mua chung (dùng để nhận dạng đơn hàng của các user thuộc về mã mua chung nào)
-    groupBuyId: string;
-    //List các user tham gia mã mua chung, subId[0] = người tạo.
-    subId: OrderModel[];
-  };
+  orders: OrderModel[];
   //Ngày khởi tạo mã mua chung
   createTime: Date;
   //Ngày kết thúc mã mua chung (default = 1 ngày sau ngày createDate

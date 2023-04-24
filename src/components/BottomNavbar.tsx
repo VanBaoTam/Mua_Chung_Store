@@ -3,7 +3,7 @@ import { BottomNavigation, Icon } from "zmp-ui";
 import { useLocation } from "react-router-dom";
 const BottomNavigationPage = () => {
   const location = useLocation();
-  const allowedRoutes = ["/", "/user"];
+  const allowedRoutes = ["/", "/user", "/orders"];
   const [activeTab, setActiveTab] = useState("home");
   const isRouteAllowed = allowedRoutes.includes(location.pathname);
   useEffect(() => {

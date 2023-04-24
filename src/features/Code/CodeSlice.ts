@@ -51,7 +51,7 @@ async function handleCreateNew(newCode: CodeModel) {
     const resp = await axios.post(
       `https://app.muachung.co/api/groupbuy/create`,
       {
-        idGroupBuy: newCode.groupBuyId,
+        idGroupBuy: newCode.groupBuyId, 
         orders: newCode.orders,
         createTime: newCode.createTime,
         delayTime: newCode.delayTime,
@@ -69,26 +69,26 @@ async function handleCreateNew(newCode: CodeModel) {
   }
 }
 
-async function handleCreateNewOrders(idGroupBuy: string, orders: OrderModel) {
-  await axios.post(
-    `https://App.muachung.co/api/groupbuy/create`,
-    {
-      userId: orders.userId,
-      products: orders.products,
-      totalCost: orders.totalCost,
-      discount: orders.discount,
-      finalCost: orders.finalCost,
-      status: orders.status,
-      address: orders.address,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  console.log("CREATE NEW ORDERS");
-}
+// async function handleCreateNewOrders(idGroupBuy: string, orders: OrderModel) {
+//   await axios.post(
+//     `https://App.muachung.co/api/groupbuy/create`,
+//     {
+//       userId: orders.userId,
+//       products: orders.products,
+//       totalCost: orders.totalCost,
+//       discount: orders.discount,
+//       finalCost: orders.finalCost,
+//       status: orders.status,
+//       address: orders.address,
+//     },
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+//   console.log("CREATE NEW ORDERS");
+// }
 // export const getCodes = createAsyncThunk("code/getCodes", async () => {
 //   try {
 //     const resp = await axios.post(
@@ -129,24 +129,22 @@ const codeSlice = createSlice({
   reducers: {
     createCode: (state, { payload }) => {
       const today = new Date();
-      const newCode: CodeModel = {
+      const newCode = {
         amount: 1,
         groupBuyId: payload.code,
-        orders: {
-          groupBuyId: payload.code,
-          subId: [
-            {
-              userId: payload.user,
-              products: payload.products,
-              totalCost: payload.total,
-              discount: 0,
-              finalCost: payload.final,
-              status: false,
-              address: payload.address,
-              paymentMethod: payload.paymentMethod,
-            },
-          ],
-        },
+        orders: [
+          {
+            userId: payload.user,
+            products: payload.products,
+            totalCost: payload.total,
+            discount: 0,
+            finalCost: payload.final,
+            status: false,
+            address: payload.address,
+            paymentMethod: payload.paymentMethod,
+            deliveryTime: payload.deliveryTime,
+          },
+        ],
         createTime: today,
         delayTime: new Date(today.getTime() + 24 * 60 * 60 * 1000),
       };
