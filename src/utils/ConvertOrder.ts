@@ -8,6 +8,7 @@ export const ConvertCartProductModelsToOrderInfoModels = (
     let temp: OrderInfoModel = {
       orderId: key.toString(),
       orderData: {
+        photo_link: item.photo_links,
         code: item.code,
         quantity: item.quantity,
         price: item.price,

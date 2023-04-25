@@ -24,6 +24,7 @@ export type CartProductModel = {
 export type OrderInfoModel = {
   orderId: string;
   orderData: {
+    photo_link: string;
     code: string;
     quantity: number;
     price: number;
@@ -42,6 +43,8 @@ export type OrderModel = {
   finalCost: number;
   address: string;
   paymentMethod: string;
+  shipmentDate: string;
+
   //Tình trạng (true = đã thanh toán| false = chưa thanh toán)
   status: boolean;
 };

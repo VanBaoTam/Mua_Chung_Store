@@ -36,26 +36,49 @@ const UserOrders = () => {
       {isLoaded ? null : <Loading />}
       <Box>
         {orders?.map((element) => {
+          let total = 0;
           return (
             <Box
+              key={element._id}
               mx={4}
               my={2}
               px={4}
               py={2}
-              flex
               className=" bg-white rounded-lg  font-semibold"
-              flexDirection="row"
-              flexWrap
-              justifyContent="space-around"
             >
-              <Box flex flexDirection="column">
+              <Box
+                py={2}
+                flex
+                justifyContent="space-evenly"
+                className="font-semibold"
+              >
+                <Text>Mã </Text>
+                <Text>Số lượng</Text>
+                <Text>Giá thành</Text>
+              </Box>
+              <Box
+                py={2}
+                flex
+                flexDirection="row"
+                justifyContent="space-evenly"
+              >
                 {element.products.map((product) => {
+                  total += product.orderData.quantity;
                   // products.Products.find();
-                  return <Text>{product.orderData.code}</Text>;
+                  return (
+                    <>
+                      <Text>{product.orderData.code}</Text>
+                      <Text>{product.orderData.quantity}</Text>
+                      <Text>
+                        {product.orderData.quantity * product.orderData.price}
+                      </Text>
+                    </>
+                  );
                 })}
               </Box>
-              <Box>
-                <Text>{element.finalCost}</Text>
+              <Box px={4} flex flexDirection="column">
+                <Text bold>Tổng sản phẩm: {total}</Text>
+                <Text bold>Tổng tiền: {element.finalCost}</Text>
               </Box>
             </Box>
           );

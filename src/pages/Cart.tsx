@@ -29,6 +29,9 @@ const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
 }
+function uniqueGHTK() {
+  return Math.random().toString(36).substring(10);
+}
 let user;
 let initCode = uniqueId();
 const Cart = () => {
@@ -59,6 +62,7 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
+  const [shipmentDate, setShipmentDate] = useState<string>("");
   useEffect(() => {
     (async () => {
       await handleGetProvinces();
@@ -199,7 +203,8 @@ const Cart = () => {
   async function handleOrderOnGHTK(
     GHTKOrders: GHTKModel[],
     isFreeship: boolean,
-    totalCost: number
+    totalCost: number,
+    uniqueGHTKVar: string
   ) {
     const resp = await HandleUploadNewShipMent(
       GHTKOrders,
@@ -210,9 +215,11 @@ const Cart = () => {
       isFreeship,
       totalCost,
       code,
+      uniqueGHTKVar,
       ShipmentFee
     );
     console.log(resp);
+    setShipmentDate(resp.order.estimated_deliver_time);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -432,7 +439,7 @@ const Cart = () => {
         user,
         code,
         products,
-
+        shipmentDate,
         total,
         final,
         address,
@@ -482,7 +489,8 @@ const Cart = () => {
               orders.Products
             );
             let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
-            await handleOrderOnGHTK(ghtkProducts, false, total);
+            let uniqueGHTKVar = uniqueGHTK();
+            await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
             await CreatingOrder(products);
           }
         } else {
@@ -492,7 +500,8 @@ const Cart = () => {
               orders.Products
             );
             let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
-            await handleOrderOnGHTK(ghtkProducts, false, total);
+            let uniqueGHTKVar = uniqueGHTK();
+            await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
             pay(
               ShipmentFee + SumPrice(orders.Products),
               ConvertArrToRecords(products)

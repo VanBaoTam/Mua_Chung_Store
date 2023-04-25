@@ -11,8 +11,7 @@ const initialState = {
 // export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
 //   try {
 //     await axios.post(
-//       // https://cors-anywhere.herokuapp.com/
-//       "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
+//       "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
 //       {
 //         dataSource: "MuaChung",
 //         database: "test",
@@ -31,27 +30,14 @@ const initialState = {
 //     console.log(error);
 //   }
 // });
-// {
-//   dataSource: "MuaChung",
-//   database: "test",
-//   collection: "groupbuys",
-//   idGroupBuy: newCode.groupBuyId,
-//   orders: newCode.orders.subId,
-//   createTime: newCode.createTime,
-//   delayTime: newCode.delayTime,
-// },
-// {
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// }
+
 async function handleCreateNew(newCode: CodeModel) {
   console.log("CREATE NEW ORDERS");
   try {
     const resp = await axios.post(
       `https://app.muachung.co/api/groupbuy/create`,
       {
-        idGroupBuy: newCode.groupBuyId, 
+        idGroupBuy: newCode.groupBuyId,
         orders: newCode.orders,
         createTime: newCode.createTime,
         delayTime: newCode.delayTime,
@@ -142,6 +128,7 @@ const codeSlice = createSlice({
             status: false,
             address: payload.address,
             paymentMethod: payload.paymentMethod,
+            shipmentDate: payload.shipmentDate,
             deliveryTime: payload.deliveryTime,
           },
         ],

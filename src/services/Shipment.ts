@@ -10,17 +10,18 @@ export async function HandleUploadNewShipMent(
   is_freeship: boolean,
   value: number,
   groupBuysId: string,
+  uniqueGHTK: string,
   ShipmentFee: number
 ) {
   const isFreeship: number = is_freeship ? 0 : 1;
   // https://app.muachung.co/api/order/createorder
   // https://cors-anywhere.herokuapp.com/https://services-staging.ghtklab.com/services/shipment/order
-  fetch(" https://app.muachung.co/api/order/createorder", {
+  const resp = await fetch(" https://app.muachung.co/api/order/createorder", {
     method: "POST",
     body: JSON.stringify({
       products: products,
       order: {
-        id: groupBuysId,
+        id: groupBuysId + uniqueGHTK,
         pick_name: "HCM-nội thành", //Tên A
         pick_address: "590 CMT8 P.11", // Địa chỉ A
         pick_province: "TP. Hồ Chí Minh",
@@ -36,14 +37,15 @@ export async function HandleUploadNewShipMent(
         is_freeship: isFreeship,
         pick_money: ShipmentFee, //Tiền ship
         value: value, // Giá trị sản phẩm
+        transport: "road",
       },
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json));
+  });
+  const json = await resp.json();
+  return json;
 }
 
 export async function HandleUpGetShipmentFee(
