@@ -417,7 +417,7 @@ const Cart = () => {
           >
             <Button onClick={handleCreateOrder}>Thanh toán</Button>
           </Box>
-          <Box mx={4} my={2} px={4} py={1}></Box>
+          <div className="h-12"></div>
         </>
       )}
     </Page>

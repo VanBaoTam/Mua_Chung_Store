@@ -12,6 +12,7 @@ import Initializer from "./Initializer";
 import User from "../pages/User/User";
 import BottomNavigationPage from "./BottomNavbar";
 import UserOrders from "../pages/User/Orders";
+import Discovery from "../pages/Discovery";
 
 const MyApp = () => {
   return (
@@ -26,6 +27,7 @@ const MyApp = () => {
               <Route path="/user" element={<User />} />
               <Route path="/orders" element={<UserOrders />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />
+              <Route path="/discovery" element={<Discovery />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
