@@ -4,10 +4,11 @@ import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import pay from "../services/Order";
-import { AddressFormType, CartProductModel } from "../models";
+import { AddressFormType, CartProductModel, GHTKModel } from "../models";
 import { createCode } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
+  ConvertCartProductModelsToGHTK,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
@@ -28,6 +29,9 @@ const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
 }
+function uniqueGHTK() {
+  return Math.random().toString(36).substring(10);
+}
 let user;
 let initCode = uniqueId();
 const Cart = () => {
@@ -44,7 +48,7 @@ const Cart = () => {
     useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(true);
   const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
@@ -58,6 +62,7 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
+  const [shipmentDate, setShipmentDate] = useState<string>("");
   useEffect(() => {
     (async () => {
       await handleGetProvinces();
@@ -75,6 +80,7 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+  let today = new Date();
   const addressFormTypes: AddressFormType[] = [
     {
       name: "detail",
@@ -194,13 +200,31 @@ const Cart = () => {
     console.log("SHIPMENT FEE: " + temp);
     setPaymentMethod(e);
   }
-
-  async function handleOrderOnGHTK() {
-    await HandleUploadNewShipMent(
-      userInfo.userInfo.id as string,
+  function handleFinishOrder() {
+    setOrderSuccess(false);
+    dispatch(clearCart());
+    navigate("/");
+  }
+  async function handleOrderOnGHTK(
+    GHTKOrders: GHTKModel[],
+    isFreeship: boolean,
+    totalCost: number,
+    uniqueGHTKVar: string
+  ) {
+    const resp = await HandleUploadNewShipMent(
+      GHTKOrders,
+      currentAddress,
+      currentProvince,
+      currentDistrict,
+      currentWard,
+      isFreeship,
+      totalCost,
       code,
+      uniqueGHTKVar,
       ShipmentFee
     );
+    console.log(resp);
+    setShipmentDate(resp.order.estimated_deliver_time);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -224,7 +248,14 @@ const Cart = () => {
           {codeRequired ? <CodeRequired /> : null}
           {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
-          {orderSuccess ? <OrderSuccess /> : null}
+          {orderSuccess ? (
+            <OrderSuccess
+              code={code}
+              Delaydate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
+              amount={1}
+              handleFinish={handleFinishOrder}
+            />
+          ) : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
             mx={4}
@@ -334,7 +365,12 @@ const Cart = () => {
 
             <Radio.Group
               onChange={async (e) => {
-                await handleShipmentFee(e);
+                if (currentProvince == "" || currentDistrict == " ") {
+                  setlocationRequired(true);
+                  setTimeout(() => {
+                    setlocationRequired(false);
+                  }, 3000);
+                } else await handleShipmentFee(e);
               }}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
@@ -393,7 +429,7 @@ const Cart = () => {
           >
             <Button onClick={handleCreateOrder}>Thanh toán</Button>
           </Box>
-          <Box mx={4} my={2} px={4} py={1}></Box>
+          <div className="h-12"></div>
         </>
       )}
     </Page>
@@ -410,24 +446,20 @@ const Cart = () => {
       currentDistrict +
       ", " +
       currentProvince;
-    console.log(address);
     dispatch(
       createCode({
-        userInfo,
+        user,
         code,
         products,
+        shipmentDate,
         total,
         final,
         address,
         paymentMethod,
       })
     );
+    console.log("ORDER IS SUCCESSED");
     setOrderSuccess(true);
-    setTimeout(() => {
-      setOrderSuccess(true);
-      dispatch(clearCart());
-      navigate("/");
-    }, 5000);
   }
   async function handleCreateOrder() {
     //EXCEPTIONS
@@ -458,24 +490,31 @@ const Cart = () => {
       }, 3000);
     } else {
       if (currentAddress != "" && currentAddress != null) {
-        await handleOrderOnGHTK();
         if (paymentMethod == "COD") {
           {
+            let total = SumPrice(orders.Products);
             let products = ConvertCartProductModelsToOrderInfoModels(
               orders.Products
             );
-            CreatingOrder(products);
+            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+            let uniqueGHTKVar = uniqueGHTK();
+            await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+            await CreatingOrder(products);
           }
         } else {
           {
+            let total = SumPrice(orders.Products);
             let products = ConvertCartProductModelsToOrderInfoModels(
               orders.Products
             );
+            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+            let uniqueGHTKVar = uniqueGHTK();
+            await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
             pay(
               ShipmentFee + SumPrice(orders.Products),
               ConvertArrToRecords(products)
             )
-              .then(() => CreatingOrder(products))
+              .then(async () => await CreatingOrder(products))
               .catch((error) => console.log(error));
           }
         }

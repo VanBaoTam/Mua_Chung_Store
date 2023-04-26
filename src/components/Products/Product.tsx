@@ -12,11 +12,22 @@ const Product = (props) => {
       style={{ width: "47%" }}
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
-      <img src={props.photo_links} alt="Product's img" />
-      <h1 className="font-semibold text-xl">{props.name}</h1>
-      <span className="text-red-400 font-semibold">
-        {ConvertPrice(props.price, 1)}VNĐ
-      </span>
+      <img src={props.photo_links} className="h-40" alt="Product's img" />
+      <Box p={2}>
+        <h1
+          className="font-semibold text-lg block max-w-xs overflow-hidden"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {props.name}
+        </h1>
+        <span className="text-red-400 font-semibold">
+          {ConvertPrice(props.price, 1)}VNĐ
+        </span>
+      </Box>
     </Box>
   );
 };

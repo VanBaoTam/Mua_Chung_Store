@@ -1,7 +1,9 @@
 import React from "react";
 import { Avatar, Box, Page, Text } from "zmp-ui";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppSelector } from "../../hooks/hooks";
+import { useNavigate } from "react-router-dom";
 const User = () => {
+  const navigate = useNavigate();
   const userInfo = useAppSelector((store) => store.user);
   return (
     <Page hideScrollbar={true}>
@@ -26,6 +28,7 @@ const User = () => {
           </Box>
         </Box>
       </Box>
+
       <Box
         mx={4}
         my={2}
@@ -36,14 +39,12 @@ const User = () => {
         flexWrap
         flexDirection="column"
       >
-        <Box>
-          <Text>GroupBuy's Detail Box</Text>
-        </Box>
-        <Box mt={5} className="border-gray-300 border-t-gray-300 ">
-          <Text>GroupBuy's Detail Box</Text>
-        </Box>
-        <Box mt={5}>
-          <Text>GroupBuy's Detail Box</Text>
+        <Box
+          onClick={() => {
+            navigate("/orders");
+          }}
+        >
+          <Text>Đơn hàng của bạn</Text>
         </Box>
       </Box>
       <Box
@@ -56,17 +57,6 @@ const User = () => {
         flexWrap
       >
         <Text>Order's History</Text>
-      </Box>
-      <Box
-        mx={4}
-        my={2}
-        px={4}
-        py={2}
-        flex
-        className="bg-white rounded-lg  font-semibold"
-        flexWrap
-      >
-        <Text>Tempo</Text>
       </Box>
     </Page>
   );

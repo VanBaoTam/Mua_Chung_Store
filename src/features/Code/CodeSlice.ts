@@ -11,8 +11,7 @@ const initialState = {
 // export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
 //   try {
 //     await axios.post(
-//       // https://cors-anywhere.herokuapp.com/
-//       "https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
+//       "https://cors-anywhere.herokuapp.com/https://ap-southeast-1.aws.data.mongodb-api.com/app/data-wfuog/endpoint/data/v1/action/deleteMany",
 //       {
 //         dataSource: "MuaChung",
 //         database: "test",
@@ -31,20 +30,7 @@ const initialState = {
 //     console.log(error);
 //   }
 // });
-// {
-//   dataSource: "MuaChung",
-//   database: "test",
-//   collection: "groupbuys",
-//   idGroupBuy: newCode.groupBuyId,
-//   orders: newCode.orders.subId,
-//   createTime: newCode.createTime,
-//   delayTime: newCode.delayTime,
-// },
-// {
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// }
+
 async function handleCreateNew(newCode: CodeModel) {
   console.log("CREATE NEW ORDERS");
   try {
@@ -69,26 +55,26 @@ async function handleCreateNew(newCode: CodeModel) {
   }
 }
 
-async function handleCreateNewOrders(idGroupBuy: string, orders: OrderModel) {
-  await axios.post(
-    `https://App.muachung.co/api/groupbuy/create`,
-    {
-      userId: orders.userId,
-      products: orders.products,
-      totalCost: orders.totalCost,
-      discount: orders.discount,
-      finalCost: orders.finalCost,
-      status: orders.status,
-      address: orders.address,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  console.log("CREATE NEW ORDERS");
-}
+// async function handleCreateNewOrders(idGroupBuy: string, orders: OrderModel) {
+//   await axios.post(
+//     `https://App.muachung.co/api/groupbuy/create`,
+//     {
+//       userId: orders.userId,
+//       products: orders.products,
+//       totalCost: orders.totalCost,
+//       discount: orders.discount,
+//       finalCost: orders.finalCost,
+//       status: orders.status,
+//       address: orders.address,
+//     },
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+//   console.log("CREATE NEW ORDERS");
+// }
 // export const getCodes = createAsyncThunk("code/getCodes", async () => {
 //   try {
 //     const resp = await axios.post(
@@ -129,24 +115,23 @@ const codeSlice = createSlice({
   reducers: {
     createCode: (state, { payload }) => {
       const today = new Date();
-      const newCode: CodeModel = {
+      const newCode = {
         amount: 1,
         groupBuyId: payload.code,
-        orders: {
-          groupBuyId: payload.code,
-          subId: [
-            {
-              userId: payload.user,
-              products: payload.products,
-              totalCost: payload.total,
-              discount: 0,
-              finalCost: payload.final,
-              status: false,
-              address: payload.address,
-              paymentMethod: payload.paymentMethod,
-            },
-          ],
-        },
+        orders: [
+          {
+            userId: payload.user,
+            products: payload.products,
+            totalCost: payload.total,
+            discount: 0,
+            finalCost: payload.final,
+            status: false,
+            address: payload.address,
+            paymentMethod: payload.paymentMethod,
+            shipmentDate: payload.shipmentDate,
+            deliveryTime: payload.deliveryTime,
+          },
+        ],
         createTime: today,
         delayTime: new Date(today.getTime() + 24 * 60 * 60 * 1000),
       };

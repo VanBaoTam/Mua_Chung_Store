@@ -1,4 +1,4 @@
-import { CartProductModel, OrderInfoModel } from "../models";
+import { CartProductModel, GHTKModel, OrderInfoModel } from "../models";
 export const ConvertCartProductModelsToOrderInfoModels = (
   OrderArr: CartProductModel[]
 ): OrderInfoModel[] => {
@@ -6,8 +6,9 @@ export const ConvertCartProductModelsToOrderInfoModels = (
   let key = 0;
   OrderArr.forEach((item) => {
     let temp: OrderInfoModel = {
-      key: key.toString(),
-      info: {
+      orderId: key.toString(),
+      orderData: {
+        photo_link: item.photo_links,
         code: item.code,
         quantity: item.quantity,
         price: item.price,
@@ -18,12 +19,26 @@ export const ConvertCartProductModelsToOrderInfoModels = (
   });
   return result;
 };
+export const ConvertCartProductModelsToGHTK = (
+  OrderArr: CartProductModel[]
+): GHTKModel[] => {
+  let result: GHTKModel[] = [];
+  OrderArr.forEach((item) => {
+    let temp: GHTKModel = {
+      name: item.name,
+      weight: 0.2,
+      product_code: item.code,
+    };
+    result.push(temp);
+  });
+  return result;
+};
 export const ConvertArrToRecords = (
   OrderArr: OrderInfoModel[]
 ): Record<string, any>[] => {
   let result: Record<string, any>[] = [];
   OrderArr.forEach((item) => {
-    let temp: Record<string, any> = { id: item.key, info: item.info };
+    let temp: Record<string, any> = { id: item.orderId, info: item.orderData };
     result.push(temp);
   });
   return result;

@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useId } from "react";
 import { getAccessToken } from "zmp-sdk";
 import { getUserInfo } from "zmp-sdk/apis";
 
@@ -31,6 +33,16 @@ export const handlegetAccessToken = async () => {
     return accessToken;
   } catch (error) {
     // xử lý khi gọi api thất bại
+    console.log(error);
+  }
+};
+export const handlegetOrdersFromUsers = async (userId: string) => {
+  try {
+    const resp = await axios.get(
+      `https://app.muachung.co/api/groupbuy/user/${userId}`
+    );
+    return resp.data;
+  } catch (error) {
     console.log(error);
   }
 };
