@@ -31,6 +31,7 @@ export const shareLink = async () => {
         "Bạn vừa được {Username của người Share} gửi 1 lời mời tham gia nhóm mã mua chung của Mua Chung Store để nhận được các mức chiết khấu ưu đãi. Mã mua chung của bạn là {MÃ MUA CHUNG}",
       thumbnail:
         "https://inkythuatso.com/uploads/thumbnails/800/2021/09/zalo-logo-inkythuatso-14-15-05-01.jpg",
+      path: "/discovery",
     },
     fail: (err) => {
       console.log(err);

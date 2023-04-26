@@ -18,7 +18,6 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Page hideScrollbar={true} className="p-3">
       <SearchBar />
-
       <Carousel />
       <Categories />
       <BottomNavigationPage />
