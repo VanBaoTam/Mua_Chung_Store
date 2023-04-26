@@ -48,7 +48,7 @@ const Cart = () => {
     useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(true);
   const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
@@ -80,6 +80,7 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+  let today = new Date();
   const addressFormTypes: AddressFormType[] = [
     {
       name: "detail",
@@ -199,7 +200,11 @@ const Cart = () => {
     console.log("SHIPMENT FEE: " + temp);
     setPaymentMethod(e);
   }
-
+  function handleFinishOrder() {
+    setOrderSuccess(false);
+    dispatch(clearCart());
+    navigate("/");
+  }
   async function handleOrderOnGHTK(
     GHTKOrders: GHTKModel[],
     isFreeship: boolean,
@@ -243,7 +248,14 @@ const Cart = () => {
           {codeRequired ? <CodeRequired /> : null}
           {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
-          {orderSuccess ? <OrderSuccess /> : null}
+          {orderSuccess ? (
+            <OrderSuccess
+              code={code}
+              Delaydate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
+              amount={1}
+              handleFinish={handleFinishOrder}
+            />
+          ) : null}
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
             mx={4}
@@ -446,12 +458,8 @@ const Cart = () => {
         paymentMethod,
       })
     );
+    console.log("ORDER IS SUCCESSED");
     setOrderSuccess(true);
-    setTimeout(() => {
-      setOrderSuccess(true);
-      dispatch(clearCart());
-      navigate("/");
-    }, 5000);
   }
   async function handleCreateOrder() {
     //EXCEPTIONS

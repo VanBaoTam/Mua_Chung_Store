@@ -35,7 +35,7 @@ const UserOrders = () => {
       {orders ? null : EmptyOrders}
       {isLoaded ? null : <Loading />}
       <Box>
-        {orders?.map((element) => {
+        {/* {orders?.map((element) => {
           let total = 0;
           return (
             <Box
@@ -82,7 +82,7 @@ const UserOrders = () => {
               </Box>
             </Box>
           );
-        })}
+        })} */}
       </Box>
     </Page>
   );

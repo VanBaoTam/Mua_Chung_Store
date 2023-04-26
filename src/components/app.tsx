@@ -30,6 +30,14 @@ const MyApp = () => {
               <Route path="/discovery" element={<Discovery />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
+
+              <Route path="/:MaMuaChung" element={<HomePage />} />
+              <Route path="/user/:MaMuaChung" element={<User />} />
+              <Route path="/orders/:MaMuaChung" element={<UserOrders />} />
+              <Route path="/detail-product/:code" element={<DetailProduct />} />
+              <Route path="/discovery" element={<Discovery />} />
+              <Route path="/cart/:MaMuaChung" element={<Cart />} />
+              <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
             <BottomNavigationPage />
           </ZMPRouter>
