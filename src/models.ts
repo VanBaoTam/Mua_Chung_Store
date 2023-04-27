@@ -22,8 +22,8 @@ export type CartProductModel = {
   quantity: number;
 };
 export type OrderInfoModel = {
-  orderId: string;
-  orderData: {
+  productId: string;
+  productData: {
     photo_link: string;
     code: string;
     quantity: number;
@@ -31,10 +31,12 @@ export type OrderInfoModel = {
   };
 };
 export type OrderModel = {
+  //OrderI
+  orderId: string;
   //Zalo User's id
   userId: string;
   //Đơn hàng của user
-  products: OrderInfoModel[];
+  order: OrderInfoModel[];
   //Tổng tiền
   totalCost: number;
   //Giảm gía

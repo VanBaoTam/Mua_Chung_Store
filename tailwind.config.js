@@ -5,6 +5,9 @@ module.exports = {
       width: {
         "45per": "42%",
       },
+      colors: {
+        myColor: "#fccfcf",
+      },
     },
   },
 };

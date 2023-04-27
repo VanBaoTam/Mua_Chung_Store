@@ -5,7 +5,7 @@ import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import pay from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
-import { createCode } from "../features/Code/CodeSlice";
+import { createCode, patchUser } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
   ConvertCartProductModelsToGHTK,
@@ -41,6 +41,9 @@ const Cart = () => {
   const userInfo = useAppSelector((store) => store.user);
   user = userInfo.userInfo.id;
   const [code, setCode] = useState<string>("");
+  const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
+  const [pending, setPending] = useState(false);
+  const [point, setPoint] = useState<number>(0);
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
@@ -48,7 +51,7 @@ const Cart = () => {
     useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(true);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
   const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
@@ -80,6 +83,16 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+  useEffect(() => {
+    if (isNewcodeCalled) {
+      dispatch(
+        createCode({
+          code,
+        })
+      );
+      setIsNewcodeCalled(false);
+    }
+  }, [isNewcodeCalled]);
   let today = new Date();
   const addressFormTypes: AddressFormType[] = [
     {
@@ -184,10 +197,24 @@ const Cart = () => {
   }
   function NewCode() {
     initCode = uniqueId();
+    setPending(true);
     setCode(initCode);
+    setIsNewcodeCalled(true);
+    setTimeout(() => {
+      setIsNewcodeCalled(false);
+      setPending(false);
+    }, 60000);
   }
   function handleInputChange(event) {
     setCode(event.target.value);
+  }
+  function handlePointChange(event) {
+    const newValue = parseInt(event.target.value);
+    const roundedValue = Math.ceil(newValue / 1000) * 1000; // Round the input to the nearest multiple of 1000
+    if (roundedValue >= 0 && roundedValue <= 10000) {
+      setPoint(roundedValue);
+    }
+    setPoint(0);
   }
   async function handleShipmentFee(e) {
     const temp = await HandleUpGetShipmentFee(
@@ -269,14 +296,40 @@ const Cart = () => {
           >
             <h4 className="text-black pb-4">Mã mua chung</h4>
             <div className="flex justify-around pb-3">
-              <Button onClick={NewCode}>Tạo mã mới</Button>
+              <Button disabled={pending ? true : false} onClick={NewCode}>
+                Tạo mã mới
+              </Button>
             </div>
+            <Text size="xxSmall" className="text-gray-500 text-center">
+              Nút tạo mã cần 1 phút reset mỗi lần nhấn
+            </Text>
             <Input
               helperText='Mã mua chung bắt đầu = "MC"'
               value={code}
               placeholder="Nhập mã mua chung"
               onChange={handleInputChange}
             ></Input>
+          </Box>
+          <Box
+            mx={4}
+            my={2}
+            px={4}
+            py={2}
+            flex
+            className="bg-white rounded-lg  font-semibold"
+            flexDirection="column"
+            flexWrap
+          >
+            <h4 className="text-black pb-2">Điểm chiết khấu</h4>
+            <p className="text-red-400">Điểm: 10.000</p>
+            <input
+              type="number"
+              min={0}
+              placeholder="1.000 điểm = 1.000VNĐ"
+              max={10000}
+              onChange={handlePointChange}
+              className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
+            ></input>
           </Box>
 
           <Box
@@ -434,7 +487,7 @@ const Cart = () => {
       )}
     </Page>
   );
-  async function CreatingOrder(products) {
+  async function CreatingOrder(products, uniqueGHTKVar: string) {
     let total = SumPrice(orders.Products),
       final = total;
     let address =
@@ -446,18 +499,22 @@ const Cart = () => {
       currentDistrict +
       ", " +
       currentProvince;
-    dispatch(
-      createCode({
-        user,
-        code,
-        products,
-        shipmentDate,
-        total,
-        final,
-        address,
-        paymentMethod,
-      })
-    );
+    let orderId = code + uniqueGHTKVar;
+    console.log("TESTING");
+    console.log("CODE " + code);
+    let payload = {
+      code: code,
+      orderId: orderId,
+      userId: user,
+      order: products,
+      totalCost: total,
+      discount: point,
+      finalCost: final,
+      status: false,
+      address: address,
+    };
+    console.log("NEW CODE " + code);
+    dispatch(patchUser(payload));
     console.log("ORDER IS SUCCESSED");
     setOrderSuccess(true);
   }
@@ -499,7 +556,7 @@ const Cart = () => {
             let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
             let uniqueGHTKVar = uniqueGHTK();
             await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-            await CreatingOrder(products);
+            await CreatingOrder(products, uniqueGHTKVar);
           }
         } else {
           {
@@ -509,12 +566,12 @@ const Cart = () => {
             );
             let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
             let uniqueGHTKVar = uniqueGHTK();
-            await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+            // await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
             pay(
               ShipmentFee + SumPrice(orders.Products),
               ConvertArrToRecords(products)
             )
-              .then(async () => await CreatingOrder(products))
+              .then(async () => await CreatingOrder(products, uniqueGHTKVar))
               .catch((error) => console.log(error));
           }
         }

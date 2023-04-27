@@ -6,8 +6,8 @@ export const ConvertCartProductModelsToOrderInfoModels = (
   let key = 0;
   OrderArr.forEach((item) => {
     let temp: OrderInfoModel = {
-      orderId: key.toString(),
-      orderData: {
+      productId: key.toString(),
+      productData: {
         photo_link: item.photo_links,
         code: item.code,
         quantity: item.quantity,
@@ -38,7 +38,10 @@ export const ConvertArrToRecords = (
 ): Record<string, any>[] => {
   let result: Record<string, any>[] = [];
   OrderArr.forEach((item) => {
-    let temp: Record<string, any> = { id: item.orderId, info: item.orderData };
+    let temp: Record<string, any> = {
+      id: item.productId,
+      info: item.productData,
+    };
     result.push(temp);
   });
   return result;

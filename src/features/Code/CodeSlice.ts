@@ -30,15 +30,39 @@ const initialState = {
 //     console.log(error);
 //   }
 // });
+async function handlePatchUser(payload) {
+  try {
+    console.log("HANDLE " + payload.code);
+    const resp = await axios.patch(
+      `https://app.muachung.co/api/groupbuy/${payload.code}/add`,
+      {
+        orderId: payload.orderId,
+        userId: payload.userId,
+        order: payload.order,
+        totalCost: payload.totalCost,
+        discount: payload.discount,
+        finalCost: payload.finalCost,
+        status: false,
+        address: payload.address,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(resp);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-async function handleCreateNew(newCode: CodeModel) {
-  console.log("CREATE NEW ORDERS");
+async function handleCreateNew(newCode) {
   try {
     const resp = await axios.post(
       `https://app.muachung.co/api/groupbuy/create`,
       {
         idGroupBuy: newCode.groupBuyId,
-        orders: newCode.orders,
         createTime: newCode.createTime,
         delayTime: newCode.delayTime,
       },
@@ -48,7 +72,6 @@ async function handleCreateNew(newCode: CodeModel) {
         },
       }
     );
-    console.log("CREATE NEW SUCCESS");
     console.log(resp.data);
   } catch (error) {
     console.log(error);
@@ -120,6 +143,7 @@ const codeSlice = createSlice({
         groupBuyId: payload.code,
         orders: [
           {
+            orderId: payload.code + payload.uniqueGHTKVar,
             userId: payload.user,
             products: payload.products,
             totalCost: payload.total,
@@ -147,6 +171,30 @@ const codeSlice = createSlice({
       //   paymentMethod: payload.paymentMethod,
       // });
     },
+    patchUser: (state, { payload }) => {
+      const user = {
+        code: payload.code,
+        orderId: payload.orderId,
+        userId: payload.user,
+        order: payload.products,
+        totalCost: payload.total,
+        discount: payload.discount,
+        finalCost: payload.final,
+        status: false,
+        address: payload.address,
+      };
+      handlePatchUser(user);
+      // handleCreateNewOrders({
+      //   userId: payload.user,
+      //   products: payload.products,
+      //   totalCost: payload.total,
+      //   discount: 0,
+      //   finalCost: payload.final,
+      //   status: false,
+      //   address: payload.address,
+      //   paymentMethod: payload.paymentMethod,
+      // });
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(getCodes.pending, (state) => {
@@ -161,5 +209,5 @@ const codeSlice = createSlice({
   //   });
   // },
 });
-export const { createCode } = codeSlice.actions;
+export const { createCode, patchUser } = codeSlice.actions;
 export default codeSlice.reducer;
