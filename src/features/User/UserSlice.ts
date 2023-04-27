@@ -22,6 +22,7 @@ export const handlegetUserInfo = createAsyncThunk(
     } catch (error) {
       // xử lý khi gọi api thất bại
       console.log(error);
+      return undefined;
     }
   }
 );

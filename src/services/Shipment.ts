@@ -72,6 +72,7 @@ export async function HandleUpGetShipmentFee(
         },
       }
     );
+    console.log(response);
     return response.data.fee.fee;
   } catch (error) {
     console.log(error);
