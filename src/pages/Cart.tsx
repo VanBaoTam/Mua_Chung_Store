@@ -41,6 +41,7 @@ const Cart = () => {
   const userInfo = useAppSelector((store) => store.user);
   user = userInfo.userInfo.id;
   const [code, setCode] = useState<string>("");
+  const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
   const [pending, setPending] = useState(false);
   const [point, setPoint] = useState<number>(0);
   // const codeList = useAppSelector((store) => store.codes);
@@ -82,6 +83,16 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+  useEffect(() => {
+    if (isNewcodeCalled) {
+      dispatch(
+        createCode({
+          code,
+        })
+      );
+      setIsNewcodeCalled(false);
+    }
+  }, [isNewcodeCalled]);
   let today = new Date();
   const addressFormTypes: AddressFormType[] = [
     {
@@ -187,15 +198,12 @@ const Cart = () => {
   function NewCode() {
     initCode = uniqueId();
     setPending(true);
-    dispatch(
-      createCode({
-        code,
-      })
-    );
+    setCode(initCode);
+    setIsNewcodeCalled(true);
     setTimeout(() => {
+      setIsNewcodeCalled(false);
       setPending(false);
     }, 60000);
-    setCode(initCode);
   }
   function handleInputChange(event) {
     setCode(event.target.value);
@@ -491,9 +499,12 @@ const Cart = () => {
       currentDistrict +
       ", " +
       currentProvince;
+    let orderId = code + uniqueGHTKVar;
+    console.log("TESTING");
+    console.log("CODE " + code);
     let payload = {
-      idGroupBuy: code,
-      orderId: code + uniqueGHTKVar,
+      code: code,
+      orderId: orderId,
       userId: user,
       order: products,
       totalCost: total,
@@ -502,6 +513,7 @@ const Cart = () => {
       status: false,
       address: address,
     };
+    console.log("NEW CODE " + code);
     dispatch(patchUser(payload));
     console.log("ORDER IS SUCCESSED");
     setOrderSuccess(true);

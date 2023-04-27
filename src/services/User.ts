@@ -23,8 +23,7 @@ export const handleLogin = async () => {
     console.log(error);
   }
 };
-
-export const handlegetAccessToken = async () => {
+const HandleAccessToken = async () => {
   try {
     const accessToken = await getAccessToken({});
     return accessToken;
@@ -51,7 +50,7 @@ const getPhoneNumberByToken = async (
   try {
     const resp = await axios.get(`https://app.muachung.co/api/zalo/user-info`, {
       params: {
-        userAccessToken: userAccessToken,
+        userAccessToken: `Bearer ${userAccessToken}`,
         token: token,
       },
     });
@@ -65,11 +64,11 @@ export const getUserPhoneNumber = async () => {
   await getPhoneNumber({
     success: async (data) => {
       // xử lý khi gọi api thành công
-      let { token, number } = data;
+      let { token } = data;
       console.log(token);
       // xử lý cho trường hợp sử dụng phiên bản Zalo mới (phiên bản lớn hơn 23.02.01)
       if (token) {
-        const accesstoken = await handlegetAccessToken();
+        const accesstoken = await HandleAccessToken();
         const phonenumber = await getPhoneNumberByToken(token, accesstoken);
         console.log(phonenumber);
         return phonenumber;

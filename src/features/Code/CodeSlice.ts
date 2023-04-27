@@ -31,28 +31,25 @@ const initialState = {
 //   }
 // });
 async function handlePatchUser(payload) {
-  const data = {
-    orderId: payload.orderId,
-    userId: payload.userId,
-    order: payload.order,
-    totalCost: payload.totalCost,
-    discount: payload.discount,
-    finalCost: payload.finalCost,
-    status: false,
-    address: payload.address,
-  };
-
-  const options = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
   try {
+    console.log("HANDLE " + payload.code);
     const resp = await axios.patch(
-      `https://app.muachung.co/api/${payload.code}/add`,
-      data,
-      options
+      `https://app.muachung.co/api/groupbuy/${payload.code}/add`,
+      {
+        orderId: payload.orderId,
+        userId: payload.userId,
+        order: payload.order,
+        totalCost: payload.totalCost,
+        discount: payload.discount,
+        finalCost: payload.finalCost,
+        status: false,
+        address: payload.address,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     console.log(resp);
   } catch (error) {
@@ -176,8 +173,8 @@ const codeSlice = createSlice({
     },
     patchUser: (state, { payload }) => {
       const user = {
-        idGroupBuy: payload.code,
-        orderId: payload.code + payload.uniqueGHTKVar,
+        code: payload.code,
+        orderId: payload.orderId,
         userId: payload.user,
         order: payload.products,
         totalCost: payload.total,
