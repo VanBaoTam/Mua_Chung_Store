@@ -50,7 +50,7 @@ const getPhoneNumberByToken = async (
   try {
     const resp = await axios.get(`https://app.muachung.co/api/zalo/user-info`, {
       params: {
-        userAccessToken: `Bearer ${userAccessToken}`,
+        userAccessToken: "Bearer " + userAccessToken,
         token: token,
       },
     });
