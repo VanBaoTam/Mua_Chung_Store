@@ -16,6 +16,7 @@ export default function AddressRequired() {
           onClick={() => {
             setPopupVisible(false);
           }}
+          style={{ backgroundColor: "#f6bebe" }}
           fullWidth
         >
           Xác nhận

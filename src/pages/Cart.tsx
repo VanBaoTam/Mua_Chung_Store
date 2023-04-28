@@ -294,6 +294,7 @@ const Cart = () => {
       ShipmentFee,
       userInfo.userInfo.name
     );
+    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -338,7 +339,11 @@ const Cart = () => {
           >
             <h4 className="text-black pb-4">Mã mua chung</h4>
             <div className="flex justify-around pb-3">
-              <Button disabled={pending ? true : false} onClick={NewCode}>
+              <Button
+                style={{ backgroundColor: "#f6bebe" }}
+                disabled={pending ? true : false}
+                onClick={NewCode}
+              >
                 Tạo mã mới
               </Button>
             </div>
@@ -538,7 +543,12 @@ const Cart = () => {
             justifyContent="center"
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
-            <Button onClick={handleCreateOrder}>Thanh toán</Button>
+            <Button
+              style={{ backgroundColor: "#f6bebe" }}
+              onClick={handleCreateOrder}
+            >
+              Thanh toán
+            </Button>
           </Box>
           <div className="h-12"></div>
         </>
@@ -558,8 +568,6 @@ const Cart = () => {
       ", " +
       currentProvince;
     let orderId = code + uniqueGHTKVar;
-    console.log("TESTING");
-    console.log("CODE " + code);
     let payload = {
       code: code,
       orderId: orderId,
@@ -568,12 +576,10 @@ const Cart = () => {
       totalCost: total,
       discount: point,
       finalCost: final,
-      status: false,
       address: address,
     };
-    console.log("NEW CODE " + code);
+    console.log(payload);
     dispatch(patchUser(payload));
-    console.log("ORDER IS SUCCESSED");
     setOrderSuccess(true);
   }
   async function handleCreateOrder() {
@@ -656,7 +662,7 @@ const Cart = () => {
                 orders.Products
               );
               let uniqueGHTKVar = uniqueGHTK();
-              // await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+              await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
               pay(
                 ShipmentFee + SumPrice(orders.Products),
                 ConvertArrToRecords(products)

@@ -16,6 +16,7 @@ export default function CodeRequired() {
           onClick={() => {
             setPopupVisible(false);
           }}
+          style={{ backgroundColor: "#f6bebe" }}
           fullWidth
         >
           Xác nhận

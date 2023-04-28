@@ -21,12 +21,16 @@ const AddToCart = (props) => {
       {isShown ? <ProductSheet {...props} handleShown={handleShown} /> : null}
       <Button
         size="medium"
-        variant="secondary"
+        style={{ backgroundColor: "#fccfcf" }}
         onClick={() => navigate("/cart")}
       >
         Đến giỏ hàng
       </Button>
-      <Button size="medium" onClick={() => setIsShown(() => true)}>
+      <Button
+        size="medium"
+        style={{ backgroundColor: "#f6bebe" }}
+        onClick={() => setIsShown(() => true)}
+      >
         Thêm vào giỏ hàng
       </Button>
     </Box>

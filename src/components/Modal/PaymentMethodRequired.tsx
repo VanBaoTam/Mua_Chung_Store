@@ -16,6 +16,7 @@ export default function PaymentMethodRequired() {
           onClick={() => {
             setPopupVisible(false);
           }}
+          style={{ backgroundColor: "#f6bebe" }}
           fullWidth
         >
           Xác nhận

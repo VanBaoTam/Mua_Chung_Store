@@ -4,7 +4,7 @@ import { getAmount, shareLink } from "../../services/Order";
 import { useAppSelector } from "../../hooks/hooks";
 
 export default function OrderSuccess(props) {
-  const [amount, setAmount] = useState<number>();
+  const [amount, setAmount] = useState<number>(0);
   const [popupVisible, setPopupVisible] = useState(true);
 
   const userInfo = useAppSelector((store) => store.user);
@@ -12,8 +12,9 @@ export default function OrderSuccess(props) {
     console.log(props.code);
     async function handlegetAmount() {
       const amountUser = await getAmount(props.code);
-      console.log(amountUser[0].amount);
-      if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
+      console.log(amountUser);
+      // console.log(amountUser[0].amount);
+      // if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
     }
     handlegetAmount();
   }, []);
@@ -38,7 +39,7 @@ export default function OrderSuccess(props) {
           </Box>
           <Box mt={3}>
             <Text bold>Tổng số người đã tham gia:</Text>
-            <Text> {amount}</Text>
+            <Text> {amount + 1} </Text>
           </Box>
         </Box>
         <Box flex justifyContent="space-around">
@@ -48,11 +49,12 @@ export default function OrderSuccess(props) {
               setPopupVisible(false);
               props.handleFinish();
             }}
+            style={{ backgroundColor: "#f6bebe" }}
           >
             Chia sẻ
           </Button>
           <Button
-            variant="secondary"
+            style={{ backgroundColor: "#fccfcf" }}
             onClick={() => {
               setPopupVisible(false);
               props.handleFinish();

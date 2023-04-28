@@ -41,7 +41,6 @@ async function handlePatchUser(payload) {
         totalCost: payload.totalCost,
         discount: payload.discount,
         finalCost: payload.finalCost,
-        status: false,
         address: payload.address,
       },
       {
@@ -50,6 +49,7 @@ async function handlePatchUser(payload) {
         },
       }
     );
+    console.log(resp);
   } catch (error) {
     console.log(error);
   }
@@ -173,11 +173,11 @@ const codeSlice = createSlice({
       const user = {
         code: payload.code,
         orderId: payload.orderId,
-        userId: payload.user,
-        order: payload.products,
-        totalCost: payload.total,
+        userId: payload.userId,
+        order: payload.order,
+        totalCost: payload.totalCost,
         discount: payload.discount,
-        finalCost: payload.final,
+        finalCost: payload.finalCost,
         status: false,
         address: payload.address,
       };

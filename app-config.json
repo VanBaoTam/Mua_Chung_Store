@@ -1,11 +1,11 @@
 {
   "app": {
     "title": "Mua Chung Store",
-    "headerColor": "#1843EF",
+    "headerColor": "#fccfcf",
     "textColor": "white",
     "actionBarHidden": false,
     "leftButton": "back",
-    "statusBarColor": "",
+    "statusBarColor": "#fccfcf",
     "hideAndroidBottomNavigationBar": false,
     "hideIOSSafeAreaBottom": false,
     "selfControlLoading": false,

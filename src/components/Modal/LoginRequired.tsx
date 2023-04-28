@@ -18,14 +18,14 @@ export default function LoginRequired(props) {
     >
       <Box flex justifyContent="space-between">
         <Button
-          variant="secondary"
+          style={{ backgroundColor: "#fccfcf" }}
           onClick={async () => {
             setPopupVisible(false);
           }}
         >
           Đóng
         </Button>
-        <Button variant="primary" onClick={handleClick}>
+        <Button style={{ backgroundColor: "#f6bebe" }} onClick={handleClick}>
           Đăng nhập
         </Button>
       </Box>
