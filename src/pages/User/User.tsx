@@ -4,26 +4,38 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import guest from "../../static/icons/Guest_avatar.jpg";
 import { handleGetUserInfoFromBE, handleLogin } from "../../services/User";
-import { Logout, handlegetUserInfo } from "../../features/User/UserSlice";
+import {
+  Logout,
+  handlegetUserInfo,
+  updatePoint,
+} from "../../features/User/UserSlice";
 const User = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
+  const [userId, setUserId] = useState<string>("");
+  const [point, setPoint] = useState(-1);
   function handleLogOut() {
     dispatch(Logout());
   }
   async function handleSignIn() {
     await handleLogin();
     await dispatch(handlegetUserInfo());
-    await handleGetUserInfoFromBE(userInfo.userInfo.id);
   }
-  // try {
-  //   const resp = await dispatch(getUser);
-  //   console.log(resp);
-  //   setIsLogined(true);
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  useEffect(() => {
+    setUserId(userInfo.userInfo.id);
+  }, [userInfo]);
+  useEffect(() => {
+    async function handleGetPoint() {
+      const temppoint = await handleGetUserInfoFromBE(userId);
+      setPoint(temppoint);
+      dispatch(updatePoint(temppoint));
+    }
+    if (userId != "") {
+      handleGetPoint();
+    }
+  }, [userId]);
+
   return (
     <Page hideScrollbar={true}>
       <Box
@@ -53,13 +65,13 @@ const User = () => {
                   Xin chào, {userInfo.userInfo.name}
                 </Text>
                 <Text size="small" className="mt-1">
-                  Points: 99999
+                  Điểm: {point == -1 ? 0 : point}
                 </Text>
               </>
             ) : (
               <>
                 <Text size="xLarge" bold={true}>
-                  Khách
+                  Xin chào, Khách
                 </Text>
                 <Text size="small" className="mt-1">
                   Points: 0

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CodeModel, OrderModel } from "../../models";
 
 import axios from "axios";
@@ -32,9 +32,8 @@ const initialState = {
 // });
 async function handlePatchUser(payload) {
   try {
-    console.log("HANDLE " + payload.code);
     const resp = await axios.patch(
-      `https://app.muachung.co/api/groupbuy/${payload.code}/add`,
+      `https://app.muachung.co/api/groupbuy/${payload.code}/add/${payload.userId}`,
       {
         orderId: payload.orderId,
         userId: payload.userId,
@@ -51,7 +50,6 @@ async function handlePatchUser(payload) {
         },
       }
     );
-    console.log(resp);
   } catch (error) {
     console.log(error);
   }

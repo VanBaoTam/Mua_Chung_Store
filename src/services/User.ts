@@ -91,7 +91,7 @@ export const handleGetUserInfoFromBE = async (userId: string) => {
         },
       }
     );
-    console.log(resp.data);
+    return resp.data;
   } catch (error) {
     console.log(error);
   }
