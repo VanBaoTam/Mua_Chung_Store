@@ -29,7 +29,11 @@ export const handlegetUserInfo = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    Logout: (state) => {
+      state.userInfo = init;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(handlegetUserInfo.pending, (state) => {});
     builder.addCase(handlegetUserInfo.fulfilled, (state, actions) => {
@@ -46,5 +50,5 @@ const userSlice = createSlice({
     builder.addCase(handlegetUserInfo.rejected, (state) => {});
   },
 });
-export const {} = userSlice.actions;
+export const { Logout } = userSlice.actions;
 export default userSlice.reducer;

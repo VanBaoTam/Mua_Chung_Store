@@ -11,7 +11,8 @@ export async function HandleUploadNewShipMent(
   value: number,
   groupBuysId: string,
   uniqueGHTK: string,
-  ShipmentFee: number
+  ShipmentFee: number,
+  username
 ) {
   const isFreeship: number = is_freeship ? 0 : 1;
   // https://app.muachung.co/api/order/createorder
@@ -22,13 +23,13 @@ export async function HandleUploadNewShipMent(
       products: products,
       order: {
         id: groupBuysId + uniqueGHTK,
-        pick_name: "HCM-nội thành", //Tên A
+        pick_name: "Cun Fashion shop", //Tên A
         pick_address: "590 CMT8 P.11", // Địa chỉ A
         pick_province: "TP. Hồ Chí Minh",
         pick_district: "Quận 3",
         pick_tel: "0999999999", //Số A
         tel: "0911222333", // Số B
-        name: "USERB", //Tên B
+        name: username, //Tên B
         address: address, //Địa chỉ B
         province: province,
         district: district,

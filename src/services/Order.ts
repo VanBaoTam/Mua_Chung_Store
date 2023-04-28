@@ -22,16 +22,14 @@ const pay = (amount: number, products: Record<string, any>[]) =>
 
 export default pay;
 
-export const shareLink = async () => {
+export const shareLink = async (username: string, idGroupBuy: string) => {
   await openShareSheet({
     type: "zmp",
     data: {
-      title: "Mua Chung Store - Lời mời tham gia Mã mua chung",
-      description:
-        "Bạn vừa được {Username của người Share} gửi 1 lời mời tham gia nhóm mã mua chung của Mua Chung Store để nhận được các mức chiết khấu ưu đãi. Mã mua chung của bạn là {MÃ MUA CHUNG}",
+      title: "Lời mời tham gia mã mua chung",
+      description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
         "https://inkythuatso.com/uploads/thumbnails/800/2021/09/zalo-logo-inkythuatso-14-15-05-01.jpg",
-      path: "/discovery",
     },
     fail: (err) => {
       console.log(err);
