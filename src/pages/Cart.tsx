@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
-import pay from "../services/Order";
+import pay, { getAmount } from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
 import { createCode, patchUser } from "../features/Code/CodeSlice";
 import {
@@ -25,7 +25,6 @@ import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
 import { getWards } from "../services/Location";
 import LocationRequired from "../components/Modal/LocationRequired";
-import { number } from "prop-types";
 import PhoneNumberFormat from "../components/Modal/PhoneNumberFormat";
 import LoginRequired from "../components/Modal/LoginRequired";
 const { Option } = Select;
@@ -61,7 +60,7 @@ const Cart = () => {
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
-  const [isLogined, setIsLogined] = useState<boolean>();
+  const [isLogined, setIsLogined] = useState<boolean>(false);
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
   const [Districts, setDistricts] = useState<any>();
@@ -71,7 +70,6 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
-  const [shipmentDate, setShipmentDate] = useState<string>("");
   useEffect(() => {
     (async () => {
       await handleGetProvinces();
@@ -207,6 +205,7 @@ const Cart = () => {
   }
   function NewCode() {
     initCode = uniqueId();
+
     setPending(true);
     setCode(initCode);
     setIsNewcodeCalled(true);
@@ -226,6 +225,37 @@ const Cart = () => {
     }
     setPoint(0);
   }
+
+  function handleSignin() {
+    navigate("/user");
+  }
+  // useLayoutEffect(() => {
+  //   async function handleSignIn() {
+  //     setLoading(true);
+  //     await Promise.all([handleLogin(), dispatch(handlegetUserInfo())]);
+  //   }
+  //   if (login) {
+  //     handleSignIn();
+  //   }
+  //   setLogin(false);
+  // }, [login]);
+  // useEffect(() => {
+  //   setUserId(userInfo.userInfo.id);
+  // }, [userInfo]);
+  // useLayoutEffect(() => {
+  //   async function handleGetPoint() {
+  //     const temppoint = await handleGetUserInfoFromBE(userId);
+  //     setPoint(temppoint);
+  //     dispatch(updatePoint(temppoint));
+  //   }
+  //   if (userId != "") {
+  //     handleGetPoint();
+  //     console.log("DONE");
+  //     setLoading(false);
+  //     console.log("FREEZE UI");
+  //     window.scrollTo(100, 150);
+  //   }
+  // }, [userId]);
   async function handleShipmentFee(e) {
     const temp = await HandleUpGetShipmentFee(
       orders.Products,
@@ -264,14 +294,11 @@ const Cart = () => {
       ShipmentFee,
       userInfo.userInfo.name
     );
-    console.log(resp);
-    setShipmentDate(resp.order.estimated_deliver_time);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
   });
-  console.log(userInfo.userInfo.id);
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
       <Icon icon="zi-minus-circle" />
@@ -290,12 +317,11 @@ const Cart = () => {
           {codeRequired ? <CodeRequired /> : null}
           {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
-          {isLogined ? <LoginRequired /> : null}
+          {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
           {orderSuccess ? (
             <OrderSuccess
               code={code}
               Delaydate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
-              amount={1}
               handleFinish={handleFinishOrder}
             />
           ) : null}
@@ -337,12 +363,12 @@ const Cart = () => {
             flexWrap
           >
             <h4 className="text-black pb-2">Điểm chiết khấu</h4>
-            <p className="text-red-400">Điểm: 10.000</p>
+            <p className="text-red-400">Điểm: {userInfo.point} </p>
             <input
               type="number"
               min={0}
               placeholder="1.000 điểm = 1.000VNĐ"
-              max={10000}
+              max={userInfo.point}
               onChange={handlePointChange}
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
             ></input>
@@ -359,9 +385,8 @@ const Cart = () => {
           >
             <h4 className="text-black pb-4">Số điện thoại</h4>
             <Input
-              helperText="Số điện thoại gồm 10 số và bắt đầu bằng số 0"
               value={phonenumber}
-              placeholder="Nhập số điện thoại"
+              placeholder="+84 ..."
               onChange={handlePhoneChange}
             ></Input>
           </Box>
@@ -559,7 +584,7 @@ const Cart = () => {
       setTimeout(() => {
         setCodeRequired(false);
       }, 3000);
-    } else if (phonenumber.length == 10 && parseInt(phonenumber[0]) == 0) {
+    } else {
       for (const char of phonenumber) {
         if (
           isNaN(parseInt(char)) ||
@@ -575,14 +600,6 @@ const Cart = () => {
           break;
         }
       }
-    } else {
-      setPhoneNumberFormat(true);
-      console.log("error phone");
-      phoneflag = false;
-      setTimeout(() => {
-        console.log("reset phone");
-        setPhoneNumberFormat(false);
-      }, 3000);
     }
     if (phoneflag) {
       if (currentAddress == "") {

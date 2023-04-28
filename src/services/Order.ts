@@ -1,6 +1,7 @@
 import { Payment } from "zmp-sdk";
 import appConfig from "../../app-config.json";
 import { openShareSheet } from "zmp-sdk/apis";
+import axios from "axios";
 // tạo yêu cầu thanh toán
 
 const pay = (amount: number, products: Record<string, any>[]) =>
@@ -35,4 +36,20 @@ export const shareLink = async (username: string, idGroupBuy: string) => {
       console.log(err);
     },
   });
+};
+export const getAmount = async (idGroupBuy) => {
+  try {
+    const resp = await axios.get(
+      `https:app.muachung.co/api/groupbuy/${idGroupBuy}`,
+      {
+        params: {},
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
 };

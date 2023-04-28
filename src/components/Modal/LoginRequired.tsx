@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Button, Modal, Box } from "zmp-ui";
 
-export default function LoginRequired() {
+export default function LoginRequired(props) {
   const [popupVisible, setPopupVisible] = useState(true);
+  const { handleSignin } = props;
+  function handleClick() {
+    handleSignin();
+    setPopupVisible(false);
+  }
   return (
     <Modal
       visible={popupVisible}
@@ -11,14 +16,17 @@ export default function LoginRequired() {
         setPopupVisible(false);
       }}
     >
-      <Box p={6}>
+      <Box flex justifyContent="space-between">
         <Button
-          onClick={() => {
+          variant="secondary"
+          onClick={async () => {
             setPopupVisible(false);
           }}
-          fullWidth
         >
-          Xác nhận
+          Đóng
+        </Button>
+        <Button variant="primary" onClick={handleClick}>
+          Đăng nhập
         </Button>
       </Box>
     </Modal>

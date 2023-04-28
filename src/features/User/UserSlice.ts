@@ -12,6 +12,7 @@ interface userInfo {
 const init: userInfo = { id: "", name: "", avatar: "", idByOA: "" };
 const initialState = {
   userInfo: init,
+  point: 0,
 };
 export const handlegetUserInfo = createAsyncThunk(
   "user/handlegetUserInfo",
@@ -22,7 +23,7 @@ export const handlegetUserInfo = createAsyncThunk(
     } catch (error) {
       // xử lý khi gọi api thất bại
       console.log(error);
-      return undefined;
+      return init;
     }
   }
 );
@@ -32,6 +33,9 @@ const userSlice = createSlice({
   reducers: {
     Logout: (state) => {
       state.userInfo = init;
+    },
+    updatePoint: (state, product: PayloadAction<number>) => {
+      state.point = product.payload;
     },
   },
   extraReducers: (builder) => {
@@ -50,5 +54,5 @@ const userSlice = createSlice({
     builder.addCase(handlegetUserInfo.rejected, (state) => {});
   },
 });
-export const { Logout } = userSlice.actions;
+export const { Logout, updatePoint } = userSlice.actions;
 export default userSlice.reducer;
