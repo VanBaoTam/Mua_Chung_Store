@@ -21,7 +21,7 @@ export const getProducts = createAsyncThunk(
           headers: {
             "Content-Type": "application/json",
             access_token:
-              "rvWMDbFoCXpJbXOrN_Ws7zsI7pPHu65_kl0eBbl1Trs8v1OUVi1IGF_ESoeasHTTnyDPCnx8C7-Pe4rITvDkEex-6tPqorW_XC1xSsd9HpgPtZ4H5RTDT9A4DbjpY7KbzByUNtAlN3M1jNjvUAC38wwtPNOYe2uirxP5U0YD4ZpOwMr5NzSu2xYzRJfdjnDpeRXe07UG0oISjciF7zmsVS_OKWi3l7fHqQjU2IYe9tx8hKmf2PqvT_UJHWSfWn9lhP5MCLoN9KdPvWKOET1jFERqCXKHyM1xu-SV7XlfN7RPxmOwD8PuHDZeEYWQuabJvuu77ckaKZhldHTXj5mH75VgD1e",
+              "ni31VW33w4_2pi5z3CdiJCpAo7u2qRuTXu_HHHNpfpAvzVLwBAAV5v_djqKgvCWGZPcmHJp3pHMBgQHtBDlD0up3uYa_cTDX-vdy3KBfjstGYTqDGukdVk38bX5Kjk1quyoeNc6smdJ_uUrUEBsKBFtN_dexWOmGhl37LH6BkWgKx-1hJugP2-RTosLgchy8zvd4TbBkhG3JxSP_4g_tDBRRf4KeWiiMhksPQ6tfxJhIc9bvNklt9CI8d4e1ukC0nEB7Od28WoJk-Qz8A9JQ7O_6frKJkDTZaUcl3G3ksrAtc9O1DUNlQlI9n2vD_xr5xAdk1MlofbFrdjTYK_Or70S4s-v9",
           },
         }
       );

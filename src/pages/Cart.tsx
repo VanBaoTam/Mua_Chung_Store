@@ -25,6 +25,9 @@ import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
 import { getWards } from "../services/Location";
 import LocationRequired from "../components/Modal/LocationRequired";
+import { number } from "prop-types";
+import PhoneNumberFormat from "../components/Modal/PhoneNumberFormat";
+import LoginRequired from "../components/Modal/LoginRequired";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -32,30 +35,33 @@ function uniqueId() {
 function uniqueGHTK() {
   return Math.random().toString(36).substring(10);
 }
-let user;
+
 let initCode = uniqueId();
 const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
-  user = userInfo.userInfo.id;
   const [code, setCode] = useState<string>("");
   const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
   const [pending, setPending] = useState(false);
   const [point, setPoint] = useState<number>(0);
+  const [phonenumber, setPhonenumber] = useState<string>("");
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
   const [isGettedShipmentFee, setIsGettedShipmentFee] =
     useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
+  const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+
   const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
+  const [isLogined, setIsLogined] = useState<boolean>();
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
   const [Districts, setDistricts] = useState<any>();
@@ -83,6 +89,10 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+  useEffect(() => {
+    if (!userInfo.userInfo.id) setIsLogined(true);
+    else setIsLogined(false);
+  }, [userInfo.userInfo.id]);
   useEffect(() => {
     if (isNewcodeCalled) {
       dispatch(
@@ -232,6 +242,9 @@ const Cart = () => {
     dispatch(clearCart());
     navigate("/");
   }
+  function handlePhoneChange(e) {
+    setPhonenumber(e.target.value);
+  }
   async function handleOrderOnGHTK(
     GHTKOrders: GHTKModel[],
     isFreeship: boolean,
@@ -248,7 +261,8 @@ const Cart = () => {
       totalCost,
       code,
       uniqueGHTKVar,
-      ShipmentFee
+      ShipmentFee,
+      userInfo.userInfo.name
     );
     console.log(resp);
     setShipmentDate(resp.order.estimated_deliver_time);
@@ -257,7 +271,7 @@ const Cart = () => {
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
     return <OrderItem key={uniqueId()} {...ordersProduct} />;
   });
-
+  console.log(userInfo.userInfo.id);
   const EmptyCart = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
       <Icon icon="zi-minus-circle" />
@@ -271,10 +285,12 @@ const Cart = () => {
       ) : (
         <>
           {isLoading ? <Loading /> : null}
+          {phoneNumberFormat ? <PhoneNumberFormat /> : null}
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
           {locationRequired ? <LocationRequired /> : null}
           {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
+          {isLogined ? <LoginRequired /> : null}
           {orderSuccess ? (
             <OrderSuccess
               code={code}
@@ -331,7 +347,24 @@ const Cart = () => {
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
             ></input>
           </Box>
-
+          <Box
+            mx={4}
+            my={2}
+            px={4}
+            py={2}
+            flex
+            className="bg-white rounded-lg text-red-400 font-semibold"
+            flexDirection="column"
+            flexWrap
+          >
+            <h4 className="text-black pb-4">Số điện thoại</h4>
+            <Input
+              helperText="Số điện thoại gồm 10 số và bắt đầu bằng số 0"
+              value={phonenumber}
+              placeholder="Nhập số điện thoại"
+              onChange={handlePhoneChange}
+            ></Input>
+          </Box>
           <Box
             mx={4}
             mt={4}
@@ -505,7 +538,7 @@ const Cart = () => {
     let payload = {
       code: code,
       orderId: orderId,
-      userId: user,
+      userId: userInfo.userInfo.id,
       order: products,
       totalCost: total,
       discount: point,
@@ -520,59 +553,100 @@ const Cart = () => {
   }
   async function handleCreateOrder() {
     //EXCEPTIONS
-
+    let phoneflag = true;
     if (code.substring(0, 2) != "MC") {
       setCodeRequired(true);
       setTimeout(() => {
         setCodeRequired(false);
       }, 3000);
-    } else if (currentAddress == "" || currentAddress == null) {
-      setAddressRequired(true);
-      setTimeout(() => {
-        setAddressRequired(false);
-      }, 3000);
-    } else if (
-      currentProvince == "" ||
-      currentDistrict == "" ||
-      currentWard == ""
-    ) {
-      setlocationRequired(true);
-      setTimeout(() => {
-        setlocationRequired(false);
-      }, 3000);
-    } else if (paymentMethod == "") {
-      setIsSettedPaymentMethod(true);
-      setTimeout(() => {
-        setIsSettedPaymentMethod(false);
-      }, 3000);
+    } else if (phonenumber.length == 10 && parseInt(phonenumber[0]) == 0) {
+      for (const char of phonenumber) {
+        if (
+          isNaN(parseInt(char)) ||
+          (parseInt(char) <= 0 && parseInt(char) >= 9)
+        ) {
+          setPhoneNumberFormat(true);
+          console.log("error phone");
+          phoneflag = false;
+          setTimeout(() => {
+            console.log("reset phone");
+            setPhoneNumberFormat(false);
+          }, 3000);
+          break;
+        }
+      }
     } else {
-      if (currentAddress != "" && currentAddress != null) {
-        if (paymentMethod == "COD") {
-          {
-            let total = SumPrice(orders.Products);
-            let products = ConvertCartProductModelsToOrderInfoModels(
-              orders.Products
-            );
-            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
-            let uniqueGHTKVar = uniqueGHTK();
-            await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-            await CreatingOrder(products, uniqueGHTKVar);
-          }
-        } else {
-          {
-            let total = SumPrice(orders.Products);
-            let products = ConvertCartProductModelsToOrderInfoModels(
-              orders.Products
-            );
-            let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
-            let uniqueGHTKVar = uniqueGHTK();
-            // await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
-            pay(
-              ShipmentFee + SumPrice(orders.Products),
-              ConvertArrToRecords(products)
-            )
-              .then(async () => await CreatingOrder(products, uniqueGHTKVar))
-              .catch((error) => console.log(error));
+      setPhoneNumberFormat(true);
+      console.log("error phone");
+      phoneflag = false;
+      setTimeout(() => {
+        console.log("reset phone");
+        setPhoneNumberFormat(false);
+      }, 3000);
+    }
+    if (phoneflag) {
+      if (currentAddress == "") {
+        setAddressRequired(true);
+        setTimeout(() => {
+          setAddressRequired(false);
+        }, 3000);
+      } else if (
+        currentProvince == "" ||
+        currentDistrict == "" ||
+        currentWard == ""
+      ) {
+        setlocationRequired(true);
+        setTimeout(() => {
+          setlocationRequired(false);
+        }, 3000);
+      } else if (paymentMethod == "") {
+        setIsSettedPaymentMethod(true);
+        setTimeout(() => {
+          setIsSettedPaymentMethod(false);
+        }, 3000);
+      } else if (!userInfo.userInfo.id) {
+        setIsLogined(true);
+        setTimeout(() => {
+          setIsLogined(false);
+        }, 3000);
+      } else {
+        if (currentAddress != "" && currentAddress != null) {
+          if (paymentMethod == "COD") {
+            {
+              let total = SumPrice(orders.Products);
+              let products = ConvertCartProductModelsToOrderInfoModels(
+                orders.Products
+              );
+              let ghtkProducts = ConvertCartProductModelsToGHTK(
+                orders.Products
+              );
+              let uniqueGHTKVar = uniqueGHTK();
+              await handleOrderOnGHTK(
+                ghtkProducts,
+                false,
+                total,
+                uniqueGHTKVar
+              );
+              await CreatingOrder(products, uniqueGHTKVar);
+            }
+          } else {
+            {
+              let total = SumPrice(orders.Products);
+              let products = ConvertCartProductModelsToOrderInfoModels(
+                orders.Products
+              );
+              let ghtkProducts = ConvertCartProductModelsToGHTK(
+                orders.Products
+              );
+              let uniqueGHTKVar = uniqueGHTK();
+              // await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+              pay(
+                ShipmentFee + SumPrice(orders.Products),
+                ConvertArrToRecords(products)
+              )
+                .then(async () => await CreatingOrder(products, uniqueGHTKVar))
+                .catch((error) => console.log(error));
+            }
           }
         }
       }

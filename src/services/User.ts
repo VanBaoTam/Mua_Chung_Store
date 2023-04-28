@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getAccessToken } from "zmp-sdk";
 import { getUserInfo, getPhoneNumber } from "zmp-sdk/apis";
-export const getUser = async (): Promise<any> => {
+import { login } from "zmp-sdk/apis";
+export const getUserId = async (): Promise<any> => {
   try {
     const { userInfo } = await getUserInfo({});
     return userInfo.id;
@@ -10,14 +11,10 @@ export const getUser = async (): Promise<any> => {
     console.log(error);
   }
 };
-import { login } from "zmp-sdk/apis";
 
 export const handleLogin = async () => {
   try {
-    await login({}).then(async () => {
-      const phonenumber = await getUserPhoneNumber();
-      console.log(phonenumber);
-    });
+    const resp = await login({});
   } catch (error) {
     // login thất bại
     console.log(error);
@@ -50,7 +47,7 @@ const getPhoneNumberByToken = async (
   try {
     const resp = await axios.get(`https://app.muachung.co/api/zalo/user-info`, {
       params: {
-        userAccessToken: `Bearer ${userAccessToken}`,
+        userAccessToken: userAccessToken,
         token: token,
       },
     });
@@ -79,4 +76,23 @@ export const getUserPhoneNumber = async () => {
       console.log(error);
     },
   });
+};
+
+export const handleGetUserInfoFromBE = async (userId: string) => {
+  try {
+    const resp = await axios.post(
+      `https://app.muachung.co/api/user/login`,
+      {
+        userId: userId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(resp.data);
+  } catch (error) {
+    console.log(error);
+  }
 };

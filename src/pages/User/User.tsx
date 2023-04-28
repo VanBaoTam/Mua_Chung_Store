@@ -3,17 +3,19 @@ import { Avatar, Box, Page, Text } from "zmp-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import guest from "../../static/icons/Guest_avatar.jpg";
-import { getUser, handleLogin } from "../../services/User";
+import { handleGetUserInfoFromBE, handleLogin } from "../../services/User";
+import { Logout, handlegetUserInfo } from "../../features/User/UserSlice";
 const User = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [isLogined, setIsLogined] = useState(false);
   const userInfo = useAppSelector((store) => store.user);
   function handleLogOut() {
-    setIsLogined(false);
+    dispatch(Logout());
   }
   async function handleSignIn() {
     await handleLogin();
+    await dispatch(handlegetUserInfo());
+    await handleGetUserInfoFromBE(userInfo.userInfo.id);
   }
   // try {
   //   const resp = await dispatch(getUser);
@@ -34,7 +36,7 @@ const User = () => {
         flexWrap
       >
         <Box flex>
-          {isLogined ? (
+          {userInfo.userInfo.id ? (
             <Avatar
               src={userInfo.userInfo.avatar}
               size={40}
@@ -45,7 +47,7 @@ const User = () => {
           )}
 
           <Box ml={6} flex flexDirection="column">
-            {isLogined ? (
+            {userInfo.userInfo.id ? (
               <>
                 <Text size="xLarge" bold={true}>
                   Xin chào, {userInfo.userInfo.name}
@@ -56,7 +58,6 @@ const User = () => {
               </>
             ) : (
               <>
-                {" "}
                 <Text size="xLarge" bold={true}>
                   Khách
                 </Text>
@@ -96,7 +97,7 @@ const User = () => {
         className="bg-white rounded-lg  font-semibold"
         flexWrap
       >
-        {isLogined ? (
+        {userInfo.userInfo.id ? (
           <Text onClick={handleLogOut}>Đăng xuất</Text>
         ) : (
           <Text onClick={handleSignIn}>Đăng nhập</Text>

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Button, Modal, Box, Text } from "zmp-ui";
 import { shareLink } from "../../services/Order";
+import { useAppSelector } from "../../hooks/hooks";
 
 export default function OrderSuccess(props) {
   const [popupVisible, setPopupVisible] = useState(true);
+  const userInfo = useAppSelector((store) => store.user);
   return (
     <Modal
       visible={popupVisible}
@@ -31,7 +33,7 @@ export default function OrderSuccess(props) {
         <Box flex justifyContent="space-around" p={4}>
           <Button
             onClick={async () => {
-              await shareLink();
+              await shareLink(userInfo.userInfo.name, props.code);
               setPopupVisible(false);
             }}
           >
