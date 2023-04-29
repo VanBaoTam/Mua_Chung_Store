@@ -12,9 +12,8 @@ export default function OrderSuccess(props) {
     console.log(props.code);
     async function handlegetAmount() {
       const amountUser = await getAmount(props.code);
-      console.log(amountUser);
-      // console.log(amountUser[0].amount);
-      // if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
+      console.log(amountUser[0].amount);
+      if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
     }
     handlegetAmount();
   }, []);
