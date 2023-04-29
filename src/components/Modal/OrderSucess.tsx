@@ -38,7 +38,7 @@ export default function OrderSuccess(props) {
           </Box>
           <Box mt={3}>
             <Text bold>Tổng số người đã tham gia:</Text>
-            <Text> {amount + 1} </Text>
+            <Text> {amount} </Text>
           </Box>
         </Box>
         <Box flex justifyContent="space-around">
