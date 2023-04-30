@@ -262,7 +262,6 @@ const Cart = () => {
     );
     setShipmentFee(temp);
     setIsGettedShipmentFee(true);
-    console.log("SHIPMENT FEE: " + temp);
     setPaymentMethod(e);
   }
   function handleFinishOrder() {
@@ -292,7 +291,6 @@ const Cart = () => {
       ShipmentFee,
       userInfo.userInfo.name
     );
-    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -577,7 +575,6 @@ const Cart = () => {
       finalCost: final,
       address: address,
     };
-    console.log(payload);
     dispatch(patchUser(payload));
   }
   async function handleCreateOrder() {
@@ -595,10 +592,8 @@ const Cart = () => {
           (parseInt(char) <= 0 && parseInt(char) >= 9)
         ) {
           setPhoneNumberFormat(true);
-          console.log("error phone");
           phoneflag = false;
           setTimeout(() => {
-            console.log("reset phone");
             setPhoneNumberFormat(false);
           }, 3000);
           break;

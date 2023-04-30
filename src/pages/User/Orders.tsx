@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Icon, Page, Text } from "zmp-ui";
+import { Box, Icon, Page, Text } from "zmp-ui";
 import { handlegetOrdersFromUsers } from "../../services/User";
 import { useAppSelector } from "../../hooks/hooks";
 import Loading from "../../components/Modal/Loading";
+
+import { useNavigate } from "react-router-dom";
 const UserOrders = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [orders, setOrders] = useState<any>([]);
+  const [orderDetail, setOrderDetail] = useState<boolean>(false);
+  const navigate = useNavigate();
   const userInfo = useAppSelector((store) => store.user);
-  const products = useAppSelector((store) => store.products);
   const userId = userInfo.userInfo.id;
   const EmptyOrders = (
     <Box pt={10} className="bg-white rounded-lg h-full text-center">
@@ -15,10 +18,13 @@ const UserOrders = () => {
       <Text size="xLarge">Bạn đang không có đơn hàng nào...</Text>
     </Box>
   );
+  function handleCheckORderDetail(element) {
+    navigate("/order-detail", { replace: true, state: { props: element } });
+  }
   async function handleGetOrdersFromUser(userId) {
     const resp = await handlegetOrdersFromUsers(userId);
     console.log(resp);
-    if (resp) {
+    if (resp || resp.length != 0) {
       setOrders(resp);
       setIsLoaded(true);
     } else {
@@ -45,40 +51,25 @@ const UserOrders = () => {
               px={4}
               py={2}
               className=" bg-white rounded-lg  font-semibold"
+              onClick={() => {
+                handleCheckORderDetail(element);
+              }}
             >
-              <Box
-                py={2}
-                flex
-                justifyContent="space-evenly"
-                className="font-semibold"
-              >
-                <Text>Mã </Text>
-                <Text>Số lượng</Text>
-                <Text>Giá thành</Text>
+              <Box flex justifyContent="space-between">
+                <Text bold>Mã mua chung</Text>
+
+                <Text bold>Trạng thái</Text>
               </Box>
-              <Box
-                py={2}
-                flex
-                flexDirection="row"
-                justifyContent="space-evenly"
-              >
-                {element.products.map((product) => {
-                  total += product.orderData.quantity;
-                  //products.Products.find();
-                  return (
-                    <>
-                      <Text>{product.orderData.code}</Text>
-                      <Text>{product.orderData.quantity}</Text>
-                      <Text>
-                        {product.orderData.quantity * product.orderData.price}
-                      </Text>
-                    </>
-                  );
-                })}
-              </Box>
-              <Box px={4} flex flexDirection="column">
-                <Text bold>Tổng sản phẩm: {total}</Text>
-                <Text bold>Tổng tiền: {element.finalCost}</Text>
+              <Box mt={1} flex justifyContent="space-between">
+                <Text>{element.orderId}</Text>
+
+                <Text>
+                  {element.status == "pending"
+                    ? "Đang xử lý"
+                    : element.status == "success"
+                    ? "Hoàn thành"
+                    : "Thất bại"}
+                </Text>
               </Box>
             </Box>
           );

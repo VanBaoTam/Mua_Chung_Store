@@ -11,7 +11,6 @@ const pay = (amount: number, products: Record<string, any>[]) =>
       item: products,
       amount: amount,
       success: (data) => {
-        console.log("success: ", data);
         resolve(data);
       },
       fail: (err) => {
