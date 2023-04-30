@@ -35,7 +35,46 @@ const User = () => {
       handleGetPoint();
     }
   }, [userId]);
-
+  const orderBox = (
+    <Box
+      mx={4}
+      my={2}
+      px={4}
+      py={2}
+      flex
+      className="bg-white rounded-lg  font-semibold"
+      flexWrap
+      flexDirection="column"
+    >
+      <Box
+        onClick={() => {
+          navigate("/orders");
+        }}
+      >
+        <Text>Đơn hàng của bạn</Text>
+      </Box>
+    </Box>
+  );
+  const openGroupBuyBox = (
+    <Box
+      mx={4}
+      my={2}
+      px={4}
+      py={2}
+      flex
+      className="bg-white rounded-lg  font-semibold"
+      flexWrap
+      flexDirection="column"
+    >
+      <Box
+        onClick={() => {
+          navigate("/top");
+        }}
+      >
+        <Text>Top các mã mua chung còn thời hạn</Text>
+      </Box>
+    </Box>
+  );
   return (
     <Page hideScrollbar={true}>
       <Box
@@ -81,25 +120,8 @@ const User = () => {
           </Box>
         </Box>
       </Box>
-
-      <Box
-        mx={4}
-        my={2}
-        px={4}
-        py={2}
-        flex
-        className="bg-white rounded-lg  font-semibold"
-        flexWrap
-        flexDirection="column"
-      >
-        <Box
-          onClick={() => {
-            navigate("/orders");
-          }}
-        >
-          <Text>Đơn hàng của bạn</Text>
-        </Box>
-      </Box>
+      {userInfo.userInfo.id ? orderBox : null}
+      {userInfo.userInfo.id ? openGroupBuyBox : null}
       <Box
         mx={4}
         my={2}
