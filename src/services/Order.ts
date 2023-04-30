@@ -30,7 +30,7 @@ export const shareLink = async (username: string, idGroupBuy: string) => {
       title: "Lời mời tham gia mã mua chung",
       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
-        "https://inkythuatso.com/uploads/thumbnails/800/2021/09/zalo-logo-inkythuatso-14-15-05-01.jpg",
+        "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
     },
     fail: (err) => {
       console.log(err);

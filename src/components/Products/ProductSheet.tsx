@@ -40,7 +40,6 @@ const ProductSheet = (props) => {
       visible={sheetVisible}
       onClose={handleClose}
       autoHeight
- 
       handler
       swipeToClose
       title="Chọn chi tiết"
@@ -130,12 +129,16 @@ const ProductSheet = (props) => {
       >
         <Button
           size="medium"
-          variant="secondary"
+          style={{ backgroundColor: "#fccfcf" }}
           onClick={() => navigate("/cart")}
         >
           Đến giỏ hàng
         </Button>
-        <Button size="medium" onClick={handleAdd}>
+        <Button
+          size="medium"
+          style={{ backgroundColor: "#f6bebe" }}
+          onClick={handleAdd}
+        >
           Thêm vào giỏ hàng
         </Button>
       </Box>

@@ -1,10 +1,9 @@
 import React from "react";
 import { Page } from "zmp-ui";
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { useAppSelector } from "../hooks/hooks";
 import AddToCart from "../components/Buttons/AddToCart";
 import { ConvertPrice } from "../utils/Prices";
-import { setAcceptRenderNavBar } from "../features/App/AppSlice";
 const DetailProduct = () => {
   const param = useParams();
   const productList = useAppSelector((store) => store.products);
@@ -12,7 +11,7 @@ const DetailProduct = () => {
   const product = productList.Products.find((item) => {
     return item.id === param.code;
   })!;
-  const htmlString = product.description;
+  const htmlString = product.description.replace(/\n/g, "<br />");
   return (
     <Page hideScrollbar={true} className="pt-4">
       <div className="fixed bottom-0 bg-white w-full flex justify-between  px-4 py-1 ">
@@ -25,7 +24,7 @@ const DetailProduct = () => {
       />
       <section className="bg-white rounded-lg mt-2 p-2">
         <div className="px-2">
-          <h2>{product.name}</h2>
+          <h2 className="font-semibold">{product.name}</h2>
           <p style={{ borderBottom: "0.5px solid grey" }} className="pb-3">
             <span className="text-red-600 pr-2">
               {ConvertPrice(product.price, 1)}VNĐ

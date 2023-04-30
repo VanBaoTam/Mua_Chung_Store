@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
-import pay, { getAmount } from "../services/Order";
+import pay from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
-import { createCode, patchUser } from "../features/Code/CodeSlice";
+import { createCode, initPatched, patchUser } from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
   ConvertCartProductModelsToGHTK,
@@ -27,6 +27,7 @@ import { getWards } from "../services/Location";
 import LocationRequired from "../components/Modal/LocationRequired";
 import PhoneNumberFormat from "../components/Modal/PhoneNumberFormat";
 import LoginRequired from "../components/Modal/LoginRequired";
+import OrderFail from "../components/Modal/OrderFail";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -34,17 +35,19 @@ function uniqueId() {
 function uniqueGHTK() {
   return Math.random().toString(36).substring(10);
 }
-
+let uniqueGHTKVar = uniqueGHTK();
 let initCode = uniqueId();
 const Cart = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
+  const codeSlice = useAppSelector((store) => store.codes);
   const [code, setCode] = useState<string>("");
   const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
   const [pending, setPending] = useState(false);
   const [point, setPoint] = useState<number>(0);
+  const [fail, setFail] = useState<boolean>(false);
   const [phonenumber, setPhonenumber] = useState<string>("");
   // const codeList = useAppSelector((store) => store.codes);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -55,7 +58,6 @@ const Cart = () => {
   const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-
   const [paymentMethod, setPaymentMethod] = useState<any>("");
   const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
     useState<boolean>(false);
@@ -101,6 +103,15 @@ const Cart = () => {
       setIsNewcodeCalled(false);
     }
   }, [isNewcodeCalled]);
+  useEffect(() => {
+    if (codeSlice.isPatched == 2) {
+      handleOrderSuccess();
+      dispatch(initPatched());
+    } else if (codeSlice.isPatched == 3) {
+      handleOrderFail();
+      dispatch(initPatched());
+    }
+  }, [codeSlice.isPatched]);
   let today = new Date();
   const addressFormTypes: AddressFormType[] = [
     {
@@ -146,7 +157,15 @@ const Cart = () => {
     const districts = await getDistricts(provinceId);
     setDistricts(districts);
   }
-
+  async function handleOrderSuccess() {
+    let total = SumPrice(orders.Products);
+    let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+    let uniqueGHTKVar = uniqueGHTK();
+    if (paymentMethod == "COD")
+      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    setOrderSuccess(true);
+  }
   async function handleGetWards(DistrictId: number) {
     const wards = await getWards(DistrictId);
     setWards(wards);
@@ -203,6 +222,12 @@ const Cart = () => {
     }
     return { value, listOptions, handleSelect };
   }
+  function handleOrderFail() {
+    setFail(true);
+    setTimeout(() => {
+      setFail(false);
+    }, 5000);
+  }
   function NewCode() {
     initCode = uniqueId();
 
@@ -229,33 +254,6 @@ const Cart = () => {
   function handleSignin() {
     navigate("/user");
   }
-  // useLayoutEffect(() => {
-  //   async function handleSignIn() {
-  //     setLoading(true);
-  //     await Promise.all([handleLogin(), dispatch(handlegetUserInfo())]);
-  //   }
-  //   if (login) {
-  //     handleSignIn();
-  //   }
-  //   setLogin(false);
-  // }, [login]);
-  // useEffect(() => {
-  //   setUserId(userInfo.userInfo.id);
-  // }, [userInfo]);
-  // useLayoutEffect(() => {
-  //   async function handleGetPoint() {
-  //     const temppoint = await handleGetUserInfoFromBE(userId);
-  //     setPoint(temppoint);
-  //     dispatch(updatePoint(temppoint));
-  //   }
-  //   if (userId != "") {
-  //     handleGetPoint();
-  //     console.log("DONE");
-  //     setLoading(false);
-  //     console.log("FREEZE UI");
-  //     window.scrollTo(100, 150);
-  //   }
-  // }, [userId]);
   async function handleShipmentFee(e) {
     const temp = await HandleUpGetShipmentFee(
       orders.Products,
@@ -294,6 +292,7 @@ const Cart = () => {
       ShipmentFee,
       userInfo.userInfo.name
     );
+    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -311,6 +310,7 @@ const Cart = () => {
         EmptyCart
       ) : (
         <>
+          {fail ? <OrderFail /> : null}
           {isLoading ? <Loading /> : null}
           {phoneNumberFormat ? <PhoneNumberFormat /> : null}
           {addressRequired ? <AddressRequired /> : null}
@@ -338,7 +338,11 @@ const Cart = () => {
           >
             <h4 className="text-black pb-4">Mã mua chung</h4>
             <div className="flex justify-around pb-3">
-              <Button disabled={pending ? true : false} onClick={NewCode}>
+              <Button
+                style={{ backgroundColor: "#f6bebe" }}
+                disabled={pending ? true : false}
+                onClick={NewCode}
+              >
                 Tạo mã mới
               </Button>
             </div>
@@ -538,7 +542,12 @@ const Cart = () => {
             justifyContent="center"
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
-            <Button onClick={handleCreateOrder}>Thanh toán</Button>
+            <Button
+              style={{ backgroundColor: "#f6bebe" }}
+              onClick={handleCreateOrder}
+            >
+              Thanh toán
+            </Button>
           </Box>
           <div className="h-12"></div>
         </>
@@ -558,8 +567,6 @@ const Cart = () => {
       ", " +
       currentProvince;
     let orderId = code + uniqueGHTKVar;
-    console.log("TESTING");
-    console.log("CODE " + code);
     let payload = {
       code: code,
       orderId: orderId,
@@ -568,13 +575,10 @@ const Cart = () => {
       totalCost: total,
       discount: point,
       finalCost: final,
-      status: false,
       address: address,
     };
-    console.log("NEW CODE " + code);
+    console.log(payload);
     dispatch(patchUser(payload));
-    console.log("ORDER IS SUCCESSED");
-    setOrderSuccess(true);
   }
   async function handleCreateOrder() {
     //EXCEPTIONS
@@ -630,33 +634,17 @@ const Cart = () => {
         if (currentAddress != "" && currentAddress != null) {
           if (paymentMethod == "COD") {
             {
-              let total = SumPrice(orders.Products);
               let products = ConvertCartProductModelsToOrderInfoModels(
                 orders.Products
               );
-              let ghtkProducts = ConvertCartProductModelsToGHTK(
-                orders.Products
-              );
-              let uniqueGHTKVar = uniqueGHTK();
-              await handleOrderOnGHTK(
-                ghtkProducts,
-                false,
-                total,
-                uniqueGHTKVar
-              );
+
               await CreatingOrder(products, uniqueGHTKVar);
             }
           } else {
             {
-              let total = SumPrice(orders.Products);
               let products = ConvertCartProductModelsToOrderInfoModels(
                 orders.Products
               );
-              let ghtkProducts = ConvertCartProductModelsToGHTK(
-                orders.Products
-              );
-              let uniqueGHTKVar = uniqueGHTK();
-              // await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
               pay(
                 ShipmentFee + SumPrice(orders.Products),
                 ConvertArrToRecords(products)
