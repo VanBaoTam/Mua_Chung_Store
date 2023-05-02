@@ -499,7 +499,7 @@ const Cart = () => {
             >
               <Box flex p={4} flexDirection="column">
                 <Radio className="mt-2" name="COD" value={"COD"} label="COD" />
-                <Radio
+                {/* <Radio
                   className="mt-2"
                   name="Momo"
                   value={"Momo"}
@@ -510,7 +510,7 @@ const Cart = () => {
                   name="Zalo Pay"
                   value={"Zalo Pay"}
                   label="Zalo Pay"
-                />
+                /> */}
               </Box>
             </Radio.Group>
           </Box>

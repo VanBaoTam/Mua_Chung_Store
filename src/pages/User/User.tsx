@@ -71,7 +71,7 @@ const User = () => {
           navigate("/top");
         }}
       >
-        <Text>Top các mã mua chung còn thời hạn</Text>
+        <Text>Top các mã mua chung đang hoạt động</Text>
       </Box>
     </Box>
   );
