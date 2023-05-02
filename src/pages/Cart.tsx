@@ -291,6 +291,7 @@ const Cart = () => {
       ShipmentFee,
       userInfo.userInfo.name
     );
+    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {

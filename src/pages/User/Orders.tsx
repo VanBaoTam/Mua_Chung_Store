@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const UserOrders = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [orders, setOrders] = useState<any>([]);
-  const [orderDetail, setOrderDetail] = useState<boolean>(false);
   const navigate = useNavigate();
   const userInfo = useAppSelector((store) => store.user);
   const userId = userInfo.userInfo.id;
@@ -56,20 +55,20 @@ const UserOrders = () => {
               }}
             >
               <Box flex justifyContent="space-between">
-                <Text bold>Mã mua chung</Text>
-
-                <Text bold>Trạng thái</Text>
-              </Box>
-              <Box mt={1} flex justifyContent="space-between">
-                <Text>{element.orderId}</Text>
-
-                <Text>
-                  {element.status == "pending"
-                    ? "Đang xử lý"
-                    : element.status == "success"
-                    ? "Hoàn thành"
-                    : "Thất bại"}
-                </Text>
+                <Box flex flexDirection="column">
+                  <Text bold>Mã đơn hàng của bạn</Text>
+                  <Text>{element.orderId}</Text>
+                </Box>
+                <Box flex flexDirection="column" width={80}>
+                  <Text bold>Trạng thái</Text>
+                  <Text>
+                    {element.status == "pending"
+                      ? "Đang xử lý"
+                      : element.status == "success"
+                      ? "Hoàn thành"
+                      : "Thất bại"}
+                  </Text>
+                </Box>
               </Box>
             </Box>
           );
