@@ -12,7 +12,7 @@ import {
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
 import AddressRequired from "../components/Modal/AddressRequired";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { clearCart } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Modal/OrderSucess";
 import CodeRequired from "../components/Modal/CodeRequired";
@@ -42,6 +42,8 @@ const Cart = () => {
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
+
+  const { idGroupBuy } = useParams<{ idGroupBuy: string }>();
   const codeSlice = useAppSelector((store) => store.codes);
   const [code, setCode] = useState<string>("");
   const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
@@ -93,6 +95,11 @@ const Cart = () => {
     if (!userInfo.userInfo.id) setIsLogined(true);
     else setIsLogined(false);
   }, [userInfo.userInfo.id]);
+  useEffect(() => {
+    if (idGroupBuy != undefined) {
+      setCode(idGroupBuy);
+    }
+  }, []);
   useEffect(() => {
     if (isNewcodeCalled) {
       dispatch(
@@ -289,7 +296,8 @@ const Cart = () => {
       code,
       uniqueGHTKVar,
       ShipmentFee,
-      userInfo.userInfo.name
+      userInfo.userInfo.name,
+      phonenumber
     );
     console.log(resp);
   }

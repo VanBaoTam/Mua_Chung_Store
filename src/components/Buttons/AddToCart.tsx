@@ -29,7 +29,7 @@ const AddToCart = (props) => {
       <Button
         size="medium"
         style={{ backgroundColor: "#f6bebe" }}
-        onClick={() => setIsShown(() => true)}
+        onClick={() => setIsShown(true)}
       >
         Thêm vào giỏ hàng
       </Button>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from "zmp-ui";
 import { Provider } from "react-redux";
@@ -13,7 +13,6 @@ import User from "../pages/User/User";
 import BottomNavigationPage from "./BottomNavbar";
 import UserOrders from "../pages/User/Orders";
 import Discovery from "../pages/Discovery";
-import OrderDetail from "../pages/User/Order-detail";
 import TopGroupBuy from "../pages/User/TopGroupBuy";
 
 const MyApp = () => {
@@ -30,9 +29,8 @@ const MyApp = () => {
               <Route path="/orders" element={<UserOrders />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />
               <Route path="/discovery" element={<Discovery />} />
-              <Route path="/order-detail" element={<OrderDetail />} />
               <Route path="/top" element={<TopGroupBuy />} />
-              <Route path="/cart" element={<Cart />} />
+              <Route path="/cart/:idGroupBuy?" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
             <BottomNavigationPage />

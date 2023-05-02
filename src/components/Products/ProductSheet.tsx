@@ -74,53 +74,7 @@ const ProductSheet = (props) => {
           </div>
         </div>
       </Box>
-      {/* 
-      <Box py={1} px={3} flex flexDirection="column" flexWrap={true}>
-        <h4>Size:</h4>
-        <Radio.Group
-          defaultValue="S"
-          name="S"
-          size="medium"
-          onChange={(value) => (size = value.toString())}
-        >
-          <Radio size="small" name="S" value="S" label="S" className="p-2" />
-          <Radio size="small" name="M" value="M" label="M" className="p-2" />
-          <Radio size="small" name="L" value="L" label="L" className="p-2" />
-          <Radio size="small" name="XL" value="XL" label="XL" className="p-2" />
-        </Radio.Group>
-      </Box>
-      <Box py={1} px={3} flex flexDirection="column" flexWrap={true}>
-        <h4>Màu sắc:</h4>
-        <Radio.Group
-          defaultValue="Đỏ"
-          name="Đỏ"
-          size="medium"
-          onChange={(value) => (color = value.toString())}
-        >
-          <Radio size="small" name="Đỏ" value="Đỏ" label="Đỏ" className="p-2" />
-          <Radio
-            size="small"
-            name="Xanh"
-            value="Xanh"
-            label="Xanh"
-            className="p-2"
-          />
-          <Radio
-            size="small"
-            name="Đen"
-            value="Đen"
-            label="Đen"
-            className="p-2"
-          />
-          <Radio
-            size="small"
-            name="Trắng"
-            value="Trắng"
-            label="Trắng"
-            className="p-2"
-          />
-        </Radio.Group>
-      </Box> */}
+
       <Box
         flex
         justifyContent="space-around"

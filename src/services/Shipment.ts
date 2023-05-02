@@ -12,7 +12,8 @@ export async function HandleUploadNewShipMent(
   groupBuysId: string,
   uniqueGHTK: string,
   ShipmentFee: number,
-  username
+  username: string,
+  phonenumber: string
 ) {
   const isFreeship: number = is_freeship ? 0 : 1;
   console.log(products);
@@ -23,11 +24,11 @@ export async function HandleUploadNewShipMent(
       order: {
         id: groupBuysId + uniqueGHTK,
         pick_name: "Cun Fashion shop", //Tên A
-        pick_address: "590 CMT8 P.11", // Địa chỉ A
+        pick_address: "SN 180 đường số 9 phường 9", // Địa chỉ A
         pick_province: "TP. Hồ Chí Minh",
-        pick_district: "Quận 3",
-        pick_tel: "0999999999", //Số A
-        tel: "0911222333", // Số B
+        pick_district: "Quận Gò Vấp",
+        pick_tel: "0975749809", //Số A
+        tel: phonenumber, // Số B
         name: username, //Tên B
         address: address, //Địa chỉ B
         province: province,

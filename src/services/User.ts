@@ -40,6 +40,21 @@ export const handlegetOrdersFromUsers = async (userId: string) => {
   }
 };
 
+export const handlegetGroupBuyIdFromOrders = async (
+  userId: string,
+  orderId: string
+) => {
+  try {
+    const resp = await axios.get(
+      `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
+    );
+    console.log(resp.data);
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getPhoneNumberByToken = async (
   token: string,
   userAccessToken: string | undefined

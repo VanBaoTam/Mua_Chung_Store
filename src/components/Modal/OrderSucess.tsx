@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Box, Text } from "zmp-ui";
-import { getAmount, shareLink } from "../../services/Order";
+import { getAmount, shareLinkGroupBuy } from "../../services/Order";
 import { useAppSelector } from "../../hooks/hooks";
 
 export default function OrderSuccess(props) {
@@ -9,9 +9,9 @@ export default function OrderSuccess(props) {
 
   const userInfo = useAppSelector((store) => store.user);
   useEffect(() => {
-    console.log(props.code);
     async function handlegetAmount() {
       const amountUser = await getAmount(props.code);
+      console.log(amountUser);
       console.log(amountUser[0].amount);
       if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
     }
@@ -38,29 +38,33 @@ export default function OrderSuccess(props) {
           </Box>
           <Box mt={3}>
             <Text bold>Tổng số người đã tham gia:</Text>
-            <Text> {amount} </Text>
+            <Text> {amount + 1} </Text>
           </Box>
         </Box>
         <Box flex justifyContent="space-around">
-          <Button
-            onClick={async () => {
-              await shareLink(userInfo.userInfo.name, props.code);
-              setPopupVisible(false);
-              props.handleFinish();
-            }}
-            style={{ backgroundColor: "#f6bebe" }}
-          >
-            Chia sẻ
-          </Button>
-          <Button
-            style={{ backgroundColor: "#fccfcf" }}
-            onClick={() => {
-              setPopupVisible(false);
-              props.handleFinish();
-            }}
-          >
-            Xác nhận
-          </Button>
+          <Box>
+            <Button
+              onClick={async () => {
+                await shareLinkGroupBuy(userInfo.userInfo.name, props.code);
+                setPopupVisible(false);
+                props.handleFinish();
+              }}
+              style={{ backgroundColor: "#f6bebe" }}
+            >
+              Chia sẻ
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              style={{ backgroundColor: "#fccfcf" }}
+              onClick={() => {
+                setPopupVisible(false);
+                props.handleFinish();
+              }}
+            >
+              Đóng
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Modal>

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Page, Text } from "zmp-ui";
+import { Box, Button, Page, Text } from "zmp-ui";
 import { popularGroupBuyId } from "../../services/GroupBuy";
 import Loading from "../../components/Modal/Loading";
 import Countdown from "../../utils/Coundown";
 import { calculatePoint } from "../../utils/calculatePoint";
+import { useAppSelector } from "../../hooks/hooks";
+import { useNavigate } from "react-router-dom";
 
 const TopGroupBuy = () => {
+  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const today = new Date();
   const [data, setData] = useState<any>("init");
@@ -58,10 +61,19 @@ const TopGroupBuy = () => {
                 <Box mt={2}>
                   Chiết khấu tạm tính:
                   <span className="text-red-400">
-                    {" "}
                     &nbsp;
                     {calculatePoint(groupBuy.amount) * 100} %
                   </span>
+                </Box>
+                <Box textAlign="center" width={310} p={3}>
+                  <Button
+                    fullWidth
+                    size="medium"
+                    style={{ backgroundColor: "#fccfcf" }}
+                    onClick={() => navigate(`/cart/${groupBuy.idGroupBuy}`)}
+                  >
+                    Tham gia
+                  </Button>
                 </Box>
               </Box>
             );
