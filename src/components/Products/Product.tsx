@@ -12,7 +12,7 @@ const Product = (props) => {
       style={{ width: "47%" }}
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
-      <img src={props.photo_links} className="h-40" alt="Product's img" />
+      <img src={props.photo_links} alt="Product's img" />
       <Box p={2}>
         <h1
           className="font-semibold text-lg block max-w-xs overflow-hidden"

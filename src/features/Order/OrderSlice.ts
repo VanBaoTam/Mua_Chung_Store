@@ -12,9 +12,31 @@ const orderSlice = createSlice({
       state.Products = [];
     },
     addProduct: (state, product: PayloadAction<CartProductModel>) => {
-      state.Products = [...state.Products, product.payload];
+      let flag = true; // new product?
+      state.Products.find((item) => {
+        if (product.payload.code === item.code) {
+          item.quantity++;
+          flag = false;
+        }
+      });
+      if (flag) state.Products = [...state.Products, product.payload];
+    },
+    changeQuantity: (state, product) => {
+      state.Products.find((item) => {
+        if (product.payload.code === item.code) {
+          item.quantity = product.payload.amount;
+        }
+      });
+    },
+    removeProduct: (state, product) => {
+      const filteredState = state.Products.filter((item) => {
+        console.log(item.code);
+        return item.code !== product.payload.code;
+      });
+      state.Products = filteredState;
     },
   },
 });
-export const { clearCart, addProduct } = orderSlice.actions;
+export const { clearCart, addProduct, removeProduct, changeQuantity } =
+  orderSlice.actions;
 export default orderSlice.reducer;

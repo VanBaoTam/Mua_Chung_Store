@@ -65,10 +65,10 @@ const TopGroupBuy = () => {
                     {calculatePoint(groupBuy.amount) * 100} %
                   </span>
                 </Box>
-                <Box textAlign="center" width={310} p={3}>
+                <Box textAlign="center" width={310} py={3}>
                   <Button
                     fullWidth
-                    size="medium"
+                    size="large"
                     style={{ backgroundColor: "#fccfcf" }}
                     onClick={() => navigate(`/cart/${groupBuy.idGroupBuy}`)}
                   >

@@ -4,12 +4,12 @@ import { Box, Spinner, Text } from "zmp-ui";
 export default function Loading() {
   return (
     <Box
-      mt={6}
+      mt={1}
       flex
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      className="z-50 w-full h-full bg-slate-600"
+      className="z-20 absolute w-full bg-background h-screen overflow-hidden"
     >
       <Text.Title size="small">Đang cập nhật</Text.Title>
       <Spinner

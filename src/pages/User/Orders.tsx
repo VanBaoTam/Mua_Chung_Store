@@ -3,7 +3,7 @@ import { Box, Button, Icon, Page, Text } from "zmp-ui";
 import { handlegetOrdersFromUsers } from "../../services/User";
 import { useAppSelector } from "../../hooks/hooks";
 import Loading from "../../components/Modal/Loading";
-import OrderSheet from "../../components/Modal/OrderSheet";
+import OrderSheet from "../../components/Sheet/OrderSheet";
 const UserOrders = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [orderInfo, setOrderInfo] = useState<any>();
@@ -79,10 +79,10 @@ const UserOrders = () => {
                   </Text>
                 </Box>
               </Box>
-              <Box textAlign="center" width={310} p={3} px={7}>
+              <Box textAlign="center" width={310} py={3}>
                 <Button
                   fullWidth
-                  size="medium"
+                  size="large"
                   style={{ backgroundColor: "#fccfcf" }}
                   onClick={() => {
                     setIsShown(true);
@@ -96,6 +96,7 @@ const UserOrders = () => {
           );
         })}
       </Box>
+      <div className="h-20"></div>
     </Page>
   );
 };

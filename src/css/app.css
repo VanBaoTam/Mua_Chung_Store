@@ -4,6 +4,8 @@ body {
 img {
   width: 100%;
   min-height: 30%;
- 
   border-radius: 8px;
+}
+::-webkit-scrollbar {
+  display: none;
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Box, Text } from "zmp-ui";
 import { getAmountUser, shareLinkGroupBuy } from "../../services/Order";
 import { useAppSelector } from "../../hooks/hooks";
-import Loading from "./Loading";
+import Loading from "../Modal/Loading";
 
 export default function OrderSuccess(props) {
   const [amount, setAmount] = useState<number>(0);

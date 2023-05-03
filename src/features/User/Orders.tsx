@@ -3,7 +3,7 @@ import { Box, Button, Icon, Page, Text } from "zmp-ui";
 import { handlegetOrdersFromUsers } from "../../services/User";
 import { useAppSelector } from "../../hooks/hooks";
 import Loading from "../../components/Modal/Loading";
-import OrderSheet from "../../components/Modal/OrderSheet";
+import OrderSheet from "../../components/Sheet/OrderSheet";
 const UserOrders = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [orderInfo, setOrderInfo] = useState<any>();

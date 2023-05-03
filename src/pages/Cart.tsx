@@ -14,7 +14,7 @@ import {
 import AddressRequired from "../components/Modal/AddressRequired";
 import { useNavigate, useParams } from "react-router-dom";
 import { clearCart } from "../features/Order/OrderSlice";
-import OrderSuccess from "../components/Modal/OrderSucess";
+import OrderSuccess from "../components/Sheet/OrderSucess";
 import CodeRequired from "../components/Modal/CodeRequired";
 import PaymentMethodRequired from "../components/Modal/PaymentMethodRequired";
 import {
@@ -27,7 +27,7 @@ import { getWards } from "../services/Location";
 import LocationRequired from "../components/Modal/LocationRequired";
 import PhoneNumberFormat from "../components/Modal/PhoneNumberFormat";
 import LoginRequired from "../components/Modal/LoginRequired";
-import OrderFail from "../components/Modal/OrderFail";
+import OrderFail from "../components/Sheet/OrderFail";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -42,8 +42,8 @@ const Cart = () => {
   const navigate = useNavigate();
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
-
   const { idGroupBuy } = useParams<{ idGroupBuy: string }>();
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const codeSlice = useAppSelector((store) => store.codes);
   const [code, setCode] = useState<string>("");
   const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
@@ -52,7 +52,6 @@ const Cart = () => {
   const [fail, setFail] = useState<boolean>(false);
   const [phonenumber, setPhonenumber] = useState<string>("");
   // const codeList = useAppSelector((store) => store.codes);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
   const [isGettedShipmentFee, setIsGettedShipmentFee] =
     useState<boolean>(false);
@@ -100,6 +99,11 @@ const Cart = () => {
       setCode(idGroupBuy);
     }
   }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 5000);
+  }, [isLoaded]);
   useEffect(() => {
     if (isNewcodeCalled) {
       dispatch(
@@ -171,6 +175,7 @@ const Cart = () => {
     if (paymentMethod == "COD")
       await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
     else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    setIsLoaded(true);
     setOrderSuccess(true);
   }
   async function handleGetWards(DistrictId: number) {
@@ -252,10 +257,11 @@ const Cart = () => {
   function handlePointChange(event) {
     const newValue = parseInt(event.target.value);
     const roundedValue = Math.ceil(newValue / 1000) * 1000; // Round the input to the nearest multiple of 1000
-    if (roundedValue >= 0 && roundedValue <= 10000) {
+    if (userInfo.point <= 0) {
+      setPoint(0);
+    } else if (roundedValue >= 0 && roundedValue <= userInfo.point) {
       setPoint(roundedValue);
-    }
-    setPoint(0);
+    } else setPoint(0);
   }
 
   function handleSignin() {
@@ -318,7 +324,7 @@ const Cart = () => {
       ) : (
         <>
           {fail ? <OrderFail /> : null}
-          {isLoading ? <Loading /> : null}
+          {isLoaded ? null : <Loading />}
           {phoneNumberFormat ? <PhoneNumberFormat /> : null}
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
@@ -379,7 +385,7 @@ const Cart = () => {
               type="number"
               min={0}
               placeholder="1.000 điểm = 1.000VNĐ"
-              max={userInfo.point}
+              max={userInfo.point <= 0 ? 0 : userInfo.point}
               onChange={handlePointChange}
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
             ></input>
@@ -487,18 +493,30 @@ const Cart = () => {
 
             <Radio.Group
               onChange={async (e) => {
-                if (currentProvince == "" || currentDistrict == " ") {
+                if (
+                  currentProvince == "" ||
+                  currentDistrict == "" ||
+                  currentWard == ""
+                ) {
+                  setPaymentMethod("");
                   setlocationRequired(true);
                   setTimeout(() => {
                     setlocationRequired(false);
                   }, 3000);
-                } else await handleShipmentFee(e);
+                } else {
+                  setIsLoaded(false);
+                  await handleShipmentFee(e);
+                  setTimeout(() => {
+                    setIsLoaded(true);
+                  }, 1000);
+                }
               }}
+              value={paymentMethod}
               name={paymentMethod}
               className="text-black font-semibold flex flex-col"
             >
               <Box flex p={4} flexDirection="column">
-                <Radio className="mt-2" name="COD" value={"COD"} label="COD" />
+                <Radio className="mt-2" name="COD" value="COD" label="COD" />
                 {/* <Radio
                   className="mt-2"
                   name="Momo"
@@ -562,8 +580,10 @@ const Cart = () => {
     </Page>
   );
   async function CreatingOrder(products, uniqueGHTKVar: string) {
-    let total = SumPrice(orders.Products),
-      final = total;
+    console.log(ShipmentFee);
+    let total = SumPrice(orders.Products) + ShipmentFee,
+      final = total - point;
+
     let address =
       "Địa chỉ: " +
       currentAddress +
@@ -584,6 +604,7 @@ const Cart = () => {
       finalCost: final,
       address: address,
     };
+    console.log(payload);
     dispatch(patchUser(payload));
   }
   async function handleCreateOrder() {
@@ -636,6 +657,7 @@ const Cart = () => {
         }, 3000);
       } else {
         if (currentAddress != "" && currentAddress != null) {
+          setIsLoaded(false);
           if (paymentMethod == "COD") {
             {
               let products = ConvertCartProductModelsToOrderInfoModels(

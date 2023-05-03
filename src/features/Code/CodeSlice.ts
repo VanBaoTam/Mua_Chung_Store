@@ -44,7 +44,7 @@ export const patchUser = createAsyncThunk(
           products: payload.order,
           totalCost: payload.totalCost,
           discount: payload.discount,
-          finalCost: payload.finalCost,
+          finalCost: payload.totalCost,
           address: payload.address,
         },
         {

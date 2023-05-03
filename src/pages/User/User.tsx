@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, Page, Text } from "zmp-ui";
+import { Avatar, Box, Button, Page, Text } from "zmp-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import guest from "../../static/icons/Guest_avatar.jpg";
@@ -9,7 +9,10 @@ import {
   handlegetUserInfo,
   updatePoint,
 } from "../../features/User/UserSlice";
+import { BsChevronRight } from "react-icons/bs";
+import Loading from "../../components/Modal/Loading";
 const User = () => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
@@ -27,9 +30,13 @@ const User = () => {
   }, [userInfo]);
   useEffect(() => {
     async function handleGetPoint() {
+      setIsLoaded(false);
       const temppoint = await handleGetUserInfoFromBE(userId);
-      setPoint(temppoint);
-      dispatch(updatePoint(temppoint));
+      setTimeout(() => {
+        setPoint(temppoint);
+        dispatch(updatePoint(temppoint));
+        setIsLoaded(true);
+      }, 500);
     }
     if (userId != "") {
       handleGetPoint();
@@ -47,11 +54,15 @@ const User = () => {
       flexDirection="column"
     >
       <Box
+        flex
+        justifyContent="space-between"
+        alignItems="center"
         onClick={() => {
           navigate("/orders");
         }}
       >
         <Text>Đơn hàng của bạn</Text>
+        <BsChevronRight />
       </Box>
     </Box>
   );
@@ -67,16 +78,21 @@ const User = () => {
       flexDirection="column"
     >
       <Box
+        flex
+        justifyContent="space-between"
+        alignItems="center"
         onClick={() => {
           navigate("/top");
         }}
       >
         <Text>Top các mã mua chung đang hoạt động</Text>
+        <BsChevronRight />
       </Box>
     </Box>
   );
   return (
     <Page hideScrollbar={true}>
+      {isLoaded ? null : <Loading />}
       <Box
         mx={4}
         my={2}
@@ -128,13 +144,28 @@ const User = () => {
         px={4}
         py={2}
         flex
+        justifyContent="center"
         className="bg-white rounded-lg  font-semibold"
         flexWrap
       >
         {userInfo.userInfo.id ? (
-          <Text onClick={handleLogOut}>Đăng xuất</Text>
+          <Button
+            fullWidth={true}
+            size="large"
+            style={{ backgroundColor: "#f6bebe" }}
+            onClick={handleLogOut}
+          >
+            Đăng xuất
+          </Button>
         ) : (
-          <Text onClick={handleSignIn}>Đăng nhập</Text>
+          <Button
+            fullWidth={true}
+            size="large"
+            style={{ backgroundColor: "#f6bebe" }}
+            onClick={handleSignIn}
+          >
+            Đăng nhập
+          </Button>
         )}
       </Box>
     </Page>
