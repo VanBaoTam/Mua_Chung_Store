@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Box, Text } from "zmp-ui";
-import { getAmount, shareLinkGroupBuy } from "../../services/Order";
+import { getAmountUser, shareLinkGroupBuy } from "../../services/Order";
 import { useAppSelector } from "../../hooks/hooks";
+import Loading from "./Loading";
 
 export default function OrderSuccess(props) {
   const [amount, setAmount] = useState<number>(0);
   const [popupVisible, setPopupVisible] = useState(true);
-
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const userInfo = useAppSelector((store) => store.user);
   useEffect(() => {
     async function handlegetAmount() {
-      const amountUser = await getAmount(props.code);
-      console.log(amountUser);
-      console.log(amountUser[0].amount);
-      if (amountUser[0].amount >= 0) setAmount(amountUser[0].amount);
+      const amountUser = await getAmountUser(props.code);
+      if (amountUser[0].amount > 0) {
+        setAmount(amountUser[0].amount);
+        setIsLoaded(true);
+      }
     }
     handlegetAmount();
   }, []);
-  return (
+  const orderSuccessCompo = (
     <Modal
       visible={popupVisible}
       title="Thanh toán thành công!"
@@ -38,7 +40,7 @@ export default function OrderSuccess(props) {
           </Box>
           <Box mt={3}>
             <Text bold>Tổng số người đã tham gia:</Text>
-            <Text> {amount + 1} </Text>
+            <Text> {amount} </Text>
           </Box>
         </Box>
         <Box flex justifyContent="space-around">
@@ -69,4 +71,5 @@ export default function OrderSuccess(props) {
       </Box>
     </Modal>
   );
+  return <>{isLoaded ? orderSuccessCompo : <Loading />};</>;
 }

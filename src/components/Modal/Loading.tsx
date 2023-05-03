@@ -9,6 +9,7 @@ export default function Loading() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      className="z-50 w-full h-full bg-slate-600"
     >
       <Text.Title size="small">Đang cập nhật</Text.Title>
       <Spinner

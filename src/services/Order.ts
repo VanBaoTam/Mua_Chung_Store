@@ -60,17 +60,12 @@ export const shareLinkTop = async (
     },
   });
 };
-export const getAmount = async (idGroupBuy) => {
+export const getAmountUser = async (idGroupBuy: string) => {
   try {
     const resp = await axios.get(
-      `https:app.muachung.co/api/groupbuy/${idGroupBuy}`,
-      {
-        params: {},
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      `https://app.muachung.co/api/groupbuy/${idGroupBuy}`
     );
+    console.log(resp);
     return resp.data;
   } catch (error) {
     console.log(error);
