@@ -35,6 +35,7 @@ function uniqueId() {
 function uniqueGHTK() {
   return Math.random().toString(36).substring(10);
 }
+let today = new Date();
 let uniqueGHTKVar = uniqueGHTK();
 let initCode = uniqueId();
 const Cart = () => {
@@ -75,6 +76,7 @@ const Cart = () => {
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
 
+  //Set Adress
   useEffect(() => {
     (async () => {
       await handleGetProvinces();
@@ -93,17 +95,20 @@ const Cart = () => {
     }
   }, [Wards]);
 
+  //Check is Logined
   useEffect(() => {
     if (!userInfo.userInfo.id) setIsLogined(true);
     else setIsLogined(false);
   }, [userInfo.userInfo.id]);
 
+  //Refresh Load checking
   useEffect(() => {
     setTimeout(() => {
       setIsLoaded(true);
     }, 5000);
   }, [isLoaded]);
 
+  //Create new Groupbuy
   useEffect(() => {
     if (isNewcodeCalled) {
       dispatch(
@@ -114,6 +119,8 @@ const Cart = () => {
       setIsNewcodeCalled(false);
     }
   }, [isNewcodeCalled]);
+
+  //Check if patch success
   useEffect(() => {
     if (codeSlice.isPatched == 2) {
       handleOrderSuccess();
@@ -123,7 +130,7 @@ const Cart = () => {
       dispatch(initPatched());
     }
   }, [codeSlice.isPatched]);
-  let today = new Date();
+
   const addressFormTypes: AddressFormType[] = [
     {
       name: "detail",
