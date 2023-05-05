@@ -38,32 +38,33 @@ function uniqueGHTK() {
 let uniqueGHTKVar = uniqueGHTK();
 let initCode = uniqueId();
 const Cart = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { idGroupBuy } = useParams<{ idGroupBuy: string }>();
+
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
-  const { idGroupBuy } = useParams<{ idGroupBuy: string }>();
-  const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const codeSlice = useAppSelector((store) => store.codes);
-  const [code, setCode] = useState<string>("");
-  const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
+
   const [pending, setPending] = useState(false);
-  const [point, setPoint] = useState<number>(0);
-  const [fail, setFail] = useState<boolean>(false);
-  const [phonenumber, setPhonenumber] = useState<string>("");
-  // const codeList = useAppSelector((store) => store.codes);
-  const [ShipmentFee, setShipmentFee] = useState<number>(0);
-  const [isGettedShipmentFee, setIsGettedShipmentFee] =
-    useState<boolean>(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
   const [locationRequired, setlocationRequired] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [paymentMethod, setPaymentMethod] = useState<any>("");
-  const [isSettedPaymentMethod, setIsSettedPaymentMethod] =
-    useState<boolean>(false);
+  const [settedPayment, setSettedPayment] = useState<boolean>(false);
+  const [isNewcodeCalled, setIsNewcodeCalled] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
+  const [fail, setFail] = useState<boolean>(false);
+  const [Shipment, setShipment] = useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [isLogined, setIsLogined] = useState<boolean>(false);
+
+  const [paymentMethod, setPaymentMethod] = useState<any>("");
+  const [code, setCode] = useState<string>("");
+  const [point, setPoint] = useState<number>(0);
+  const [phonenumber, setPhonenumber] = useState<string>("");
+  const [ShipmentFee, setShipmentFee] = useState<number>(0);
+
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
   const [Districts, setDistricts] = useState<any>();
@@ -73,6 +74,7 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
+
   useEffect(() => {
     (async () => {
       await handleGetProvinces();
@@ -90,20 +92,18 @@ const Cart = () => {
       setselectedWard(Wards[0].code);
     }
   }, [Wards]);
+
   useEffect(() => {
     if (!userInfo.userInfo.id) setIsLogined(true);
     else setIsLogined(false);
   }, [userInfo.userInfo.id]);
-  useEffect(() => {
-    if (idGroupBuy != undefined) {
-      setCode(idGroupBuy);
-    }
-  }, []);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoaded(true);
     }, 5000);
   }, [isLoaded]);
+
   useEffect(() => {
     if (isNewcodeCalled) {
       dispatch(
@@ -274,7 +274,7 @@ const Cart = () => {
       currentDistrict
     );
     setShipmentFee(temp);
-    setIsGettedShipmentFee(true);
+    setShipment(true);
     setPaymentMethod(e);
   }
   function handleFinishOrder() {
@@ -329,7 +329,7 @@ const Cart = () => {
           {addressRequired ? <AddressRequired /> : null}
           {codeRequired ? <CodeRequired /> : null}
           {locationRequired ? <LocationRequired /> : null}
-          {isSettedPaymentMethod ? <PaymentMethodRequired /> : null}
+          {settedPayment ? <PaymentMethodRequired /> : null}
           {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
           {orderSuccess ? (
             <OrderSuccess
@@ -542,9 +542,7 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>
-              {isGettedShipmentFee ? ConvertShipmentFee(ShipmentFee) : 0}VNĐ
-            </span>
+            <span>{Shipment ? ConvertShipmentFee(ShipmentFee) : 0}VNĐ</span>
           </Box>
           <Box
             mx={4}
@@ -646,9 +644,9 @@ const Cart = () => {
           setlocationRequired(false);
         }, 3000);
       } else if (paymentMethod == "") {
-        setIsSettedPaymentMethod(true);
+        setSettedPayment(true);
         setTimeout(() => {
-          setIsSettedPaymentMethod(false);
+          setSettedPayment(false);
         }, 3000);
       } else if (!userInfo.userInfo.id) {
         setIsLogined(true);
