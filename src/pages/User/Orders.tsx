@@ -27,8 +27,8 @@ const UserOrders = () => {
   );
   async function handleGetOrdersFromUser(userId) {
     const resp = await handlegetOrdersFromUsers(userId);
-    console.log(resp);
-    if (resp.length !== 0) {
+    console.log(resp.length);
+    if (!isNaN(resp.length) && resp.length > 0) {
       setOrders(resp);
       setIsLoaded(true);
     } else {
@@ -52,7 +52,7 @@ const UserOrders = () => {
             handleShown={handleShown}
           />
         ) : null}
-        {orders.map((element) => {
+        {orders?.map((element) => {
           let total = 0;
           return (
             <Box
