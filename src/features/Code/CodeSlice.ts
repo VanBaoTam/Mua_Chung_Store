@@ -76,7 +76,6 @@ async function handleCreateNew(newCode) {
         },
       }
     );
-    console.log(resp.data);
   } catch (error) {
     console.log(error);
   }
@@ -122,12 +121,8 @@ const codeSlice = createSlice({
     });
     builder.addCase(patchUser.fulfilled, (state, resp) => {
       if ("code" in resp.payload) {
-        console.log(resp);
-        console.log("FAIL");
         state.isPatched = 3;
       } else {
-        console.log("SUCCESS");
-        console.log(resp);
         state.isPatched = 2;
       }
     });
