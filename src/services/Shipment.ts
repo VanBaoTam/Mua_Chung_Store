@@ -46,6 +46,7 @@ export async function HandleUploadNewShipMent(
     },
   });
   const json = await resp.json();
+  console.log(resp);
   return json;
 }
 

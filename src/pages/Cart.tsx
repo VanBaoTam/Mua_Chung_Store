@@ -123,14 +123,15 @@ const Cart = () => {
   //Check if patch success
   useEffect(() => {
     if (codeSlice.isPatched == 2) {
+      dispatch(initPatched());
       handleOrderSuccess();
-      dispatch(initPatched());
     } else if (codeSlice.isPatched == 3) {
-      handleOrderFail();
       dispatch(initPatched());
+      handleOrderFail();
     }
   }, [codeSlice.isPatched]);
 
+  //Address Funcs
   const addressFormTypes: AddressFormType[] = [
     {
       name: "detail",
@@ -174,16 +175,6 @@ const Cart = () => {
   async function handleGetDistricts(provinceId: number) {
     const districts = await getDistricts(provinceId);
     setDistricts(districts);
-  }
-  async function handleOrderSuccess() {
-    let total = SumPrice(orders.Products);
-    let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
-    let uniqueGHTKVar = uniqueGHTK();
-    if (paymentMethod == "COD")
-      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
-    setIsLoaded(true);
-    setOrderSuccess(true);
   }
   async function handleGetWards(DistrictId: number) {
     const wards = await getWards(DistrictId);
@@ -241,12 +232,26 @@ const Cart = () => {
     }
     return { value, listOptions, handleSelect };
   }
+
+  //HandleOrder
+  async function handleOrderSuccess() {
+    let total = SumPrice(orders.Products);
+    let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
+    let uniqueGHTKVar = uniqueGHTK();
+    if (paymentMethod == "COD")
+      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    setIsLoaded(true);
+    setOrderSuccess(true);
+  }
   function handleOrderFail() {
     setFail(true);
     setTimeout(() => {
       setFail(false);
     }, 5000);
   }
+
+  //Create new group buy
   function NewCode() {
     initCode = uniqueId();
 
@@ -585,7 +590,6 @@ const Cart = () => {
     </Page>
   );
   async function CreatingOrder(products, uniqueGHTKVar: string) {
-    console.log(ShipmentFee);
     let total = SumPrice(orders.Products) + ShipmentFee,
       final = total - point;
 
@@ -609,7 +613,6 @@ const Cart = () => {
       finalCost: final,
       address: address,
     };
-    console.log(payload);
     dispatch(patchUser(payload));
   }
   async function handleCreateOrder() {
