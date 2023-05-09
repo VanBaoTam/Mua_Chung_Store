@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
-import OrderItem from "../components/OrderItem";
+import OrderItem from "../components/Sheet/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import pay from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
@@ -24,7 +24,7 @@ import { getWards } from "../services/Location";
 import LoginRequired from "../components/Modal/LoginRequired";
 import OrderFail from "../components/Sheet/OrderFail";
 import { openChatScreen } from "../services/Zalo";
-import Required from "../components/Modal/Required";
+import PopUpModal from "../components/Modal/PopUpModal";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -43,7 +43,6 @@ const Cart = () => {
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
   const codeSlice = useAppSelector((store) => store.codes);
-
   const [pending, setPending] = useState(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
@@ -58,7 +57,7 @@ const Cart = () => {
   const [isLogined, setIsLogined] = useState<boolean>(false);
 
   const [paymentMethod, setPaymentMethod] = useState<any>("");
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState<string>(orders.initCode);
   const [point, setPoint] = useState<number>(0);
   const [phonenumber, setPhonenumber] = useState<string>("");
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
@@ -337,19 +336,19 @@ const Cart = () => {
           {fail ? <OrderFail /> : null}
           {isLoaded ? null : <Loading />}
           {phoneNumberFormat ? (
-            <Required title="Số điện thoại không chính xác!" />
+            <PopUpModal title="Số điện thoại không chính xác!" />
           ) : null}
           {addressRequired ? (
-            <Required title="Số nhà, tên đường không được để trống!" />
+            <PopUpModal title="Số nhà, tên đường không được để trống!" />
           ) : null}
           {codeRequired ? (
-            <Required title="Mã mua chung không được để trống!" />
+            <PopUpModal title="Mã mua chung không được để trống!" />
           ) : null}
           {locationRequired ? (
-            <Required title="Không được để trống các thanh chọn địa chỉ!" />
+            <PopUpModal title="Không được để trống các thanh chọn địa chỉ!" />
           ) : null}
           {settedPayment ? (
-            <Required title="Phương thức thanh toán không được để trống!" />
+            <PopUpModal title="Phương thức thanh toán không được để trống!" />
           ) : null}
           {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
           {orderSuccess ? (

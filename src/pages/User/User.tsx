@@ -11,6 +11,7 @@ import {
 } from "../../features/User/UserSlice";
 import { BsChevronRight } from "react-icons/bs";
 import Loading from "../../components/Modal/Loading";
+import FollowOA from "../../components/User/FollowOA";
 const User = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -136,6 +137,7 @@ const User = () => {
           </Box>
         </Box>
       </Box>
+      {userInfo.userInfo.id ? <FollowOA /> : null}
       {userInfo.userInfo.id ? orderBox : null}
       {userInfo.userInfo.id ? openGroupBuyBox : null}
       <Box

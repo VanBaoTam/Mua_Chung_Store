@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Box, useTheme } from "zmp-ui";
-import { CartProductModel } from "../models";
-import { ConvertPrice } from "../utils/Prices";
-import CartSheet from "./Sheet/CartSheet";
+import { CartProductModel } from "../../models";
+import { ConvertPrice } from "../../utils/Prices";
+import CartSheet from "./CartSheet";
 const OrderItem = (props: CartProductModel) => {
   const [isShown, setIsShown] = useState<boolean>(false);
   const [isRemoved, setIsRemoved] = useState<boolean>(false);

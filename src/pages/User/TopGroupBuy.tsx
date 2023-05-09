@@ -4,12 +4,13 @@ import { popularGroupBuyId } from "../../services/GroupBuy";
 import Loading from "../../components/Modal/Loading";
 import Countdown from "../../utils/Coundown";
 import { calculatePoint } from "../../utils/calculatePoint";
-import { useAppSelector } from "../../hooks/hooks";
-import { useNavigate } from "react-router-dom";
-
+import { useAppDispatch } from "../../hooks/hooks";
+import PopUpModal from "../../components/Modal/PopUpModal";
+import { setCode } from "../../features/Order/OrderSlice";
 const TopGroupBuy = () => {
-  const navigate = useNavigate();
+  const distpatch = useAppDispatch();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
   const today = new Date();
   const [data, setData] = useState<any>("init");
   async function getPopularGroupBuy() {
@@ -19,14 +20,22 @@ const TopGroupBuy = () => {
       setIsLoaded(true);
     }
   }
+  function handleJoinCode(idGroupBuy: string) {
+    if (!idGroupBuy) return;
+    distpatch(setCode(idGroupBuy));
+    setSuccess(true);
+    setTimeout(() => {
+      setSuccess(false);
+    }, 3000);
+  }
   useEffect(() => {
     getPopularGroupBuy();
   }, []);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   return (
     <Page hideScrollbar={true}>
+      {success ? (
+        <PopUpModal title="Tham gia mã mua chung thành công!" />
+      ) : null}
       {isLoaded ? (
         data?.map((groupBuy) => {
           const groupBuyTime = new Date(groupBuy.delayTime);
@@ -70,7 +79,9 @@ const TopGroupBuy = () => {
                     fullWidth
                     size="large"
                     style={{ backgroundColor: "#fccfcf" }}
-                    onClick={() => navigate(`/cart/${groupBuy.idGroupBuy}`)}
+                    onClick={() => {
+                      handleJoinCode(groupBuy.idGroupBuy);
+                    }}
                   >
                     Tham gia
                   </Button>

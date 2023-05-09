@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { getProducts } from "../features/Products/ProductSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { getProducts } from "../../features/Products/ProductSlice";
 // import { getCodes, DeleteAll } from "../features/Code/CodeSlice";
 const Initializer = ({ type }) => {
   const Products = useAppSelector((store) => store.products);
