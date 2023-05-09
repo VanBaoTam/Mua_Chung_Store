@@ -1,6 +1,6 @@
 import { Payment } from "zmp-sdk";
 import appConfig from "../../app-config.json";
-import { openShareSheet } from "zmp-sdk/apis";
+import { getShareableLink, openShareSheet } from "zmp-sdk/apis";
 import axios from "axios";
 // tạo yêu cầu thanh toán
 
@@ -22,20 +22,38 @@ const pay = (amount: number, products: Record<string, any>[]) =>
 
 export default pay;
 
+// export const shareLinkGroupBuy = async (
+//   username: string,
+//   idGroupBuy: string
+// ) => {
+//   await openShareSheet({
+//     type: "zmp",
+//     data: {
+//       title: "Lời mời tham gia mã mua chung",
+//       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
+//       thumbnail:
+//         "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
+//     },
+//     fail: (err) => {
+//       console.log(err);
+//     },
+//   });
+// };
 export const shareLinkGroupBuy = async (
   username: string,
   idGroupBuy: string
 ) => {
+  const link = await getShareableLink({
+    title: "Lời mời tham gia mã mua chung",
+    description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
+    thumbnail:
+      "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
+    path: "https://zalo.me/s/3771778687486376805/",
+  });
   await openShareSheet({
-    type: "zmp",
+    type: "link",
     data: {
-      title: "Lời mời tham gia mã mua chung",
-      description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
-      thumbnail:
-        "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-    },
-    fail: (err) => {
-      console.log(err);
+      link,
     },
   });
 };

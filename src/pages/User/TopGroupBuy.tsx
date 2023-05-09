@@ -74,9 +74,10 @@ const TopGroupBuy = () => {
                     {calculatePoint(groupBuy.amount) * 100} %
                   </span>
                 </Box>
-                <Box textAlign="center" width={310} py={3}>
+
+                <Box flex justifyContent="center" flexWrap width={310} py={3}>
                   <Button
-                    fullWidth
+                    fullWidth={true}
                     size="large"
                     style={{ backgroundColor: "#fccfcf" }}
                     onClick={() => {

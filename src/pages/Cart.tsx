@@ -56,7 +56,7 @@ const Cart = () => {
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [isLogined, setIsLogined] = useState<boolean>(false);
 
-  const [paymentMethod, setPaymentMethod] = useState<any>("");
+  const [paymentMethod, setPaymentMethod] = useState<any>(null);
   const [code, setCode] = useState<string>(orders.initCode);
   const [point, setPoint] = useState<number>(0);
   const [phonenumber, setPhonenumber] = useState<string>("");
@@ -80,16 +80,6 @@ const Cart = () => {
       await handleGetWards(1);
     })();
   }, []);
-  useEffect(() => {
-    if (Districts) {
-      setselectedDistrict(Districts[0].code);
-    }
-  }, [Districts]);
-  useEffect(() => {
-    if (Wards) {
-      setselectedWard(Wards[0].code);
-    }
-  }, [Wards]);
 
   //Check is Logined
   useEffect(() => {
@@ -192,6 +182,9 @@ const Cart = () => {
           setCurrentProvince(province.name);
           setCurrentDistrict("");
           setCurrentWard("");
+          setselectedDistrict("-");
+          setselectedWard("-");
+          setPaymentMethod(null);
           value = currentProvince;
           await handleGetDistricts(provinceId);
         };
@@ -205,6 +198,7 @@ const Cart = () => {
           setCurrentDistrict(district.name);
           setselectedDistrict(district.code);
           setCurrentWard("");
+          setselectedWard("-");
           value = selectedDistrict;
           await handleGetWards(districtId);
         };
@@ -234,11 +228,9 @@ const Cart = () => {
     let total = SumPrice(orders.Products);
     let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
     let uniqueGHTKVar = uniqueGHTK();
-    if (paymentMethod == "COD")
-      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
-    const resp = await openChatScreen(userInfo.userInfo.id);
-    console.log(resp);
+    // if (paymentMethod == "COD")
+    //   await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    // else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
     setIsLoaded(true);
     setOrderSuccess(true);
   }
@@ -454,6 +446,7 @@ const Cart = () => {
                     <Box className="relative" m={0}>
                       {item.type === "select" ? (
                         <Select
+                          defaultValue={"-"}
                           disabled={item.disabled}
                           key={item.name}
                           id={item.name}
@@ -478,6 +471,7 @@ const Cart = () => {
                               title={option.name}
                             />
                           ))}
+                          <Option key="" value="-" title="-" disabled={true} />
                         </Select>
                       ) : (
                         <Input

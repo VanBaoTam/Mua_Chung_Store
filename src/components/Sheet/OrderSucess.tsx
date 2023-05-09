@@ -30,10 +30,10 @@ export default function OrderSuccess(props) {
     >
       <Box flex flexDirection="column">
         <Box p={3}>
-          <Box mt={3}>
+          <Box>
             <Text bold>Mã mua chung:</Text>
           </Box>
-          <Box mt={3}>
+          <Box mt={1}>
             <Text> {props.code}</Text>
             <Text bold>Thời hạn kết thúc:</Text>
             <Text> {props.Delaydate.toLocaleString()}</Text>
