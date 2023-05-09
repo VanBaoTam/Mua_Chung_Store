@@ -22,43 +22,43 @@ const pay = (amount: number, products: Record<string, any>[]) =>
 
 export default pay;
 
-// export const shareLinkGroupBuy = async (
-//   username: string,
-//   idGroupBuy: string
-// ) => {
-//   await openShareSheet({
-//     type: "zmp",
-//     data: {
-//       title: "Lời mời tham gia mã mua chung",
-//       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
-//       thumbnail:
-//         "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-//       path: `/?IdGroupBuy=${idGroupBuy}&username=${username}`,
-//     },
-//     fail: (err) => {
-//       console.log(err);
-//     },
-//   });
-// };
 export const shareLinkGroupBuy = async (
   username: string,
   idGroupBuy: string
 ) => {
-  const link = await getShareableLink({
-    title: "Lời mời tham gia mã mua chung",
-    description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
-    thumbnail:
-      "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-    path: "/",
-  });
-
   await openShareSheet({
-    type: "link",
+    type: "zmp",
     data: {
-      link,
+      title: "Lời mời tham gia mã mua chung",
+      description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
+      thumbnail:
+        "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
+      path: `/?idGroupBuy=${idGroupBuy}`,
+    },
+    fail: (err) => {
+      console.log(err);
     },
   });
 };
+// export const shareLinkGroupBuy = async (
+//   username: string,
+//   idGroupBuy: string
+// ) => {
+//   const link = await getShareableLink({
+//     title: "Lời mời tham gia mã mua chung",
+//     description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
+//     thumbnail:
+//       "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
+//     path: "/",
+//   });
+
+//   await openShareSheet({
+//     type: "link",
+//     data: {
+//       link,
+//     },
+//   });
+// };
 
 export const shareLinkTop = async (
   username: string,

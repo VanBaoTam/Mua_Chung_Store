@@ -6,7 +6,7 @@ import Countdown from "../../utils/Coundown";
 import { calculatePoint } from "../../utils/calculatePoint";
 import { useAppDispatch } from "../../hooks/hooks";
 import PopUpModal from "../../components/Modal/PopUpModal";
-import { setCode } from "../../features/Order/OrderSlice";
+import { setOrderCode } from "../../features/Order/OrderSlice";
 const TopGroupBuy = () => {
   const distpatch = useAppDispatch();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -22,7 +22,7 @@ const TopGroupBuy = () => {
   }
   function handleJoinCode(idGroupBuy: string) {
     if (!idGroupBuy) return;
-    distpatch(setCode(idGroupBuy));
+    distpatch(setOrderCode(idGroupBuy));
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);

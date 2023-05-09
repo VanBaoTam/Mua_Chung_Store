@@ -12,7 +12,7 @@ import {
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
 import { useNavigate, useParams } from "react-router-dom";
-import { clearCart } from "../features/Order/OrderSlice";
+import { clearCart, setOrderCode } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Sheet/OrderSucess";
 import {
   HandleUpGetShipmentFee,
@@ -23,7 +23,6 @@ import { getDistricts, getProvinces } from "../services/Location";
 import { getWards } from "../services/Location";
 import LoginRequired from "../components/Modal/LoginRequired";
 import OrderFail from "../components/Sheet/OrderFail";
-import { openChatScreen } from "../services/Zalo";
 import PopUpModal from "../components/Modal/PopUpModal";
 const { Option } = Select;
 function uniqueId() {
@@ -38,11 +37,10 @@ let initCode = uniqueId();
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { idGroupBuy } = useParams<{ idGroupBuy: string }>();
-
   const orders = useAppSelector((store) => store.orders);
   const userInfo = useAppSelector((store) => store.user);
   const codeSlice = useAppSelector((store) => store.codes);
+  const OrderCode = useAppSelector((store) => store.orders.initCode);
   const [pending, setPending] = useState(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
@@ -105,7 +103,11 @@ const Cart = () => {
       setIsNewcodeCalled(false);
     }
   }, [isNewcodeCalled]);
-
+  useEffect(() => {
+    if (OrderCode !== "" && OrderCode !== undefined && OrderCode !== null) {
+      setCode(OrderCode);
+    }
+  }, [OrderCode]);
   //Check if patch success
   useEffect(() => {
     if (codeSlice.isPatched == 2) {

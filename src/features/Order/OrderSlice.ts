@@ -36,12 +36,17 @@ const orderSlice = createSlice({
       });
       state.Products = filteredState;
     },
-    setCode: (state, action: PayloadAction<string>) => {
+    setOrderCode: (state, action: PayloadAction<string>) => {
       state.initCode = action.payload;
       console.log(action.payload);
     },
   },
 });
-export const { clearCart, addProduct, removeProduct, changeQuantity, setCode } =
-  orderSlice.actions;
+export const {
+  clearCart,
+  addProduct,
+  removeProduct,
+  changeQuantity,
+  setOrderCode,
+} = orderSlice.actions;
 export default orderSlice.reducer;

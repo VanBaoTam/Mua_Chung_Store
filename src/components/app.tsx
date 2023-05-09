@@ -24,7 +24,7 @@ const MyApp = () => {
             <Header />
             <Initializer type="Products" />
             <AnimationRoutes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/idGroupBuy?" element={<HomePage />} />
               <Route path="/user" element={<User />} />
               <Route path="/orders" element={<UserOrders />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />
