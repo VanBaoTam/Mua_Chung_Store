@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Page, Button, Text, Modal, Box } from "zmp-ui";
 
-export default function LocationRequired() {
+export default function JoinCode() {
   const [popupVisible, setPopupVisible] = useState(true);
   return (
     <Modal
       visible={popupVisible}
-      title="Không được để trống các thanh chọn địa chỉ!"
+      title="Tham gia mã mua chung thành công!"
       onClose={() => {
         setPopupVisible(false);
       }}

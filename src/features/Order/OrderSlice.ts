@@ -3,6 +3,7 @@ import { CartProductModel } from "../../models";
 const listOrders: CartProductModel[] = [];
 const initialState = {
   Products: listOrders,
+  initCode: "",
 };
 const orderSlice = createSlice({
   name: "orders",
@@ -35,8 +36,12 @@ const orderSlice = createSlice({
       });
       state.Products = filteredState;
     },
+    setCode: (state, action: PayloadAction<string>) => {
+      state.initCode = action.payload;
+      console.log(action.payload);
+    },
   },
 });
-export const { clearCart, addProduct, removeProduct, changeQuantity } =
+export const { clearCart, addProduct, removeProduct, changeQuantity, setCode } =
   orderSlice.actions;
 export default orderSlice.reducer;

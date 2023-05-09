@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Page, Button, Text, Modal, Box } from "zmp-ui";
 
-export default function CodeRequired() {
+export default function Required({ title }) {
   const [popupVisible, setPopupVisible] = useState(true);
   return (
     <Modal
       visible={popupVisible}
-      title="Mã mua chung không được để trống!"
+      title={title}
       onClose={() => {
         setPopupVisible(false);
       }}

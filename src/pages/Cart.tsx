@@ -11,12 +11,9 @@ import {
   ConvertCartProductModelsToGHTK,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
-import AddressRequired from "../components/Modal/AddressRequired";
 import { useNavigate, useParams } from "react-router-dom";
 import { clearCart } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Sheet/OrderSucess";
-import CodeRequired from "../components/Modal/CodeRequired";
-import PaymentMethodRequired from "../components/Modal/PaymentMethodRequired";
 import {
   HandleUpGetShipmentFee,
   HandleUploadNewShipMent,
@@ -24,10 +21,10 @@ import {
 import Loading from "../components/Modal/Loading";
 import { getDistricts, getProvinces } from "../services/Location";
 import { getWards } from "../services/Location";
-import LocationRequired from "../components/Modal/LocationRequired";
-import PhoneNumberFormat from "../components/Modal/PhoneNumberFormat";
 import LoginRequired from "../components/Modal/LoginRequired";
 import OrderFail from "../components/Sheet/OrderFail";
+import { openChatScreen } from "../services/Zalo";
+import Required from "../components/Modal/Required";
 const { Option } = Select;
 function uniqueId() {
   return "MC" + Math.random().toString(36).substring(2);
@@ -241,6 +238,8 @@ const Cart = () => {
     if (paymentMethod == "COD")
       await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
     else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    const resp = await openChatScreen(userInfo.userInfo.id);
+    console.log(resp);
     setIsLoaded(true);
     setOrderSuccess(true);
   }
@@ -337,11 +336,21 @@ const Cart = () => {
         <>
           {fail ? <OrderFail /> : null}
           {isLoaded ? null : <Loading />}
-          {phoneNumberFormat ? <PhoneNumberFormat /> : null}
-          {addressRequired ? <AddressRequired /> : null}
-          {codeRequired ? <CodeRequired /> : null}
-          {locationRequired ? <LocationRequired /> : null}
-          {settedPayment ? <PaymentMethodRequired /> : null}
+          {phoneNumberFormat ? (
+            <Required title="Số điện thoại không chính xác!" />
+          ) : null}
+          {addressRequired ? (
+            <Required title="Số nhà, tên đường không được để trống!" />
+          ) : null}
+          {codeRequired ? (
+            <Required title="Mã mua chung không được để trống!" />
+          ) : null}
+          {locationRequired ? (
+            <Required title="Không được để trống các thanh chọn địa chỉ!" />
+          ) : null}
+          {settedPayment ? (
+            <Required title="Phương thức thanh toán không được để trống!" />
+          ) : null}
           {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
           {orderSuccess ? (
             <OrderSuccess
