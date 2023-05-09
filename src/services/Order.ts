@@ -33,6 +33,7 @@ export default pay;
 //       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
 //       thumbnail:
 //         "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
+//       path: `/?IdGroupBuy=${idGroupBuy}&username=${username}`,
 //     },
 //     fail: (err) => {
 //       console.log(err);
@@ -48,8 +49,9 @@ export const shareLinkGroupBuy = async (
     description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
     thumbnail:
       "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-    path: "https://zalo.me/s/3771778687486376805/",
+    path: "/",
   });
+
   await openShareSheet({
     type: "link",
     data: {
