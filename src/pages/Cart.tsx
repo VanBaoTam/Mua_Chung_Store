@@ -55,7 +55,7 @@ const Cart = () => {
   const [isLogined, setIsLogined] = useState<boolean>(false);
 
   const [paymentMethod, setPaymentMethod] = useState<any>(null);
-  const [code, setCode] = useState<string>(orders.initCode);
+  const [code, setCode] = useState<string>(OrderCode);
   const [point, setPoint] = useState<number>(0);
   const [phonenumber, setPhonenumber] = useState<string>("");
   const [ShipmentFee, setShipmentFee] = useState<number>(0);

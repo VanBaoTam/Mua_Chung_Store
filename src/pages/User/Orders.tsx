@@ -47,6 +47,7 @@ const UserOrders = () => {
       <Box>
         {isShown && orderInfo ? (
           <OrderSheet
+            key=""
             {...orderInfo}
             username={userInfo.userInfo.name}
             handleShown={handleShown}
