@@ -12,7 +12,11 @@ const Product = (props) => {
       style={{ width: "47%" }}
       onClick={() => navigate(`/detail-product/${props.id}`)}
     >
-      <img src={props.photo_links} alt="Product's img" />
+      <img
+        src={props.photo_links}
+        style={{ minHeight: "222px" }}
+        alt="Product's img"
+      />
       <Box p={2}>
         <h1
           className="font-semibold text-lg block max-w-xs overflow-hidden"
@@ -25,7 +29,7 @@ const Product = (props) => {
           {props.name}
         </h1>
         <span className="text-red-400 font-semibold">
-          {ConvertPrice(props.price, 1)}VNĐ
+          {ConvertPrice(props.price, 1)}đ
         </span>
       </Box>
     </Box>

@@ -69,7 +69,7 @@ const ProductSheet = (props) => {
           <div className="mt-3">
             <span>Tổng tiền: </span>
             <span className="text-red-400">
-              {ConvertPrice(Number(product.price), amount)}VNĐ
+              {ConvertPrice(Number(product.price), amount)}đ
             </span>
           </div>
         </div>

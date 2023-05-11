@@ -15,6 +15,7 @@ const OrderSheet = (props) => {
       props.userId,
       props.orderId
     );
+    console.log(resp);
     setIdGroupBuy(resp);
   }
   function handleConfirm() {
@@ -25,7 +26,7 @@ const OrderSheet = (props) => {
     handleGetGroupBuyId();
   }, []);
 
-  console.log(props);
+  // console.log(props);
   return (
     <Sheet
       height={600}
@@ -55,6 +56,7 @@ const OrderSheet = (props) => {
           {props.order?.map((item) => {
             return (
               <Box
+                key={item._id}
                 p={2}
                 flex
                 justifyContent="space-between"
@@ -67,20 +69,22 @@ const OrderSheet = (props) => {
                   alt="order's image"
                 />
                 <Text>{item.productData.quantity}</Text>
-                <Text> {ConvertPrice(item.productData.price, 1)}VNĐ</Text>
+                <Text> {ConvertPrice(item.productData.price, 1)}đ</Text>
               </Box>
             );
           })}
         </Box>
         <Box px={4} flex justifyContent="space-between">
           <Text bold>Tổng tiền:</Text>
-          <Text>{ConvertPrice(props.finalCost, 1)}VNĐ</Text>
+          <Text>{ConvertPrice(props.finalCost, 1)}đ</Text>
         </Box>
       </Box>
       <div className="fixed bottom-0 bg-white w-full flex justify-between  px-4 py-1 ">
         <ShareId
           username={props.username}
           idGroupBuy={idGroupBuy}
+          orderId={props.orderId}
+          userId={props.userId}
           handleConfirm={handleConfirm}
         />
       </div>

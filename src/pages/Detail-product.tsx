@@ -27,7 +27,7 @@ const DetailProduct = () => {
           <h2 className="font-semibold">{product.name}</h2>
           <p style={{ borderBottom: "0.5px solid grey" }} className="pb-3">
             <span className="text-red-600 pr-2">
-              {ConvertPrice(product.price, 1)}VNĐ
+              {ConvertPrice(product.price, 1)}đ
             </span>
           </p>
         </div>

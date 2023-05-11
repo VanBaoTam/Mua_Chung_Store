@@ -59,7 +59,7 @@ function CartSheet(props) {
           <div className="mt-3">
             <span>Tổng tiền: </span>
             <span className="text-red-400">
-              {ConvertPrice(Number(props.price), amount)}VNĐ
+              {ConvertPrice(Number(props.price), amount)}đ
             </span>
           </div>
         </div>

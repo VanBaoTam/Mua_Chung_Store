@@ -24,8 +24,11 @@ export default pay;
 
 export const shareLinkGroupBuy = async (
   username: string,
-  idGroupBuy: string
+  idGroupBuy: string,
+  orderId: string,
+  userId: string
 ) => {
+  console.log(idGroupBuy, orderId, userId);
   await openShareSheet({
     type: "zmp",
     data: {
@@ -33,33 +36,24 @@ export const shareLinkGroupBuy = async (
       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
         "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-      path: `/?IdGroupBuy=${idGroupBuy}`,
+      path: `/?IdGroupBuy=${idGroupBuy}&orderId=${orderId}&userId=${userId}`,
     },
     fail: (err) => {
       console.log(err);
     },
   });
 };
-// export const shareLinkGroupBuy = async (
-//   username: string,
-//   idGroupBuy: string
-// ) => {
-//   const link = await getShareableLink({
-//     title: "Lời mời tham gia mã mua chung",
-//     description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
-//     thumbnail:
-//       "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
-//     path: "/",
-//   });
-
-//   await openShareSheet({
-//     type: "link",
-//     data: {
-//       link,
-//     },
-//   });
-// };
-
+export const getOrderFromUser = async (userId: string, orderId: string) => {
+  try {
+    console.log(userId, orderId);
+    const resp = await axios.get(
+      `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
+    );
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const shareLinkTop = async (
   username: string,
   idGroupBuy: string,

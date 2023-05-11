@@ -47,7 +47,12 @@ export default function OrderSuccess(props) {
           <Box>
             <Button
               onClick={async () => {
-                await shareLinkGroupBuy(userInfo.userInfo.name, props.code);
+                await shareLinkGroupBuy(
+                  userInfo.userInfo.name,
+                  props.code,
+                  props.orderId,
+                  userInfo.userInfo.id
+                );
                 setPopupVisible(false);
                 props.handleFinish();
               }}

@@ -4,6 +4,7 @@ import orderReducer from "../features/Order/OrderSlice";
 import codeReducer from "../features/Code/CodeSlice";
 import appReducer from "../features/App/AppSlice";
 import userReducer from "../features/User/UserSlice";
+import previousReducer from "../features/PreviousUser/PreviousSlice";
 export const store = configureStore({
   reducer: {
     products: productReducer,
@@ -11,6 +12,7 @@ export const store = configureStore({
     codes: codeReducer,
     appFeatures: appReducer,
     user: userReducer,
+    previous: previousReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

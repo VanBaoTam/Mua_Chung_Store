@@ -24,6 +24,7 @@ export type CartProductModel = {
 export type OrderInfoModel = {
   productId: string;
   productData: {
+    product_name: string;
     photo_link: string;
     code: string;
     quantity: number;

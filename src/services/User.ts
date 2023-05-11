@@ -46,7 +46,7 @@ export const handlegetGroupBuyIdFromOrders = async (
 ) => {
   try {
     const resp = await axios.get(
-      `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
+      `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}/getgroupbuyid`
     );
     console.log(resp.data);
     return resp.data;

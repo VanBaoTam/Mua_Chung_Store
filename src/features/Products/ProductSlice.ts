@@ -17,7 +17,6 @@ export const getProducts = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
       console.log(error);

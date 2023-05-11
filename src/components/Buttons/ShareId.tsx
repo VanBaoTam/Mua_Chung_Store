@@ -2,9 +2,9 @@ import React from "react";
 import { Box, Button } from "zmp-ui";
 import { shareLinkGroupBuy } from "../../services/Order";
 const ShareId = (props) => {
-  const { username, idGroupBuy, handleConfirm } = props;
+  const { username, idGroupBuy, orderId, userId, handleConfirm } = props;
   async function handleShareId() {
-    const resp = await shareLinkGroupBuy(username, idGroupBuy);
+    const resp = await shareLinkGroupBuy(username, idGroupBuy, orderId, userId);
     console.log(resp);
     handleConfirm();
   }

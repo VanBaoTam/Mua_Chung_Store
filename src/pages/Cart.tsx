@@ -3,7 +3,7 @@ import { Box, Button, Icon, Input, Page, Radio, Select, Text } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import OrderItem from "../components/Sheet/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
-import pay from "../services/Order";
+import pay, { getOrderFromUser } from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
 import { createCode, initPatched, patchUser } from "../features/Code/CodeSlice";
 import {
@@ -11,7 +11,7 @@ import {
   ConvertCartProductModelsToGHTK,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { clearCart, setOrderCode } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Sheet/OrderSucess";
 import {
@@ -41,6 +41,7 @@ const Cart = () => {
   const userInfo = useAppSelector((store) => store.user);
   const codeSlice = useAppSelector((store) => store.codes);
   const OrderCode = useAppSelector((store) => store.orders.initCode);
+  const previous = useAppSelector((store) => store.previous);
   const [pending, setPending] = useState(false);
   const [codeRequired, setCodeRequired] = useState<boolean>(false);
   const [phoneNumberFormat, setPhoneNumberFormat] = useState<boolean>(false);
@@ -59,6 +60,7 @@ const Cart = () => {
   const [point, setPoint] = useState<number>(0);
   const [phonenumber, setPhonenumber] = useState<string>("");
   const [ShipmentFee, setShipmentFee] = useState<number>(0);
+  const [orderId, setOrderId] = useState<string>("");
 
   const [currentAddress, setCurrentAddress] = useState<string>("");
   const [Provinces, setProvinces] = useState<any>();
@@ -69,6 +71,15 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
+
+  useEffect(() => {
+    if (previous.groupbuyId !== "") {
+      setCode(previous.groupbuyId);
+    }
+    if (orders.initCode !== "") {
+      setCode(orders.initCode);
+    }
+  }, []);
 
   //Set Adress
   useEffect(() => {
@@ -327,31 +338,34 @@ const Cart = () => {
         EmptyCart
       ) : (
         <>
-          {fail ? <OrderFail /> : null}
-          {isLoaded ? null : <Loading />}
-          {phoneNumberFormat ? (
-            <PopUpModal title="Số điện thoại không chính xác!" />
-          ) : null}
-          {addressRequired ? (
-            <PopUpModal title="Số nhà, tên đường không được để trống!" />
-          ) : null}
-          {codeRequired ? (
-            <PopUpModal title="Mã mua chung không được để trống!" />
-          ) : null}
-          {locationRequired ? (
-            <PopUpModal title="Không được để trống các thanh chọn địa chỉ!" />
-          ) : null}
-          {settedPayment ? (
-            <PopUpModal title="Phương thức thanh toán không được để trống!" />
-          ) : null}
-          {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
-          {orderSuccess ? (
-            <OrderSuccess
-              code={code}
-              Delaydate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
-              handleFinish={handleFinishOrder}
-            />
-          ) : null}
+          <Box>
+            {fail ? <OrderFail /> : null}
+            {isLoaded ? null : <Loading />}
+            {phoneNumberFormat ? (
+              <PopUpModal title="Số điện thoại không chính xác!" />
+            ) : null}
+            {addressRequired ? (
+              <PopUpModal title="Số nhà, tên đường không được để trống!" />
+            ) : null}
+            {codeRequired ? (
+              <PopUpModal title="Mã mua chung không đúng cấu trúc!" />
+            ) : null}
+            {locationRequired ? (
+              <PopUpModal title="Không được để trống các thanh chọn địa chỉ!" />
+            ) : null}
+            {settedPayment ? (
+              <PopUpModal title="Phương thức thanh toán không được để trống!" />
+            ) : null}
+            {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
+            {orderSuccess ? (
+              <OrderSuccess
+                code={code}
+                orderId={orderId}
+                Delaydate={new Date(today.getTime() + 24 * 60 * 60 * 1000)}
+                handleFinish={handleFinishOrder}
+              />
+            ) : null}
+          </Box>
           <Box title="Giỏ hàng">{orderItems}</Box>
           <Box
             mx={4}
@@ -398,7 +412,7 @@ const Cart = () => {
             <input
               type="number"
               min={0}
-              placeholder="1.000 điểm = 1.000VNĐ"
+              placeholder="1.000 điểm = 1.000đ"
               max={userInfo.point <= 0 ? 0 : userInfo.point}
               onChange={handlePointChange}
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
@@ -558,7 +572,7 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Phí ship</span>
-            <span>{Shipment ? ConvertShipmentFee(ShipmentFee) : 0}VNĐ</span>
+            <span>{Shipment ? ConvertShipmentFee(ShipmentFee) : 0}đ</span>
           </Box>
           <Box
             mx={4}
@@ -570,7 +584,7 @@ const Cart = () => {
             className="bg-white rounded-lg text-red-400 font-semibold"
           >
             <span>Tổng tiền</span>
-            <span>{ConvertPriceAll(orders.Products, ShipmentFee)}VNĐ</span>
+            <span>{ConvertPriceAll(orders.Products, ShipmentFee)}đ</span>
           </Box>
           <Box
             mx={4}
@@ -596,7 +610,7 @@ const Cart = () => {
   async function CreatingOrder(products, uniqueGHTKVar: string) {
     let total = SumPrice(orders.Products) + ShipmentFee,
       final = total - point;
-
+    console.log(code);
     let address =
       "Địa chỉ: " +
       currentAddress +
@@ -607,6 +621,7 @@ const Cart = () => {
       ", " +
       currentProvince;
     let orderId = code + uniqueGHTKVar;
+    setOrderId(orderId);
     let payload = {
       code: code,
       orderId: orderId,

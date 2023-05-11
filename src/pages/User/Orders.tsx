@@ -47,14 +47,12 @@ const UserOrders = () => {
       <Box>
         {isShown && orderInfo ? (
           <OrderSheet
-            key=""
             {...orderInfo}
             username={userInfo.userInfo.name}
             handleShown={handleShown}
           />
         ) : null}
         {orders?.map((element) => {
-          let total = 0;
           return (
             <Box
               key={element._id}

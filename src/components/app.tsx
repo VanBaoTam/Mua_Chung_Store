@@ -24,13 +24,13 @@ const MyApp = () => {
             <Header />
             <Initializer type="Products" />
             <AnimationRoutes>
-              <Route path="/idGroupBuy?" element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/user" element={<User />} />
               <Route path="/orders" element={<UserOrders />} />
               <Route path="/detail-product/:code" element={<DetailProduct />} />
               <Route path="/discovery" element={<Discovery />} />
               <Route path="/top" element={<TopGroupBuy />} />
-              <Route path="/cart/:idGroupBuy?" element={<Cart />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
             <BottomNavigationPage />
