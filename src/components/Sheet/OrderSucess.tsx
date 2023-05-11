@@ -29,21 +29,21 @@ export default function OrderSuccess(props) {
       }}
     >
       <Box flex flexDirection="column">
-        <Box p={3}>
-          <Box>
+        <Box>
+          <Box py={2}>
             <Text bold>Mã mua chung:</Text>
-          </Box>
-          <Box mt={1}>
             <Text> {props.code}</Text>
+          </Box>
+          <Box py={2}>
             <Text bold>Thời hạn kết thúc:</Text>
             <Text> {props.Delaydate.toLocaleString()}</Text>
           </Box>
-          <Box mt={3}>
+          <Box py={2}>
             <Text bold>Tổng số người đã tham gia:</Text>
             <Text> {amount} </Text>
           </Box>
         </Box>
-        <Box flex justifyContent="space-around">
+        <Box flex justifyContent="space-around" py={2}>
           <Box>
             <Button
               onClick={async () => {

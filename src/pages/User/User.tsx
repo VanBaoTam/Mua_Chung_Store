@@ -7,11 +7,14 @@ import { handleGetUserInfoFromBE, handleLogin } from "../../services/User";
 import {
   Logout,
   handlegetUserInfo,
+  setFollowed,
   updatePoint,
 } from "../../features/User/UserSlice";
 import { BsChevronRight } from "react-icons/bs";
 import Loading from "../../components/Modal/Loading";
 import FollowOA from "../../components/User/FollowOA";
+import UnFollowOA from "../../components/User/UnfollowOA";
+import { followOA } from "zmp-sdk";
 const User = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -32,10 +35,12 @@ const User = () => {
   useEffect(() => {
     async function handleGetPoint() {
       setIsLoaded(false);
-      const temppoint = await handleGetUserInfoFromBE(userId);
+      const extraUserInfo = await handleGetUserInfoFromBE(userId);
+      console.log(extraUserInfo);
       setTimeout(() => {
-        setPoint(temppoint);
-        dispatch(updatePoint(temppoint));
+        setPoint(extraUserInfo.point);
+        console.log(extraUserInfo.followOA);
+        dispatch(setFollowed(extraUserInfo.followOA));
         setIsLoaded(true);
       }, 500);
     }
@@ -137,9 +142,14 @@ const User = () => {
           </Box>
         </Box>
       </Box>
-      {userInfo.userInfo.id ? <FollowOA /> : null}
-      {userInfo.userInfo.id ? orderBox : null}
-      {userInfo.userInfo.id ? openGroupBuyBox : null}
+      {userInfo.userInfo.id ? (
+        <>
+          {userInfo.isFollowed ? <UnFollowOA /> : <FollowOA />}
+          {userInfo.userInfo.id ? orderBox : null}
+          {userInfo.userInfo.id ? openGroupBuyBox : null}
+        </>
+      ) : null}
+
       <Box
         mx={4}
         my={2}

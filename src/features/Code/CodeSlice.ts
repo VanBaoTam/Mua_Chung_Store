@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CodeModel, OrderModel } from "../../models";
 
 import axios from "axios";
@@ -6,7 +6,7 @@ let initCodeList: CodeModel[] = [];
 const initialState = {
   code: initCodeList,
   isLoaded: false,
-  isPatched: 1, //1 init , 2 success , 3 fail
+  isPatched: 1, //1 init , 2 success , 3 fail , 4 over , 5 exist
 };
 
 // export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
@@ -53,10 +53,11 @@ export const patchUser = createAsyncThunk(
           },
         }
       );
-      return resp;
-    } catch (error) {
+      console.log(resp);
+      return { resp: resp, check: true };
+    } catch (error: any) {
       console.log(error);
-      return { code: "fail" };
+      return { resp: error, check: false };
     }
   }
 );
@@ -111,7 +112,10 @@ const codeSlice = createSlice({
       handleCreateNew(newCode);
       //  paymentMethod: payload.paymentMethod,
     },
-    initPatched: (state) => {
+    Patched: (state, payload: PayloadAction<number>) => {
+      state.isPatched = payload.payload;
+    },
+    setInitPatched: (state) => {
       state.isPatched = 1;
     },
   },
@@ -119,11 +123,20 @@ const codeSlice = createSlice({
     builder.addCase(patchUser.pending, (state) => {
       state.isLoaded = false;
     });
-    builder.addCase(patchUser.fulfilled, (state, resp) => {
-      if ("code" in resp.payload) {
-        state.isPatched = 3;
-      } else {
+    builder.addCase(patchUser.fulfilled, (state, result) => {
+      if (result.payload.check) {
+        console.log;
         state.isPatched = 2;
+      } else if (
+        result.payload.resp.response.data.message == "Group buy is over"
+      ) {
+        state.isPatched = 4;
+      } else if (
+        result.payload.resp.response.data.message == "User already exists"
+      ) {
+        state.isPatched = 5;
+      } else {
+        state.isPatched = 3;
       }
     });
     builder.addCase(patchUser.rejected, (state) => {
@@ -131,5 +144,5 @@ const codeSlice = createSlice({
     });
   },
 });
-export const { createCode, initPatched } = codeSlice.actions;
+export const { createCode, Patched, setInitPatched } = codeSlice.actions;
 export default codeSlice.reducer;

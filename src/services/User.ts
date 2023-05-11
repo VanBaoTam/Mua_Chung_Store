@@ -111,3 +111,28 @@ export const handleGetUserInfoFromBE = async (userId: string) => {
     console.log(error);
   }
 };
+
+export const handleToggleFollowOA = async (
+  userId: string,
+  followOA: boolean
+) => {
+  try {
+    console.log(followOA);
+    const resp = await axios.post(
+      `https://app.muachung.co/api/user/followOA`,
+      {
+        userId: userId,
+        followOA: followOA,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(resp);
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

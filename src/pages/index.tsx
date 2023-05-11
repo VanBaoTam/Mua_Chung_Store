@@ -55,15 +55,12 @@ const HomePage: React.FunctionComponent = () => {
     if (!previous.isShown)
       if (previous.groupbuyId && previous.orderId && previous.userId) {
         handleGetPrevious();
-
         setIsPrevious(true);
       }
   }, [previous]);
   return (
     <Page hideScrollbar={true} className="p-3">
-      {isPrevious && previousOrder ? (
-        <PreviousModal {...previousOrder} />
-      ) : null}
+      {isPrevious ? <PreviousModal {...previousOrder} /> : null}
       <SearchBar />
       <Carousel />
       <Categories />

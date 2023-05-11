@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Icon, Page, Text } from "zmp-ui";
 import { handlegetOrdersFromUsers } from "../../services/User";
 import { useAppSelector } from "../../hooks/hooks";
-import Loading from "../../components/Modal/Loading";
-import OrderSheet from "../../components/Sheet/OrderSheet";
+import Loading from "../Modal/Loading";
+import OrderSheet from "../Sheet/OrderSheet";
 const UserOrders = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [orderInfo, setOrderInfo] = useState<any>();

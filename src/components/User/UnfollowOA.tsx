@@ -2,11 +2,11 @@ import React from "react";
 import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Text } from "zmp-ui";
-import { handleFollowOA } from "../../services/Zalo";
+import { handleUnfollowOA } from "../../services/Zalo";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { setFollowed } from "../../features/User/UserSlice";
 
-export default function FollowOA() {
+export default function UnFollowOA() {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((store) => store.user.userInfo.id);
   const navigate = useNavigate();
@@ -21,27 +21,20 @@ export default function FollowOA() {
       flexWrap
       flexDirection="column"
     >
-      <Button
-        fullWidth={true}
-        size="large"
-        style={{ backgroundColor: "#f6bebe" }}
+      <button
         onClick={() => {
-          async function handleFollow() {
-            dispatch(setFollowed(true));
-            await handleFollowOA(userId);
+          async function handleUnfollow() {
+            dispatch(setFollowed(false));
+            await handleUnfollowOA(userId);
           }
-          handleFollow();
+          handleUnfollow();
         }}
       >
-        <Box
-          style={{ fontWeight: "bold" }}
-          flex
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Text bold>Đăng ký nhận mã ưu đãi!</Text>
+        <Box flex justifyContent="space-between" alignItems="center">
+          <Text>Hủy đăng ký nhận mã</Text>
+          <BsChevronRight />
         </Box>
-      </Button>
+      </button>
     </Box>
   );
 }

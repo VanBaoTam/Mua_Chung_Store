@@ -5,7 +5,12 @@ import OrderItem from "../components/Sheet/OrderItem";
 import { ConvertPriceAll, ConvertShipmentFee, SumPrice } from "../utils/Prices";
 import pay, { getOrderFromUser } from "../services/Order";
 import { AddressFormType, CartProductModel, GHTKModel } from "../models";
-import { createCode, initPatched, patchUser } from "../features/Code/CodeSlice";
+import {
+  Patched,
+  createCode,
+  patchUser,
+  setInitPatched,
+} from "../features/Code/CodeSlice";
 import {
   ConvertArrToRecords,
   ConvertCartProductModelsToGHTK,
@@ -54,6 +59,8 @@ const Cart = () => {
   const [Shipment, setShipment] = useState<boolean>(false);
   const [addressRequired, setAddressRequired] = useState<boolean>(false);
   const [isLogined, setIsLogined] = useState<boolean>(false);
+  const [GBOver, setGBOver] = useState<boolean>(false);
+  const [userExist, setUserExist] = useState<boolean>(false);
 
   const [paymentMethod, setPaymentMethod] = useState<any>(null);
   const [code, setCode] = useState<string>(OrderCode);
@@ -121,12 +128,33 @@ const Cart = () => {
   }, [OrderCode]);
   //Check if patch success
   useEffect(() => {
-    if (codeSlice.isPatched == 2) {
-      dispatch(initPatched());
-      handleOrderSuccess();
+    console.log(codeSlice.isPatched);
+    if (codeSlice.isPatched == 4) {
+      dispatch(Patched(4));
+      setGBOver(true);
+      setTimeout(() => {
+        dispatch(setInitPatched());
+        setGBOver(false);
+      }, 3000);
+    } else if (codeSlice.isPatched == 5) {
+      dispatch(Patched(5));
+      setUserExist(true);
+      setTimeout(() => {
+        dispatch(setInitPatched());
+        setUserExist(false);
+      }, 3000);
     } else if (codeSlice.isPatched == 3) {
-      dispatch(initPatched());
-      handleOrderFail();
+      dispatch(Patched(3));
+      setTimeout(() => {
+        dispatch(setInitPatched());
+        handleOrderFail();
+      }, 1000);
+    } else if (codeSlice.isPatched == 2) {
+      dispatch(Patched(2));
+      setTimeout(() => {
+        dispatch(setInitPatched());
+        handleOrderSuccess();
+      }, 1000);
     }
   }, [codeSlice.isPatched]);
 
@@ -339,6 +367,10 @@ const Cart = () => {
       ) : (
         <>
           <Box>
+            {GBOver ? <PopUpModal title="Mã mua chung đã hết hạn!" /> : null}
+            {userExist ? (
+              <PopUpModal title="Người dùng đã tham gia mã!" />
+            ) : null}
             {fail ? <OrderFail /> : null}
             {isLoaded ? null : <Loading />}
             {phoneNumberFormat ? (
@@ -632,7 +664,7 @@ const Cart = () => {
       finalCost: final,
       address: address,
     };
-    dispatch(patchUser(payload));
+    await dispatch(patchUser(payload));
   }
   async function handleCreateOrder() {
     //EXCEPTIONS

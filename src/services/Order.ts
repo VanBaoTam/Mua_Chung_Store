@@ -28,7 +28,6 @@ export const shareLinkGroupBuy = async (
   orderId: string,
   userId: string
 ) => {
-  console.log(idGroupBuy, orderId, userId);
   await openShareSheet({
     type: "zmp",
     data: {
