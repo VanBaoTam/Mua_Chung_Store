@@ -7,7 +7,7 @@ module.exports = {
       },
       colors: {
         myColor: "#fccfcf",
-        background: "#e9ebed",
+        background: "rgb(233, 235, 237,0.7)",
       },
     },
   },

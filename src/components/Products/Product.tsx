@@ -14,7 +14,7 @@ const Product = (props) => {
     >
       <img
         src={props.photo_links}
-        style={{ minHeight: "222px" }}
+        style={{ height: "200px" }}
         alt="Product's img"
       />
       <Box p={2}>

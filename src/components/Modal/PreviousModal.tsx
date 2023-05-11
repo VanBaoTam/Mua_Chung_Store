@@ -21,16 +21,9 @@ export default function PreviousModal(props) {
           <Text>{props.groupbuyId}</Text>
           <Box mt={2}>
             <Text bold>List sản phẩm:</Text>
-            <Box py={2} flex justifyContent="space-between">
-              <Box>
-                <Text>Sản phẩm</Text>
-              </Box>
-              <Box>
-                <Text>Số lượng</Text>
-              </Box>
-              <Box>
-                <Text>Giá</Text>
-              </Box>
+            <Box py={2} px={1} flex justifyContent="space-between">
+              <Text>Tên sản phẩm</Text>
+              <Text>Ảnh</Text>
             </Box>
             {props.order?.map((item) => {
               return (
@@ -41,18 +34,26 @@ export default function PreviousModal(props) {
                   mt={1}
                   alignItems="center"
                 >
+                  <p
+                    className=" block max-w-xs overflow-hidden"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {item.productData.product_name}
+                  </p>
                   <img
                     className="w-20 h-20"
                     src={item.productData.photo_link}
                     alt="order's image"
                   />
-                  <Text>{item.productData.quantity}</Text>
-                  <Text> {ConvertPrice(item.productData.price, 1)}đ</Text>
                 </Box>
               );
             })}
           </Box>
-          <Box px={4} py={4} flex justifyContent="space-between">
+          <Box py={4} flex justifyContent="space-between">
             <Text bold>Tổng tiền:</Text>
             <Text>{ConvertPrice(props.finalCost, 1)}đ</Text>
           </Box>
