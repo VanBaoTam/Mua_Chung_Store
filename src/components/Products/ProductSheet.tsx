@@ -22,8 +22,6 @@ const ProductSheet = (props) => {
   function handleAdd() {
     let orderProduct: CartProductModel = {
       ...product,
-      size: size,
-      color: color,
       quantity: amount,
     };
     dispatch(addProduct(orderProduct));

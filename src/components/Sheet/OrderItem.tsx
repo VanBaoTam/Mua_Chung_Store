@@ -3,7 +3,11 @@ import { Box, useTheme } from "zmp-ui";
 import { CartProductModel } from "../../models";
 import { ConvertPrice } from "../../utils/Prices";
 import CartSheet from "./CartSheet";
+import { useAppDispatch } from "../../hooks/hooks";
+import { removeProduct } from "../../features/Order/OrderSlice";
+import { RiDeleteBinFill } from "react-icons/ri";
 const OrderItem = (props: CartProductModel) => {
+  const dispatch = useAppDispatch();
   const [isShown, setIsShown] = useState<boolean>(false);
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
   function handleRemove() {
@@ -14,7 +18,6 @@ const OrderItem = (props: CartProductModel) => {
       setIsShown(false);
     }, 300);
   }
-
   return (
     <Box>
       {isRemoved ? null : (
@@ -52,6 +55,25 @@ const OrderItem = (props: CartProductModel) => {
             <p className="text-xs font-semibold text-red-400">
               {ConvertPrice(Number(props.price), props.quantity)}VNĐ
             </p>
+          </div>
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                zIndex: "10",
+                position: "absolute",
+                display: "inline-block",
+                right: "0",
+                top: "-40px",
+              }}
+            >
+              <button
+                onClick={() => {
+                  dispatch(removeProduct(props.code));
+                }}
+              >
+                <RiDeleteBinFill size={20} color="#f6bebe" />
+              </button>
+            </div>
           </div>
         </Box>
       )}

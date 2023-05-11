@@ -16,9 +16,6 @@ export type CartProductModel = {
   photo_links: string;
   name: string;
   price: number;
-  description: string;
-  size: string;
-  color: string;
   quantity: number;
 };
 export type OrderInfoModel = {

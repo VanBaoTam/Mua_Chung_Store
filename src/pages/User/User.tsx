@@ -20,6 +20,7 @@ const User = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
+
   const [userId, setUserId] = useState<string>("");
   const [point, setPoint] = useState(-1);
   function handleLogOut() {
@@ -36,7 +37,6 @@ const User = () => {
     async function handleGetPoint() {
       setIsLoaded(false);
       const extraUserInfo = await handleGetUserInfoFromBE(userId);
-      console.log(extraUserInfo);
       setTimeout(() => {
         setPoint(extraUserInfo.point);
         console.log(extraUserInfo.followOA);

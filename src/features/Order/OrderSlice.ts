@@ -31,8 +31,7 @@ const orderSlice = createSlice({
     },
     removeProduct: (state, product) => {
       const filteredState = state.Products.filter((item) => {
-        console.log(item.code);
-        return item.code !== product.payload.code;
+        return item.code !== product.payload;
       });
       state.Products = filteredState;
     },

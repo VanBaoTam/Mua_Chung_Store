@@ -9,7 +9,7 @@ import { setFollowed } from "../../features/User/UserSlice";
 export default function FollowOA() {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((store) => store.user.userInfo.id);
-  const navigate = useNavigate();
+
   return (
     <Box
       mx={4}
