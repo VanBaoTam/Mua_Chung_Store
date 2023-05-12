@@ -1,5 +1,5 @@
 import { openChat, followOA, unfollowOA } from "zmp-sdk/apis";
-import { handleToggleFollowOA } from "./User";
+import { getIdByOA, handleToggleFollowOA } from "./User";
 
 export const openChatScreen = async (userId: string) => {
   try {
@@ -18,7 +18,9 @@ export const handleFollowOA = async (userId: string) => {
     await followOA({
       id: "3553899238149499553",
     });
-    await handleToggleFollowOA(userId, true);
+    const idByOA = await getIdByOA();
+    console.log(idByOA);
+    await handleToggleFollowOA(userId, true, idByOA);
     return true;
   } catch (error) {
     // xử lý khi gọi api thất bại
@@ -32,7 +34,8 @@ export const handleUnfollowOA = async (userId: string) => {
     await unfollowOA({
       id: "3553899238149499553",
     });
-    await handleToggleFollowOA(userId, false);
+    const idByOA = undefined;
+    await handleToggleFollowOA(userId, false, idByOA);
     return true;
   } catch (error) {
     // xử lý khi gọi api thất bại

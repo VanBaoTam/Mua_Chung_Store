@@ -11,6 +11,15 @@ export const getUserId = async (): Promise<any> => {
     console.log(error);
   }
 };
+export const getIdByOA = async (): Promise<any> => {
+  try {
+    const { userInfo } = await getUserInfo({});
+    return userInfo.idByOA;
+  } catch (error) {
+    // xử lý khi gọi api thất bại
+    console.log(error);
+  }
+};
 
 export const handleLogin = async () => {
   try {
@@ -93,12 +102,16 @@ export const getUserPhoneNumber = async () => {
   });
 };
 
-export const handleGetUserInfoFromBE = async (userId: string) => {
+export const handleGetUserInfoFromBE = async (
+  userId: string,
+  idByOA?: string | undefined
+) => {
   try {
     const resp = await axios.post(
       `https://app.muachung.co/api/user/login`,
       {
         userId: userId,
+        idByOA: idByOA,
       },
       {
         headers: {
@@ -114,15 +127,16 @@ export const handleGetUserInfoFromBE = async (userId: string) => {
 
 export const handleToggleFollowOA = async (
   userId: string,
-  followOA: boolean
+  followOA: boolean,
+  idByOA: string | undefined
 ) => {
   try {
-    console.log(followOA);
     const resp = await axios.post(
       `https://app.muachung.co/api/user/followOA`,
       {
         userId: userId,
         followOA: followOA,
+        idByOA: idByOA,
       },
       {
         headers: {

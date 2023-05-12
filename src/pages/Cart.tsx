@@ -658,6 +658,7 @@ const Cart = () => {
       code: code,
       orderId: orderId,
       userId: userInfo.userInfo.id,
+      idByOA: userInfo.userInfo.idByOA,
       order: products,
       totalCost: total,
       discount: point,

@@ -11,13 +11,28 @@ const initialState = {
 export const getProducts = createAsyncThunk(
   "products/getProducts",
   async (name, thunk) => {
+    let access_token;
     try {
-      const resp = await axios.get("https://app.muachung.co/api/product", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      return resp.data;
+      access_token = await axios.get(`
+    https://app.muachung.co/api/zalo/access_token`);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      const resp = await axios.get(
+        "https://openapi.zalo.me/v2.0/mstore/product/getproductofoa?offset=0&limit=10",
+        {
+          params: {
+            offset: "0",
+            limit: "10",
+          },
+          headers: {
+            "Content-Type": "application/json",
+            access_token: access_token.data,
+          },
+        }
+      );
+      return resp.data.data.products;
     } catch (error) {
       console.log(error);
     }
@@ -36,14 +51,16 @@ const productSlice = createSlice({
       getProducts.fulfilled,
       (state, products: PayloadAction<any>) => {
         state.isLoaded = true;
+
         products?.payload.map((item) => {
+          console.log(item);
           const product: ProductModel = {
-            id: item[0],
-            code: item[1],
-            name: item[2],
-            description: item[3],
-            price: parseFloat(item[5]),
-            photo_links: item[6],
+            id: item.id,
+            code: item.code,
+            name: item.name,
+            description: item.description,
+            price: parseFloat(item.price),
+            photo_links: item.photo_links,
           };
           state.Products = [...state.Products, product];
         });

@@ -25,6 +25,7 @@ export const handlegetUserInfo = createAsyncThunk(
   async () => {
     try {
       const { userInfo } = await getUserInfo({});
+
       return userInfo;
     } catch (error) {
       // xử lý khi gọi api thất bại

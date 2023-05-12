@@ -14,13 +14,11 @@ import { BsChevronRight } from "react-icons/bs";
 import Loading from "../../components/Modal/Loading";
 import FollowOA from "../../components/User/FollowOA";
 import UnFollowOA from "../../components/User/UnfollowOA";
-import { followOA } from "zmp-sdk";
 const User = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
-
   const [userId, setUserId] = useState<string>("");
   const [point, setPoint] = useState(-1);
   function handleLogOut() {
@@ -36,7 +34,11 @@ const User = () => {
   useEffect(() => {
     async function handleGetPoint() {
       setIsLoaded(false);
-      const extraUserInfo = await handleGetUserInfoFromBE(userId);
+      const extraUserInfo = await handleGetUserInfoFromBE(
+        userId,
+        userInfo.userInfo.idByOA
+      );
+      console.log(extraUserInfo);
       setTimeout(() => {
         setPoint(extraUserInfo.point);
         console.log(extraUserInfo.followOA);
