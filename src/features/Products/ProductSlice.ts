@@ -6,29 +6,33 @@ const initArr: ProductModel[] = [];
 const initialState = {
   Products: initArr,
   isLoaded: false,
+  access_token: "",
+  page: 0,
 };
-
+export const getAccessToken = async () => {
+  try {
+    const access_token = await axios.get(`
+  https://app.muachung.co/api/zalo/access_token`);
+    return access_token.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async (name, thunk) => {
-    let access_token;
-    try {
-      access_token = await axios.get(`
-    https://app.muachung.co/api/zalo/access_token`);
-    } catch (error) {
-      console.log(error);
-    }
+  async (offset: number, thunk) => {
+    const states: any = thunk.getState();
     try {
       const resp = await axios.get(
-        "https://openapi.zalo.me/v2.0/mstore/product/getproductofoa?offset=0&limit=10",
+        `https://openapi.zalo.me/v2.0/mstore/product/getproductofoa?offset=${offset}&limit=50`,
         {
           params: {
-            offset: "0",
-            limit: "10",
+            offset: String(offset),
+            limit: "50",
           },
           headers: {
             "Content-Type": "application/json",
-            access_token: access_token.data,
+            access_token: states.products.access_token,
           },
         }
       );
@@ -42,7 +46,11 @@ export const getProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    setAccessToken: (state, action: PayloadAction<string>) => {
+      state.access_token = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getProducts.pending, (state) => {
       state.isLoaded = false;
@@ -51,9 +59,7 @@ const productSlice = createSlice({
       getProducts.fulfilled,
       (state, products: PayloadAction<any>) => {
         state.isLoaded = true;
-
         products?.payload.map((item) => {
-          console.log(item);
           const product: ProductModel = {
             id: item.id,
             code: item.code,
@@ -64,6 +70,7 @@ const productSlice = createSlice({
           };
           state.Products = [...state.Products, product];
         });
+        state.page += 10;
       }
     );
     builder.addCase(getProducts.rejected, (state) => {
@@ -71,5 +78,5 @@ const productSlice = createSlice({
     });
   },
 });
-
+export const { setAccessToken } = productSlice.actions;
 export default productSlice.reducer;

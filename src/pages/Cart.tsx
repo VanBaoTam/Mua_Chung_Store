@@ -78,7 +78,7 @@ const Cart = () => {
   const [currentWard, setCurrentWard] = useState<string>("");
   const [selectedDistrict, setselectedDistrict] = useState<string>("");
   const [selectedWard, setselectedWard] = useState<string>("");
-
+  //
   useEffect(() => {
     if (previous.groupbuyId !== "") {
       setCode(previous.groupbuyId);
@@ -269,9 +269,9 @@ const Cart = () => {
     let total = SumPrice(orders.Products);
     let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
     let uniqueGHTKVar = uniqueGHTK();
-    // if (paymentMethod == "COD")
-    //   await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-    // else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    if (paymentMethod == "COD")
+      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
     setIsLoaded(true);
     setOrderSuccess(true);
   }

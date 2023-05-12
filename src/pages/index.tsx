@@ -13,6 +13,7 @@ import {
 } from "../features/PreviousUser/PreviousSlice";
 import PreviousModal from "../components/Modal/PreviousModal";
 import { getOrderFromUser } from "../services/Order";
+import { getProducts } from "../features/Products/ProductSlice";
 interface previousOrderModel {
   groupbuyId: string;
   order: [];
@@ -26,6 +27,7 @@ const HomePage: React.FunctionComponent = () => {
   const searchParams = new URLSearchParams(location.search);
   const previous = useAppSelector((state) => state.previous);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     for (const [key, value] of searchParams.entries()) {
       if (key == "IdGroupBuy" && value) {
