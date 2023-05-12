@@ -15,7 +15,6 @@ const OrderSheet = (props) => {
       props.userId,
       props.orderId
     );
-    console.log(resp);
     setIdGroupBuy(resp);
   }
   function handleConfirm() {
@@ -26,7 +25,6 @@ const OrderSheet = (props) => {
     handleGetGroupBuyId();
   }, []);
 
-  // console.log(props);
   return (
     <Sheet
       height={600}

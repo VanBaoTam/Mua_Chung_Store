@@ -14,9 +14,7 @@ export const getAccessToken = async () => {
     const access_token = await axios.get(`
   https://app.muachung.co/api/zalo/access_token`);
     return access_token.data;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 export const getProducts = createAsyncThunk(
   "products/getProducts",

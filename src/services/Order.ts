@@ -44,7 +44,6 @@ export const shareLinkGroupBuy = async (
 };
 export const getOrderFromUser = async (userId: string, orderId: string) => {
   try {
-    console.log(userId, orderId);
     const resp = await axios.get(
       `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
     );
@@ -78,7 +77,6 @@ export const getAmountUser = async (idGroupBuy: string) => {
     const resp = await axios.get(
       `https://app.muachung.co/api/groupbuy/${idGroupBuy}`
     );
-    console.log(resp);
     return resp.data;
   } catch (error) {
     console.log(error);

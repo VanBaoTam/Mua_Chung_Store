@@ -7,7 +7,6 @@ export const handleFollowOA = async (userId: string) => {
       id: "3553899238149499553",
     });
     const idByOA = await getIdByOA();
-    console.log(idByOA);
     await handleToggleFollowOA(userId, true, idByOA);
     return true;
   } catch (error) {

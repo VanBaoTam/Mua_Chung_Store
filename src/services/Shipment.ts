@@ -16,7 +16,6 @@ export async function HandleUploadNewShipMent(
   phonenumber: string
 ) {
   const isFreeship: number = is_freeship ? 0 : 1;
-  console.log(products);
   const resp = await fetch(" https://app.muachung.co/api/order/createorder", {
     method: "POST",
     body: JSON.stringify({
@@ -46,7 +45,6 @@ export async function HandleUploadNewShipMent(
     },
   });
   const json = await resp.json();
-  console.log(resp);
   return json;
 }
 
@@ -74,7 +72,6 @@ export async function HandleUpGetShipmentFee(
         },
       }
     );
-    console.log(response);
     return response.data.fee.fee;
   } catch (error) {
     console.log(error);

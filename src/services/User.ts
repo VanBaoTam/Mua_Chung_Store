@@ -57,7 +57,6 @@ export const handlegetGroupBuyIdFromOrders = async (
     const resp = await axios.get(
       `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}/getgroupbuyid`
     );
-    console.log(resp.data);
     return resp.data;
   } catch (error) {
     console.log(error);
@@ -75,7 +74,6 @@ const getPhoneNumberByToken = async (
         token: token,
       },
     });
-    console.log(resp.data);
   } catch (error) {
     console.log(error);
   }
@@ -86,12 +84,10 @@ export const getUserPhoneNumber = async () => {
     success: async (data) => {
       // xử lý khi gọi api thành công
       let { token } = data;
-      console.log(token);
       // xử lý cho trường hợp sử dụng phiên bản Zalo mới (phiên bản lớn hơn 23.02.01)
       if (token) {
         const accesstoken = await HandleAccessToken();
         const phonenumber = await getPhoneNumberByToken(token, accesstoken);
-        console.log(phonenumber);
         return phonenumber;
       }
     },
@@ -144,7 +140,6 @@ export const handleToggleFollowOA = async (
         },
       }
     );
-    console.log(resp);
     return resp.data;
   } catch (error) {
     console.log(error);

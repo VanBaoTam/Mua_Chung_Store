@@ -18,7 +18,6 @@ const PreviousSlice = createSlice({
   initialState,
   reducers: {
     setInfo: (state, action: PayloadAction<PreviousState>) => {
-      console.log(action.payload);
       state.groupbuyId = action.payload.groupbuyId;
       state.userId = action.payload.userId;
       state.orderId = action.payload.orderId;

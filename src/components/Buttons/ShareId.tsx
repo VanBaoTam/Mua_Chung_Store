@@ -5,7 +5,6 @@ const ShareId = (props) => {
   const { username, idGroupBuy, orderId, userId, handleConfirm } = props;
   async function handleShareId() {
     const resp = await shareLinkGroupBuy(username, idGroupBuy, orderId, userId);
-    console.log(resp);
     handleConfirm();
   }
   return (

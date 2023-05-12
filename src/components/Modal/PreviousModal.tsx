@@ -10,7 +10,7 @@ import { CartProductModel } from "../../models";
 export default function PreviousModal(props) {
   const [popupVisible, setPopupVisible] = useState(true);
   const dispatch = useAppDispatch();
-  console.log(props.order);
+
   return (
     <Modal
       visible={popupVisible}
@@ -70,7 +70,7 @@ export default function PreviousModal(props) {
                           price: item.productData.price,
                           quantity: 1,
                         };
-                        console.log(payload);
+
                         dispatch(addProduct(payload));
                       }}
                     >

@@ -128,7 +128,6 @@ const Cart = () => {
   }, [OrderCode]);
   //Check if patch success
   useEffect(() => {
-    console.log(codeSlice.isPatched);
     if (codeSlice.isPatched == 4) {
       dispatch(Patched(4));
       setGBOver(true);
@@ -269,9 +268,9 @@ const Cart = () => {
     let total = SumPrice(orders.Products);
     let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
     let uniqueGHTKVar = uniqueGHTK();
-    if (paymentMethod == "COD")
-      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    // if (paymentMethod == "COD")
+    //   await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    // else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
     setIsLoaded(true);
     setOrderSuccess(true);
   }
@@ -348,7 +347,6 @@ const Cart = () => {
       userInfo.userInfo.name,
       phonenumber
     );
-    console.log(resp);
   }
   const isEmpty = orders.Products.length == 0 ? true : false;
   const orderItems = orders.Products.map((ordersProduct: CartProductModel) => {
@@ -642,7 +640,6 @@ const Cart = () => {
   async function CreatingOrder(products, uniqueGHTKVar: string) {
     let total = SumPrice(orders.Products) + ShipmentFee,
       final = total - point;
-    console.log(code);
     let address =
       "Địa chỉ: " +
       currentAddress +

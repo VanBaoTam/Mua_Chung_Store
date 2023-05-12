@@ -27,7 +27,7 @@ const UserOrders = () => {
   );
   async function handleGetOrdersFromUser(userId) {
     const resp = await handlegetOrdersFromUsers(userId);
-    console.log(resp.length);
+
     if (!isNaN(resp.length) && resp.length > 0) {
       setOrders(resp);
       setIsLoaded(true);

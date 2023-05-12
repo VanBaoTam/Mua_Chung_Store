@@ -37,7 +37,6 @@ const orderSlice = createSlice({
     },
     setOrderCode: (state, action: PayloadAction<string>) => {
       state.initCode = action.payload;
-      console.log(action.payload);
     },
   },
 });

@@ -38,10 +38,8 @@ const User = () => {
         userId,
         userInfo.userInfo.idByOA
       );
-      console.log(extraUserInfo);
       setTimeout(() => {
         setPoint(extraUserInfo.point);
-        console.log(extraUserInfo.followOA);
         dispatch(setFollowed(extraUserInfo.followOA));
         setIsLoaded(true);
       }, 500);

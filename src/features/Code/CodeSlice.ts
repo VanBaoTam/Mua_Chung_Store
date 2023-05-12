@@ -127,7 +127,6 @@ const codeSlice = createSlice({
     });
     builder.addCase(patchUser.fulfilled, (state, result) => {
       if (result.payload.check) {
-        console.log;
         state.isPatched = 2;
       } else if (
         result.payload.resp.response.data.message == "Group buy is over"
