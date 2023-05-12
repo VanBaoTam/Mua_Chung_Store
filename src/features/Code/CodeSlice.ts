@@ -35,8 +35,7 @@ const initialState = {
 export const patchUser = createAsyncThunk(
   "code/patchUser",
   async (payload: any, thunk) => {
-    const idByOA =
-      payload.idByOA !== "" && payload !== undefined ? payload.idByOA : "";
+    const idByOA = payload.idByOA !== "" ? payload.idByOA : "";
     try {
       const resp = await axios.patch(
         `https://app.muachung.co/api/groupbuy/${payload.code}/add/${payload.userId}`,
@@ -56,6 +55,7 @@ export const patchUser = createAsyncThunk(
           },
         }
       );
+      console.log(resp);
       return { resp: resp, check: true };
     } catch (error: any) {
       console.log(error);
