@@ -13,7 +13,14 @@ import {
 } from "react-icons/ri";
 const BottomNavigationPage = () => {
   const location = useLocation();
-  const allowedRoutes = ["/", "/user", "/orders", "/cart", "/discovery"];
+  const allowedRoutes = [
+    "/",
+    "/user",
+    "/orders",
+    "/cart",
+    "/discovery",
+    "/top",
+  ];
   const [activeTab, setActiveTab] = useState("home");
   const isRouteAllowed = allowedRoutes.includes(location.pathname);
   const searchStyle = activeTab === "search" ? { color: "#FCCFCF" } : undefined;

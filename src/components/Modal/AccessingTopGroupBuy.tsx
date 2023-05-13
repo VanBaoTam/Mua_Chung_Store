@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Page, Button, Text, Modal, Box } from "zmp-ui";
 
-export default function PopUpModal({ title }) {
+export default function AccessingTopGroupBuy({ title }) {
   const [popupVisible, setPopupVisible] = useState(true);
+  const navigate = useNavigate();
   return (
     <Modal
       visible={popupVisible}
@@ -16,6 +17,7 @@ export default function PopUpModal({ title }) {
         <Button
           onClick={() => {
             setPopupVisible(false);
+            navigate("/");
           }}
           style={{ backgroundColor: "#f6bebe" }}
           fullWidth
