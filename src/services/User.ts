@@ -107,7 +107,6 @@ export const handleGetUserInfoFromBE = async (
       `https://app.muachung.co/api/user/login`,
       {
         userId: userId,
-        idByOA: idByOA,
       },
       {
         headers: {
