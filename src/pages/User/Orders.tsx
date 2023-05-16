@@ -3,19 +3,10 @@ import { Box, Button, Icon, Page, Text } from "zmp-ui";
 import { handlegetOrdersFromUsers } from "../../services/User";
 import { useAppSelector } from "../../hooks/hooks";
 import Loading from "../../components/Modal/Loading";
-import OrderSheet from "../../components/Sheet/OrderSheet";
+import { useNavigate } from "react-router-dom";
 const UserOrders = () => {
+  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [orderInfo, setOrderInfo] = useState<any>();
-  const [isShown, setIsShown] = useState(false);
-  function handleShown() {
-    setTimeout(() => {
-      setIsShown(false);
-    }, 300);
-    setTimeout(() => {
-      setOrderInfo(null);
-    }, 500);
-  }
   const [orders, setOrders] = useState<any>([]);
   const userInfo = useAppSelector((store) => store.user);
   const userId = userInfo.userInfo.id;
@@ -45,14 +36,8 @@ const UserOrders = () => {
       {orders ? null : EmptyOrders}
       {isLoaded ? null : <Loading />}
       <Box>
-        {isShown && orderInfo ? (
-          <OrderSheet
-            {...orderInfo}
-            username={userInfo.userInfo.name}
-            handleShown={handleShown}
-          />
-        ) : null}
         {orders?.map((element) => {
+          console.log(element);
           return (
             <Box
               key={element._id}
@@ -84,8 +69,7 @@ const UserOrders = () => {
                   size="large"
                   style={{ backgroundColor: "#fccfcf" }}
                   onClick={() => {
-                    setIsShown(true);
-                    setOrderInfo(element);
+                    navigate(`/orderdetails/${element.orderId}`);
                   }}
                 >
                   Xem

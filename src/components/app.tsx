@@ -14,6 +14,7 @@ import BottomNavigationPage from "./Layout/BottomNavbar";
 import UserOrders from "../pages/User/Orders";
 import Discovery from "../pages/Discovery";
 import TopGroupBuy from "../pages/User/TopGroupBuy";
+import OrderDetails from "../pages/User/OrderDetails";
 
 const MyApp = () => {
   return (
@@ -31,6 +32,7 @@ const MyApp = () => {
               <Route path="/discovery" element={<Discovery />} />
               <Route path="/top" element={<TopGroupBuy />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/orderdetails/:orderId" element={<OrderDetails />} />
               <Route path="*" element={<Page404 />} />
             </AnimationRoutes>
             <BottomNavigationPage />

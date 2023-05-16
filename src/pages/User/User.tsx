@@ -34,10 +34,7 @@ const User = () => {
   useEffect(() => {
     async function handleGetPoint() {
       setIsLoaded(false);
-      const extraUserInfo = await handleGetUserInfoFromBE(
-        userId,
-        userInfo.userInfo.idByOA
-      );
+      const extraUserInfo = await handleGetUserInfoFromBE(userId);
       setTimeout(() => {
         setPoint(extraUserInfo.point);
         dispatch(setFollowed(extraUserInfo.followOA));

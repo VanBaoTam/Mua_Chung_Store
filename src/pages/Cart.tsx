@@ -104,11 +104,6 @@ const Cart = () => {
   }, [userInfo.userInfo.id]);
 
   //Refresh Load checking
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 5000);
-  }, [isLoaded]);
 
   //Create new Groupbuy
   useEffect(() => {

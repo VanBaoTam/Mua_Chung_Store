@@ -27,7 +27,7 @@ const OrderSheet = (props) => {
 
   return (
     <Sheet
-      height={600}
+      height={800}
       visible={sheetVisible}
       onClose={handleClose}
       autoHeight

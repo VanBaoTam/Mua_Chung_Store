@@ -62,6 +62,20 @@ export const handlegetGroupBuyIdFromOrders = async (
     console.log(error);
   }
 };
+export const handlegetOrderDetailsFromOrders = async (
+  userId: string,
+  orderId: string
+) => {
+  try {
+    console.log(userId, orderId);
+    const resp = await axios.get(
+      `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
+    );
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getPhoneNumberByToken = async (
   token: string,
@@ -98,10 +112,7 @@ export const getUserPhoneNumber = async () => {
   });
 };
 
-export const handleGetUserInfoFromBE = async (
-  userId: string,
-  idByOA?: string | undefined
-) => {
+export const handleGetUserInfoFromBE = async (userId: string) => {
   try {
     const resp = await axios.post(
       `https://app.muachung.co/api/user/login`,

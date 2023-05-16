@@ -2,29 +2,13 @@ import React from "react";
 import { Box, Button } from "zmp-ui";
 import { shareLinkGroupBuy } from "../../services/Order";
 const ShareId = (props) => {
-  const { username, idGroupBuy, orderId, userId, handleConfirm } = props;
+  const { username, idGroupBuy, orderId, userId } = props;
   async function handleShareId() {
     const resp = await shareLinkGroupBuy(username, idGroupBuy, orderId, userId);
-    handleConfirm();
   }
   return (
-    <Box
-      flex
-      justifyContent="space-around"
-      p={4}
-      className="absolute bottom-0 left-0 w-full bg-white"
-    >
-      <Box className="w-5/12">
-        <Button
-          fullWidth={true}
-          size="medium"
-          style={{ backgroundColor: "#fccfcf" }}
-          onClick={handleConfirm}
-        >
-          Đóng
-        </Button>
-      </Box>
-      <Box className="w-5/12">
+    <Box p={4} className="absolute bottom-0 left-0 w-full bg-white">
+      <Box px={4} className="w-full">
         <Button
           fullWidth={true}
           size="medium"
