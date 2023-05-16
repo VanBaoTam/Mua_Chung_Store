@@ -646,7 +646,6 @@ const Cart = () => {
       currentProvince;
     let orderId = code + uniqueGHTKVar;
     setOrderId(orderId);
-    console.log(userInfo.userInfo.idByOA);
     let payload = {
       code: code,
       orderId: orderId,

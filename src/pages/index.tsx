@@ -30,7 +30,7 @@ const HomePage: React.FunctionComponent = () => {
 
   useEffect(() => {
     for (const [key, value] of searchParams.entries()) {
-      if (key == "IdGroupBuy" && value) {
+      if (key == "idGroupBuy" && value) {
         dispatch(setGroupbuyId(value));
       }
       if (key == "orderId" && value) {
@@ -42,6 +42,7 @@ const HomePage: React.FunctionComponent = () => {
     }
   }, []);
   useEffect(() => {
+    console.log(previous);
     async function handleGetPrevious() {
       const resp = await getOrderFromUser(previous.userId, previous.orderId);
       if (resp) {
