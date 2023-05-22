@@ -292,13 +292,12 @@ const Cart = () => {
     setCode(event.target.value);
   }
   function handlePointChange(event) {
-    const newValue = parseInt(event.target.value);
-    const roundedValue = Math.ceil(newValue / 1000) * 1000; // Round the input to the nearest multiple of 1000
+    const point = parseInt(event.target.value);
     if (userInfo.point <= 0) {
       setPoint(0);
-    } else if (roundedValue >= 0 && roundedValue <= userInfo.point) {
-      setPoint(roundedValue);
-    } else setPoint(0);
+    } else if (point <= userInfo.point) {
+      setPoint(Math.round(point));
+    } else setPoint(userInfo.point);
   }
 
   function handleSignin() {
@@ -437,7 +436,7 @@ const Cart = () => {
             <input
               type="number"
               min={0}
-              placeholder="1.000 điểm = 1.000đ"
+              placeholder="1 điểm = 1.000đ"
               max={userInfo.point <= 0 ? 0 : userInfo.point}
               onChange={handlePointChange}
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"

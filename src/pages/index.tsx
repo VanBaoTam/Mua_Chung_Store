@@ -42,7 +42,6 @@ const HomePage: React.FunctionComponent = () => {
     }
   }, []);
   useEffect(() => {
-    console.log(previous);
     async function handleGetPrevious() {
       const resp = await getOrderFromUser(previous.userId, previous.orderId);
       if (resp) {
