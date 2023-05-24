@@ -8,13 +8,16 @@ const initialState = {
   isLoaded: false,
   access_token: "",
   page: 0,
+  loadedPages: [0],
 };
 export const getAccessToken = async () => {
   try {
     const access_token = await axios.get(`
   https://app.muachung.co/api/zalo/access_token`);
     return access_token.data;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 export const getProducts = createAsyncThunk(
   "products/getProducts",
@@ -22,11 +25,11 @@ export const getProducts = createAsyncThunk(
     const states: any = thunk.getState();
     try {
       const resp = await axios.get(
-        `https://openapi.zalo.me/v2.0/mstore/product/getproductofoa?offset=${offset}&limit=50`,
+        `https://openapi.zalo.me/v2.0/mstore/product/getproductofoa`,
         {
           params: {
             offset: String(offset),
-            limit: "50",
+            limit: "20",
           },
           headers: {
             "Content-Type": "application/json",
@@ -48,6 +51,11 @@ const productSlice = createSlice({
     setAccessToken: (state, action: PayloadAction<string>) => {
       state.access_token = action.payload;
     },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+      if (state.loadedPages.includes(action.payload)) return;
+      state.loadedPages = [...state.loadedPages, action.payload];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProducts.pending, (state) => {
@@ -68,7 +76,6 @@ const productSlice = createSlice({
           };
           state.Products = [...state.Products, product];
         });
-        state.page += 10;
       }
     );
     builder.addCase(getProducts.rejected, (state) => {
@@ -76,5 +83,5 @@ const productSlice = createSlice({
     });
   },
 });
-export const { setAccessToken } = productSlice.actions;
+export const { setAccessToken, setPage } = productSlice.actions;
 export default productSlice.reducer;

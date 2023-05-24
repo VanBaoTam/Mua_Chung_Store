@@ -4,6 +4,7 @@ import {
   getAccessToken,
   getProducts,
   setAccessToken,
+  setPage,
 } from "../../features/Products/ProductSlice";
 const Initializer = ({ type }) => {
   const Products = useAppSelector((store) => store.products);
@@ -14,7 +15,7 @@ const Initializer = ({ type }) => {
       dispatch(setAccessToken(resp));
       if (Products.isLoaded == false && type == "Products") {
         dispatch(getProducts(0));
-        dispatch(getProducts(50));
+        dispatch(setPage(0));
       }
     }
     handleGetAccessToken();
