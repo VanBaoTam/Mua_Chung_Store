@@ -9,6 +9,7 @@ const initialState = {
   access_token: "",
   page: 0,
   loadedPages: [0],
+  total: -1,
 };
 export const getAccessToken = async () => {
   try {
@@ -38,6 +39,31 @@ export const getProducts = createAsyncThunk(
         }
       );
       return resp.data.data.products;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const getTotalProducts = createAsyncThunk(
+  "products/getTotalProducts",
+  async (offset: number, thunk) => {
+    const states: any = thunk.getState();
+    try {
+      const resp = await axios.get(
+        `https://openapi.zalo.me/v2.0/mstore/product/getproductofoa`,
+        {
+          params: {
+            offset: String(offset),
+            limit: "20",
+          },
+          headers: {
+            "Content-Type": "application/json",
+            access_token: states.products.access_token,
+          },
+        }
+      );
+      return resp.data.data.total;
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +105,19 @@ const productSlice = createSlice({
       }
     );
     builder.addCase(getProducts.rejected, (state) => {
+      state.isLoaded = false;
+    });
+    builder.addCase(getTotalProducts.pending, (state) => {
+      state.isLoaded = false;
+    });
+    builder.addCase(
+      getTotalProducts.fulfilled,
+      (state, products: PayloadAction<number>) => {
+        state.total = products.payload;
+        state.isLoaded = true;
+      }
+    );
+    builder.addCase(getTotalProducts.rejected, (state) => {
       state.isLoaded = false;
     });
   },

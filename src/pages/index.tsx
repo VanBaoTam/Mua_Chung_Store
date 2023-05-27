@@ -13,7 +13,7 @@ import {
 } from "../features/PreviousUser/PreviousSlice";
 import PreviousModal from "../components/Modal/PreviousModal";
 import { getOrderFromUser } from "../services/Order";
-import { getProducts } from "../features/Products/ProductSlice";
+import { Avatar } from "@mui/material";
 interface previousOrderModel {
   groupbuyId: string;
   order: [];
@@ -63,6 +63,12 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Page hideScrollbar={true} className="p-3">
       {isPrevious ? <PreviousModal {...previousOrder} /> : null}
+      <img
+        alt="Animated GIF"
+        style={{ width: "100%", height: "180px" }}
+        src="https://w.ladicdn.com/5cfe2dbab5f9462fe64cd2dd/mc-moi-2705-20230527055820-vp3b8.gif
+      "
+      />
       <SearchBar />
       <Carousel />
       <Categories />

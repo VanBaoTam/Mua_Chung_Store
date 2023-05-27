@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import {
   getAccessToken,
   getProducts,
+  getTotalProducts,
   setAccessToken,
   setPage,
 } from "../../features/Products/ProductSlice";
@@ -15,6 +16,7 @@ const Initializer = ({ type }) => {
       dispatch(setAccessToken(resp));
       if (Products.isLoaded == false && type == "Products") {
         dispatch(getProducts(0));
+        dispatch(getTotalProducts(0));
         dispatch(setPage(0));
       }
     }

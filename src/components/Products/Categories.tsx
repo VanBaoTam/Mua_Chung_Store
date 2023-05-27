@@ -6,7 +6,6 @@ import ProductPagination from "./Pagination";
 
 const Categories = () => {
   const products = useAppSelector((store) => store.products);
-
   const productList = products.Products.slice(
     products.loadedPages.indexOf(products.page) * 20,
     products.loadedPages.indexOf(products.page) * 20 + 20
