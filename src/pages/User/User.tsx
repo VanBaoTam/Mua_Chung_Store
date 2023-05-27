@@ -143,10 +143,9 @@ const User = () => {
         <>
           {userInfo.isFollowed ? <UnFollowOA /> : <FollowOA />}
           {userInfo.userInfo.id ? orderBox : null}
-          {userInfo.userInfo.id ? openGroupBuyBox : null}
         </>
       ) : null}
-
+      {openGroupBuyBox}
       <Box
         mx={4}
         my={2}
