@@ -52,25 +52,23 @@ export const getOrderFromUser = async (userId: string, orderId: string) => {
     console.log(error);
   }
 };
-export const shareLinkTop = async (
-  username: string,
-  idGroupBuy: string,
-  point: number
-) => {
-  await openShareSheet({
+export const shareLinkTop = async (username: string, idGroupBuy: string) => {
+  const userName = username !== "" ? username : "khách";
+  const resp = await openShareSheet({
     type: "zmp",
     data: {
       title: "Lời mời tham gia mã mua chung",
-      description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}. Chiết khấu hiện tại là ${
-        point * 100
-      }%.`,
+      description: `Bạn vừa được ${userName} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
         "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/m-logo-trong-cunfashion-shorst-3-20230209153455-nrh68.png",
     },
     fail: (err) => {
       console.log(err);
+      return -1;
     },
   });
+  console.log(resp);
+  return resp.numberOfUser;
 };
 export const getAmountUser = async (idGroupBuy: string) => {
   try {

@@ -380,7 +380,12 @@ const Cart = () => {
             {settedPayment ? (
               <PopUpModal title="Phương thức thanh toán không được để trống!" />
             ) : null}
-            {isLogined ? <LoginRequired handleSignin={handleSignin} /> : null}
+            {isLogined ? (
+              <LoginRequired
+                handleSignin={handleSignin}
+                signInOnModal={false}
+              />
+            ) : null}
             {orderSuccess ? (
               <OrderSuccess
                 code={code}

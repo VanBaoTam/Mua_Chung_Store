@@ -26,6 +26,7 @@ const HomePage: React.FunctionComponent = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const previous = useAppSelector((state) => state.previous);
+  const products = useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -63,13 +64,16 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Page hideScrollbar={true} className="p-3">
       {isPrevious ? <PreviousModal {...previousOrder} /> : null}
-      <img
-        alt="Animated GIF"
-        style={{ width: "100%", height: "180px" }}
-        src="https://w.ladicdn.com/5cfe2dbab5f9462fe64cd2dd/mc-moi-2705-20230527055820-vp3b8.gif
+      {products.page === 0 && (
+        <img
+          alt="Animated GIF"
+          style={{ width: "100%", height: "180px" }}
+          src="https://w.ladicdn.com/5cfe2dbab5f9462fe64cd2dd/mc-moi-2705-20230527055820-vp3b8.gif
       "
-      />
-      <SearchBar />
+        />
+      )}
+      {/* <SearchBar /> */}
+      <div style={{ height: "30px" }}></div>
       <Carousel />
       <Categories />
       <BottomNavigationPage />

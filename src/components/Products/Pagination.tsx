@@ -10,7 +10,6 @@ export default function ProductPagination() {
   const [page, setChangePage] = useState(1);
   const products = useAppSelector((store) => store.products);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    console.log(value);
     if (value !== page) {
       setChangePage(value);
       if (!products.loadedPages.includes(page)) {

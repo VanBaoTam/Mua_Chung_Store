@@ -67,7 +67,6 @@ export const handlegetOrderDetailsFromOrders = async (
   orderId: string
 ) => {
   try {
-    console.log(userId, orderId);
     const resp = await axios.get(
       `https://app.muachung.co/api/groupbuy/user/${userId}/${orderId}`
     );

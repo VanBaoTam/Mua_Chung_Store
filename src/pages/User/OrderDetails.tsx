@@ -22,7 +22,6 @@ function OrderDetails() {
   }
   async function handleGetOrderDetail() {
     const resp = await handlegetOrderDetailsFromOrders(userInfo.id, orderId!);
-    console.log(resp);
     setOrderInfo(resp);
   }
   useEffect(() => {

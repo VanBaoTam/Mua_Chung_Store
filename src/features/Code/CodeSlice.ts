@@ -55,7 +55,6 @@ export const patchUser = createAsyncThunk(
           },
         }
       );
-      console.log(resp);
       return { resp: resp, check: true };
     } catch (error: any) {
       console.log(error);

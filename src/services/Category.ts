@@ -11,7 +11,6 @@ export const getCategories = async (access_token: string) => {
         },
       }
     );
-    console.log(response);
     //     return response.data.data.products;
   } catch (error) {
     console.log(error);

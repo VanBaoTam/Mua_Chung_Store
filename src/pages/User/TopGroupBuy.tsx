@@ -4,16 +4,24 @@ import { popularGroupBuyId } from "../../services/GroupBuy";
 import Loading from "../../components/Modal/Loading";
 import Countdown from "../../utils/Coundown";
 import { calculatePoint } from "../../utils/calculatePoint";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import PopUpModal from "../../components/Modal/PopUpModal";
 import { setOrderCode } from "../../features/Order/OrderSlice";
 import { useNavigate } from "react-router-dom";
-import AccessingTopGroupBuy from "../../components/Modal/AccessingTopGroupBuy";
+import { shareLinkTop } from "../../services/Order";
+import LoginRequired from "../../components/Modal/LoginRequired";
+import { handleIncreasePoint } from "../../services/Points";
 const TopGroupBuy = () => {
   const distpatch = useAppDispatch();
+  const user = useAppSelector((store) => store.user);
+
+  const [isLogined, setIsLogined] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [number, setNumber] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [successShare, setSuccessShare] = useState<boolean>(false);
+  const [successJoin, setSuccessJoin] = useState<boolean>(false);
+  const [successText, setSuccessText] = useState<string>("");
   const today = new Date();
   const [data, setData] = useState<any>("init");
   async function getPopularGroupBuy() {
@@ -23,14 +31,41 @@ const TopGroupBuy = () => {
       setIsLoaded(true);
     }
   }
+  async function handleSignin() {
+    setIsLogined(true);
+  }
   function handleJoinCode(idGroupBuy: string) {
+    if (user.userInfo.name == "iNiTiAl") {
+      setIsLogined(false);
+      return;
+    }
     if (!idGroupBuy) return;
     distpatch(setOrderCode(idGroupBuy));
-    setSuccess(true);
+    setSuccessJoin(true);
     setTimeout(() => {
-      setSuccess(false);
-      navigate("/");
+      setSuccessJoin(false);
     }, 2000);
+  }
+  function handleShareCode(idGroupBuy: string) {
+    if (user.userInfo.name == "iNiTiAl") {
+      setIsLogined(false);
+      return;
+    }
+    if (!idGroupBuy) return;
+    async function handleShareLinkTop() {
+      const resp = await shareLinkTop(user.userInfo.name, idGroupBuy);
+      console.log(resp);
+      if (resp !== -1) {
+        setSuccessShare(true);
+        setNumber(resp);
+        setSuccessText(`Chia sẻ mã mua chung cho ${resp} người thành công!`);
+        const changePoint = await handleIncreasePoint(user.userInfo.id, resp);
+        setTimeout(() => {
+          setSuccessShare(false);
+        }, 5000);
+      }
+    }
+    handleShareLinkTop();
   }
   useEffect(() => {
     getPopularGroupBuy();
@@ -44,8 +79,12 @@ const TopGroupBuy = () => {
   );
   return (
     <Page hideScrollbar={true}>
-      {success ? (
-        <AccessingTopGroupBuy title="Tham gia mã mua chung thành công!" />
+      {!isLogined ? (
+        <LoginRequired handleSignin={handleSignin} signInOnModal={true} />
+      ) : null}
+      {successShare && number ? <PopUpModal title={successText} /> : null}
+      {successJoin ? (
+        <PopUpModal title="Tham gia mã mua chung thành công" />
       ) : null}
       {isLoaded ? (
         data.length > 0 ? (
@@ -92,11 +131,24 @@ const TopGroupBuy = () => {
                     </span>
                   </Box>
 
-                  <Box flex justifyContent="center" flexWrap width={310} py={3}>
+                  <Box flex justifyContent="center" flexWrap py={3}>
+                    <Button
+                      size="large"
+                      style={{ backgroundColor: "#fccfcf", width: "45%" }}
+                      onClick={() => {
+                        handleShareCode(groupBuy.idGroupBuy);
+                      }}
+                    >
+                      Chia sẻ
+                    </Button>
                     <Button
                       fullWidth={true}
                       size="large"
-                      style={{ backgroundColor: "#fccfcf" }}
+                      style={{
+                        backgroundColor: "#fccfcf",
+                        width: "45%",
+                        marginLeft: "10px",
+                      }}
                       onClick={() => {
                         handleJoinCode(groupBuy.idGroupBuy);
                       }}

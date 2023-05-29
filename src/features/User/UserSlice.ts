@@ -11,7 +11,7 @@ interface userInfo {
 }
 const init: userInfo = {
   id: "",
-  name: "",
+  name: "iNiTiAl",
   avatar: "",
   idByOA: "",
 };
