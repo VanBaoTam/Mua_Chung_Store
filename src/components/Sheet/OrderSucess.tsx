@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Box, Text } from "zmp-ui";
-import { getAmountUser, shareLinkGroupBuy } from "../../services/Order";
+import {
+  getAmountUser,
+  shareLinkGroupBuy,
+  shareLinkTop,
+} from "../../services/Order";
 import { useAppSelector } from "../../hooks/hooks";
 import Loading from "../Modal/Loading";
+import { handleIncreasePoint } from "../../services/Points";
 
 export default function OrderSuccess(props) {
   const [amount, setAmount] = useState<number>(0);
@@ -53,6 +58,17 @@ export default function OrderSuccess(props) {
                   props.orderId,
                   userInfo.userInfo.id
                 );
+                const resp = await shareLinkTop(
+                  userInfo.userInfo.name,
+                  props.code
+                );
+                console.log(resp);
+                if (resp >= 0) {
+                  const changePoint = await handleIncreasePoint(
+                    userInfo.userInfo.id,
+                    resp
+                  );
+                }
                 setPopupVisible(false);
                 props.handleFinish();
               }}

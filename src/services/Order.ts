@@ -28,7 +28,7 @@ export const shareLinkGroupBuy = async (
   orderId: string,
   userId: string
 ) => {
-  await openShareSheet({
+  const res = await openShareSheet({
     type: "zmp",
     data: {
       title: "Lời mời tham gia mã mua chung",
@@ -41,6 +41,7 @@ export const shareLinkGroupBuy = async (
       console.log(err);
     },
   });
+  return res.numberOfUser;
 };
 export const getOrderFromUser = async (userId: string, orderId: string) => {
   try {
