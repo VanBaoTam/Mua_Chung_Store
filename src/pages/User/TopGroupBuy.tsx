@@ -9,8 +9,8 @@ import PopUpModal from "../../components/Modal/PopUpModal";
 import { setOrderCode } from "../../features/Order/OrderSlice";
 import { useNavigate } from "react-router-dom";
 import { shareLinkTop } from "../../services/Order";
-import LoginRequired from "../../components/Modal/LoginRequired";
 import { handleIncreasePoint } from "../../services/Points";
+import TopGroupLogin from "../../components/Modal/TopGroupLogin";
 const TopGroupBuy = () => {
   const distpatch = useAppDispatch();
   const user = useAppSelector((store) => store.user);
@@ -37,6 +37,9 @@ const TopGroupBuy = () => {
   function handleJoinCode(idGroupBuy: string) {
     if (user.userInfo.name == "iNiTiAl") {
       setIsLogined(false);
+      setTimeout(() => {
+        setIsLogined(true);
+      }, 2000);
       return;
     }
     if (!idGroupBuy) return;
@@ -49,6 +52,9 @@ const TopGroupBuy = () => {
   function handleShareCode(idGroupBuy: string) {
     if (user.userInfo.name == "iNiTiAl") {
       setIsLogined(false);
+      setTimeout(() => {
+        setIsLogined(true);
+      }, 2000);
       return;
     }
     if (!idGroupBuy) return;
@@ -80,7 +86,7 @@ const TopGroupBuy = () => {
   return (
     <Page hideScrollbar={true}>
       {!isLogined ? (
-        <LoginRequired handleSignin={handleSignin} signInOnModal={true} />
+        <TopGroupLogin handleSignin={handleSignin} signInOnModal={true} />
       ) : null}
       {successShare && number ? <PopUpModal title={successText} /> : null}
       {successJoin ? (
