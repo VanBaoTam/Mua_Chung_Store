@@ -19,6 +19,7 @@ const initialState = {
   userInfo: init,
   point: 0,
   isFollowed: false,
+  isFirstTime: false,
 };
 export const handlegetUserInfo = createAsyncThunk(
   "user/handlegetUserInfo",
@@ -47,6 +48,9 @@ const userSlice = createSlice({
     setFollowed: (state, product: PayloadAction<boolean>) => {
       state.isFollowed = product.payload;
     },
+    setFirstTime: (state, product: PayloadAction<boolean>) => {
+      state.isFirstTime = product.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(handlegetUserInfo.pending, (state) => {});
@@ -64,5 +68,6 @@ const userSlice = createSlice({
     builder.addCase(handlegetUserInfo.rejected, (state) => {});
   },
 });
-export const { Logout, updatePoint, setFollowed } = userSlice.actions;
+export const { Logout, updatePoint, setFollowed, setFirstTime } =
+  userSlice.actions;
 export default userSlice.reducer;

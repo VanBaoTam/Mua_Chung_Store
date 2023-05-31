@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
-import { ConvertPrice } from "../../utils/Prices";
+import { ConvertPrice, ConvertSalePrice } from "../../utils/Prices";
 const Product = (props) => {
+  const [price, setPrice] = useState<String>(ConvertPrice(props.price, 1));
+  const [salePrice, setSalePrice] = useState<String>(
+    ConvertSalePrice(
+      props.price - (props.price * props.sales[0].sale_percent) / 100,
+      1
+    )
+  );
   const navigate = useNavigate();
-
   return (
     <Box
       pb={3}
@@ -28,9 +34,13 @@ const Product = (props) => {
         >
           {props.name}
         </h1>
-        <span className="text-red-400 font-semibold">
-          {ConvertPrice(props.price, 1)}đ
-        </span>
+        <span className="text-red-400 font-semibold">{price}đ</span>
+        <br />
+        {props.sales && props.sales[0].sale_percent !== 0 && (
+          <span className="text-red-400 font-semibold text-lg">
+            SALES: {salePrice}đ
+          </span>
+        )}
       </Box>
     </Box>
   );

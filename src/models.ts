@@ -5,6 +5,7 @@ export type ProductModel = {
   name: string;
   price: number;
   description: string;
+  sales: [{ start_time: number; end_time: number; sale_percent: number }];
 };
 export type GHTKModel = {
   name: string;

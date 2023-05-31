@@ -38,6 +38,7 @@ export const getProducts = createAsyncThunk(
           },
         }
       );
+      console.log(resp.data);
       return resp.data.data.products;
     } catch (error) {
       console.log(error);
@@ -99,6 +100,7 @@ const productSlice = createSlice({
             description: item.description,
             price: parseFloat(item.price),
             photo_links: item.photo_links,
+            sales: item.sales,
           };
           state.Products = [...state.Products, product];
         });

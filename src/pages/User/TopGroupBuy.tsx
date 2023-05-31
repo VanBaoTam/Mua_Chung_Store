@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { shareLinkTop } from "../../services/Order";
 import { handleIncreasePoint } from "../../services/Points";
 import TopGroupLogin from "../../components/Modal/TopGroupLogin";
+import { updatePoint } from "../../features/User/UserSlice";
 const TopGroupBuy = () => {
   const distpatch = useAppDispatch();
   const user = useAppSelector((store) => store.user);
@@ -66,6 +67,7 @@ const TopGroupBuy = () => {
         setNumber(resp);
         setSuccessText(`Chia sẻ mã mua chung cho ${resp} người thành công!`);
         const changePoint = await handleIncreasePoint(user.userInfo.id, resp);
+        distpatch(updatePoint(changePoint.point));
         setTimeout(() => {
           setSuccessShare(false);
         }, 5000);

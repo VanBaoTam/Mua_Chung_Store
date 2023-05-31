@@ -23,6 +23,24 @@ export const ConvertPrice = (price: number, amount: number): string => {
   return final.split("").reverse().join("");
 };
 
+export const ConvertSalePrice = (price: number, amount: number): string => {
+  let template = Math.ceil(price * amount) + "";
+  let stringArray = Array.from(template);
+  stringArray[stringArray.length - 1] = "0";
+  let convertedPrice = stringArray.join("");
+  let final: string = "";
+  let index = 0;
+  for (let i = convertedPrice.length - 1; i >= 0; i--) {
+    if (index == 3) {
+      final += ".";
+      index = 0;
+    }
+    final += convertedPrice[i];
+    index++;
+  }
+  return final.split("").reverse().join("");
+};
+
 export const ConvertShipmentFee = (fee: number): string => {
   let convertedPrice = fee + "";
   let final: string = "";

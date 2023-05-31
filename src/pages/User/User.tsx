@@ -7,6 +7,7 @@ import { handleGetUserInfoFromBE, handleLogin } from "../../services/User";
 import {
   Logout,
   handlegetUserInfo,
+  setFirstTime,
   setFollowed,
   updatePoint,
 } from "../../features/User/UserSlice";
@@ -20,7 +21,6 @@ const User = () => {
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
   const [userId, setUserId] = useState<string>("");
-  const [point, setPoint] = useState(-1);
   function handleLogOut() {
     dispatch(Logout());
   }
@@ -32,11 +32,14 @@ const User = () => {
     setUserId(userInfo.userInfo.id);
   }, [userInfo]);
   useEffect(() => {
+    console.log("HERE");
     async function handleGetPoint() {
       setIsLoaded(false);
       const extraUserInfo = await handleGetUserInfoFromBE(userId);
+      console.log(extraUserInfo);
       setTimeout(() => {
-        setPoint(extraUserInfo.point);
+        dispatch(updatePoint(extraUserInfo.point));
+        dispatch(setFirstTime(extraUserInfo.firstTimeBuy));
         dispatch(setFollowed(extraUserInfo.followOA));
         setIsLoaded(true);
       }, 500);
@@ -123,7 +126,7 @@ const User = () => {
                   Xin chào, {userInfo.userInfo.name}
                 </Text>
                 <Text size="small" className="mt-1">
-                  Điểm: {point == -1 ? 0 : point}
+                  Điểm: {userInfo.point}
                 </Text>
               </>
             ) : (

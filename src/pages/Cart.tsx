@@ -352,6 +352,9 @@ const Cart = () => {
       <Text size="xLarge">Giỏ hàng rỗng</Text>
     </Box>
   );
+  useEffect(() => {
+    console.log(userInfo.isFirstTime);
+  }, []);
   return (
     <Page hideScrollbar={true}>
       {isEmpty ? (
@@ -439,6 +442,7 @@ const Cart = () => {
             <h4 className="text-black pb-2">Điểm chiết khấu</h4>
             <p className="text-red-400">Điểm: {userInfo.point} </p>
             <input
+              disabled={userInfo.isFirstTime}
               type="number"
               min={0}
               placeholder="1 điểm = 1.000đ"
@@ -446,6 +450,11 @@ const Cart = () => {
               onChange={handlePointChange}
               className="h-10 border-gray-100 border-2 rounded-2xl p-3 mt-2"
             ></input>
+            {userInfo.isFirstTime && (
+              <p style={{ fontSize: "12px", color: "gray" }}>
+                Bạn phải hoàn thành đơn hàng đầu tiên để dùng điểm{" "}
+              </p>
+            )}
           </Box>
           <Box
             mx={4}
