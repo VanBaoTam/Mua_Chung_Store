@@ -34,7 +34,11 @@ const Product = (props) => {
         >
           {props.name}
         </h1>
-        <span className="text-red-400 font-semibold">{price}đ</span>
+        {props.sales[0].sale_percent == 0 ? (
+          <span className="text-red-400 font-semibold">{price}đ</span>
+        ) : (
+          <span className="text-black line-through">{price}đ</span>
+        )}
         <br />
         {props.sales && props.sales[0].sale_percent !== 0 && (
           <span className="text-red-400 font-semibold text-lg">
