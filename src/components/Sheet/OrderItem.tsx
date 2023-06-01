@@ -71,7 +71,7 @@ const OrderItem = (props: CartProductModel) => {
                   dispatch(removeProduct(props.code));
                 }}
               >
-                <RiDeleteBinFill size={20} color="#f6bebe" />
+                <RiDeleteBinFill size={20} color="#BE3455" />
               </button>
             </div>
           </div>

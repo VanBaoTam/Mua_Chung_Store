@@ -1,11 +1,11 @@
 {
   "app": {
     "title": "Cun Fashion",
-    "headerColor": "#fccfcf",
+    "headerColor": "#BE3455",
     "textColor": "white",
     "actionBarHidden": false,
     "leftButton": "back",
-    "statusBarColor": "#fccfcf",
+    "statusBarColor": "#BE3455",
     "hideAndroidBottomNavigationBar": false,
     "hideIOSSafeAreaBottom": false,
     "selfControlLoading": false,

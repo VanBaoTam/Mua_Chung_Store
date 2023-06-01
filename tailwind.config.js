@@ -6,7 +6,7 @@ module.exports = {
         "45per": "42%",
       },
       colors: {
-        myColor: "#fccfcf",
+        myColor: "#BE3455",
         background: "rgb(233, 235, 237,0.7)",
       },
     },

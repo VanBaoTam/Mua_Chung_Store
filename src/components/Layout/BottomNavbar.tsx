@@ -23,12 +23,12 @@ const BottomNavigationPage = () => {
   ];
   const [activeTab, setActiveTab] = useState("home");
   const isRouteAllowed = allowedRoutes.includes(location.pathname);
-  const searchStyle = activeTab === "search" ? { color: "#FCCFCF" } : undefined;
+  const searchStyle = activeTab === "search" ? { color: "#BE3455" } : undefined;
   const discoveryStyle =
-    activeTab === "discovery" ? { color: "#FCCFCF" } : undefined;
-  const homePageStyle = activeTab === "home" ? { color: "#FCCFCF" } : undefined;
-  const cartStyle = activeTab === "cart" ? { color: "#FCCFCF" } : undefined;
-  const userStyle = activeTab === "me" ? { color: "#FCCFCF" } : undefined;
+    activeTab === "discovery" ? { color: "#BE3455" } : undefined;
+  const homePageStyle = activeTab === "home" ? { color: "#BE3455" } : undefined;
+  const cartStyle = activeTab === "cart" ? { color: "#BE3455" } : undefined;
+  const userStyle = activeTab === "me" ? { color: "#BE3455" } : undefined;
 
   useEffect(() => {
     if (location.pathname == "/") setActiveTab("home");
@@ -50,14 +50,14 @@ const BottomNavigationPage = () => {
             key="search"
             label="Tìm kiếm"
             icon={<RiSearch2Line />}
-            activeIcon={<RiSearch2Fill color="#FCCFCF" />}
+            activeIcon={<RiSearch2Fill color="#BE3455" />}
           />
           <BottomNavigation.Item
             style={discoveryStyle}
             key="discovery"
             label="Khám phá"
             icon={<BsGrid />}
-            activeIcon={<BsGridFill color="#FCCFCF" />}
+            activeIcon={<BsGridFill color="#BE3455" />}
             linkTo="/discovery"
           />
           <BottomNavigation.Item
@@ -65,7 +65,7 @@ const BottomNavigationPage = () => {
             key="home"
             label="Trang chủ"
             icon={<VscHome />}
-            activeIcon={<TiHome color="#FCCFCF" />}
+            activeIcon={<TiHome color="#BE3455" />}
             linkTo="/"
           />
           <BottomNavigation.Item
@@ -73,7 +73,7 @@ const BottomNavigationPage = () => {
             key="cart"
             label="Giỏ hàng"
             icon={<BsCart />}
-            activeIcon={<BsCartFill color="#FCCFCF" />}
+            activeIcon={<BsCartFill color="#BE3455" />}
             linkTo="/cart"
           />
           <BottomNavigation.Item

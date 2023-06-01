@@ -45,11 +45,22 @@ function CartSheet(props) {
           <p className="text-red-400 mt-4 text-sm "></p>
           <div className="mt-3">
             <span>Số lượng</span>
-            <button className="ml-4" onClick={() => handleAmount()}>
+            <button
+              style={{
+                boxShadow:
+                  "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
+              }}
+              className="ml-4"
+              onClick={() => handleAmount()}
+            >
               -
             </button>
             <span className="ml-4">{amount}</span>
             <button
+              style={{
+                boxShadow:
+                  "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
+              }}
               className="ml-4"
               onClick={() => setAmount((prev) => prev + 1)}
             >
@@ -73,14 +84,22 @@ function CartSheet(props) {
       >
         <Button
           size="medium"
-          style={{ backgroundColor: "gray" }}
+          style={{
+            backgroundColor: "gray",
+            boxShadow:
+              "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
+          }}
           onClick={handleRemove}
         >
           Xóa khỏi giỏ hàng
         </Button>
         <Button
           size="medium"
-          style={{ backgroundColor: "#f6bebe" }}
+          style={{
+            backgroundColor: "#BE3455",
+            boxShadow:
+              "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
+          }}
           onClick={handleConfirm}
         >
           Xác nhận
