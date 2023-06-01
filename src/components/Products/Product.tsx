@@ -42,7 +42,7 @@ const Product = (props) => {
         <br />
         {props.sales && props.sales[0].sale_percent !== 0 && (
           <span className="text-red-400 font-semibold text-lg">
-            SALES: {salePrice}đ
+            SALE: {salePrice}đ
           </span>
         )}
       </Box>

@@ -34,7 +34,7 @@ export const shareLinkGroupBuy = async (
       title: "Cun Fashion",
       description: `Bạn vừa được ${username} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
-        "https://w.ladicdn.com/5cfe2dbab5f9462fe64cd2dd/thuong-dien-0106-20230601101918-rgc4b.gif",
+        "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/chia-se-jpg-20230601114429-eqsbl.jpg",
       path: `/?idGroupBuy=${idGroupBuy}&orderId=${orderId}&userId=${userId}`,
     },
     fail: (err) => {
@@ -61,7 +61,7 @@ export const shareLinkTop = async (username: string, idGroupBuy: string) => {
       title: "Cun Fashion",
       description: `Bạn vừa được ${userName} gửi 1 lời mời tham gia. Mã mua chung của bạn là ${idGroupBuy}`,
       thumbnail:
-        "https://w.ladicdn.com/5cfe2dbab5f9462fe64cd2dd/thuong-dien-0106-20230601101918-rgc4b.gif",
+        "https://w.ladicdn.com/s250x250/5cfe2dbab5f9462fe64cd2dd/chia-se-jpg-20230601114429-eqsbl.jpg",
       path: `/?idGroupBuy=${idGroupBuy}`,
     },
 
