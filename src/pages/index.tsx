@@ -14,6 +14,7 @@ import {
 import PreviousModal from "../components/Modal/PreviousModal";
 import { getOrderFromUser } from "../services/Order";
 import { Avatar } from "@mui/material";
+import { setOrderCode } from "../features/Order/OrderSlice";
 interface previousOrderModel {
   groupbuyId: string;
   order: [];
@@ -33,6 +34,7 @@ const HomePage: React.FunctionComponent = () => {
     for (const [key, value] of searchParams.entries()) {
       if (key == "idGroupBuy" && value) {
         dispatch(setGroupbuyId(value));
+        dispatch(setOrderCode(value));
       }
       if (key == "orderId" && value) {
         dispatch(setOrderId(value));

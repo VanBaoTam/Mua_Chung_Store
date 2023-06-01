@@ -42,7 +42,7 @@ function CartSheet(props) {
         <img src={props.photo_links} alt="Product's image" className="w-1/3" />
         <div className="grow text-base px-2 ">
           <h4 className="font-bold text-lg">{props.name}</h4>
-          <p className="text-red-600 mt-4 text-sm "></p>
+          <p className="text-red-400 mt-4 text-sm "></p>
           <div className="mt-3">
             <span>Số lượng</span>
             <button className="ml-4" onClick={() => handleAmount()}>

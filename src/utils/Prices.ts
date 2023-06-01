@@ -8,7 +8,7 @@ export const SumPrice = (OrderArr: CartProductModel[]): number => {
   return result;
 };
 export const ConvertPrice = (price: number, amount: number): string => {
-  let convertedPrice = price * amount + "";
+  let convertedPrice = Math.round(price) * amount + "";
   let final: string = "";
   let index = 0;
   for (let i = convertedPrice.length - 1; i >= 0; i--) {
@@ -24,7 +24,7 @@ export const ConvertPrice = (price: number, amount: number): string => {
 };
 
 export const ConvertSalePrice = (price: number, amount: number): string => {
-  let template = Math.ceil(price * amount) + "";
+  let template = Math.round(price) * amount + "";
   let stringArray = Array.from(template);
   stringArray[stringArray.length - 1] = "0";
   let convertedPrice = stringArray.join("");
@@ -65,7 +65,7 @@ export const ConvertPriceAll = (
   OrderArr.forEach((Product) => {
     temp += Product.price * Product.quantity;
   });
-  let convertedPrice = temp + "";
+  let convertedPrice = Math.round(temp) + "";
   let final: string = "";
   let index = 0;
   for (let i = convertedPrice.length - 1; i >= 0; i--) {

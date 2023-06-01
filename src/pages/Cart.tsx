@@ -123,32 +123,41 @@ const Cart = () => {
   }, [OrderCode]);
   //Check if patch success
   useEffect(() => {
-    if (codeSlice.isPatched == 4) {
-      dispatch(Patched(4));
-      setGBOver(true);
-      setTimeout(() => {
-        dispatch(setInitPatched());
-        setGBOver(false);
-      }, 3000);
-    } else if (codeSlice.isPatched == 5) {
-      dispatch(Patched(5));
-      setUserExist(true);
-      setTimeout(() => {
-        dispatch(setInitPatched());
-        setUserExist(false);
-      }, 3000);
-    } else if (codeSlice.isPatched == 3) {
-      dispatch(Patched(3));
-      setTimeout(() => {
-        dispatch(setInitPatched());
-        handleOrderFail();
-      }, 1000);
-    } else if (codeSlice.isPatched == 2) {
-      dispatch(Patched(2));
-      setTimeout(() => {
-        dispatch(setInitPatched());
-        handleOrderSuccess();
-      }, 1000);
+    switch (codeSlice.isPatched) {
+      case 2: {
+        dispatch(Patched(2));
+        setTimeout(() => {
+          dispatch(setInitPatched());
+          handleOrderSuccess();
+        }, 1000);
+        break;
+      }
+      case 3: {
+        dispatch(Patched(3));
+        setTimeout(() => {
+          dispatch(setInitPatched());
+          handleOrderFail();
+        }, 1000);
+        break;
+      }
+      case 4: {
+        dispatch(Patched(4));
+        setGBOver(true);
+        setTimeout(() => {
+          dispatch(setInitPatched());
+          setGBOver(false);
+        }, 3000);
+        break;
+      }
+      case 5: {
+        dispatch(Patched(5));
+        setUserExist(true);
+        setTimeout(() => {
+          dispatch(setInitPatched());
+          setUserExist(false);
+        }, 3000);
+        break;
+      }
     }
   }, [codeSlice.isPatched]);
 
@@ -263,9 +272,9 @@ const Cart = () => {
     let total = SumPrice(orders.Products);
     let ghtkProducts = ConvertCartProductModelsToGHTK(orders.Products);
     let uniqueGHTKVar = uniqueGHTK();
-    if (paymentMethod == "COD")
-      await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
-    else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
+    // if (paymentMethod == "COD")
+    //   await handleOrderOnGHTK(ghtkProducts, false, total, uniqueGHTKVar);
+    // else await handleOrderOnGHTK(ghtkProducts, true, total, uniqueGHTKVar);
     setIsLoaded(true);
     setOrderSuccess(true);
   }
@@ -674,9 +683,10 @@ const Cart = () => {
   }
   async function handleCreateOrder() {
     //EXCEPTIONS
-    let phoneflag = true;
+    let firstCheck = true;
     if (code.substring(0, 2) != "MC") {
       setCodeRequired(true);
+      firstCheck = false;
       setTimeout(() => {
         setCodeRequired(false);
       }, 3000);
@@ -687,7 +697,7 @@ const Cart = () => {
           (parseInt(char) <= 0 && parseInt(char) >= 9)
         ) {
           setPhoneNumberFormat(true);
-          phoneflag = false;
+          firstCheck = false;
           setTimeout(() => {
             setPhoneNumberFormat(false);
           }, 3000);
@@ -695,7 +705,7 @@ const Cart = () => {
         }
       }
     }
-    if (phoneflag) {
+    if (firstCheck) {
       if (currentAddress == "") {
         setAddressRequired(true);
         setTimeout(() => {

@@ -1,29 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, Box } from "zmp-ui";
 import { handleGetUserInfoFromBE, handleLogin } from "../../services/User";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { handlegetUserInfo, updatePoint } from "../../features/User/UserSlice";
-import { setFirstTime } from "../../features/User/UserSlice";
-import { setFollowed } from "../../features/User/UserSlice";
+import {
+  handlegetUserInfo,
+  updatePoint,
+  setFollowed,
+  setFirstTime,
+} from "../../features/User/UserSlice";
 
 export default function TopGroupLogin(props) {
   const [popupVisible, setPopupVisible] = useState(true);
   const { handleSignin, signInOnModal } = props;
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    async function handleGetUserBE() {
+      handlegetUserInfo();
+      const extraUserInfo = await handleGetUserInfoFromBE(user.userInfo.id);
+      if (extraUserInfo)
+        setTimeout(() => {
+          dispatch(updatePoint(extraUserInfo.point));
+          dispatch(setFirstTime(extraUserInfo.firstTimeBuy));
+          dispatch(setFollowed(extraUserInfo.followOA));
+        }, 300);
+    }
+    if (user.userInfo.id) handleGetUserBE();
+  }, [user]);
+
   function handleClick() {
     if (signInOnModal) {
       async function handleSignIn() {
         await handleLogin();
         await dispatch(handlegetUserInfo());
-
-        const extraUserInfo = await handleGetUserInfoFromBE(user.userInfo.id);
-        if (extraUserInfo)
-          setTimeout(() => {
-            dispatch(updatePoint(extraUserInfo.point));
-            dispatch(setFirstTime(extraUserInfo.firstTimeBuy));
-            dispatch(setFollowed(extraUserInfo.followOA));
-          }, 300);
       }
       handleSignIn();
       setPopupVisible(false);

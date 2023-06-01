@@ -35,7 +35,7 @@ export async function HandleUploadNewShipMent(
         ward: ward,
         hamlet: "Khác", //Địa chỉ cấp 4 (mặc định để khác)
         is_freeship: isFreeship,
-        pick_money: value, //Tiền ship
+        pick_money: value + ShipmentFee, //Tiền ship
         value: value, // Giá trị sản phẩm
         transport: "road",
       },

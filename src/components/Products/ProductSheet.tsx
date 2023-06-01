@@ -3,12 +3,10 @@ import { useParams } from "react-router-dom";
 import { Box, Button, Radio, Sheet } from "zmp-ui";
 import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import { useNavigate } from "react-router";
-import { ConvertPrice } from "../../utils/Prices";
+import { ConvertPrice, ConvertSalePrice } from "../../utils/Prices";
 import { addProduct } from "../../features/Order/OrderSlice";
 import { CartProductModel } from "../../models";
 const ProductSheet = (props) => {
-  let size = "S",
-    color = "Đỏ";
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [sheetVisible, setSheetVisible] = useState(true);
@@ -24,6 +22,13 @@ const ProductSheet = (props) => {
       ...product,
       quantity: amount,
     };
+    if (product.sales[0].sale_percent !== 0)
+      orderProduct = {
+        ...product,
+        quantity: amount,
+        price: props.salePrice,
+      };
+    console.log(orderProduct);
     dispatch(addProduct(orderProduct));
     setSheetVisible(false);
     props.handleShown();
@@ -32,6 +37,7 @@ const ProductSheet = (props) => {
     setSheetVisible(false);
     props.handleShown();
   }
+  console.log(props);
   return (
     <Sheet
       height={600}
@@ -50,7 +56,7 @@ const ProductSheet = (props) => {
         />
         <div className="grow text-base px-2 ">
           <h4 className="font-bold text-lg">{product.name}</h4>
-          <p className="text-red-600 mt-4 text-sm "></p>
+          <p className="text-red-400 mt-4 text-sm "></p>
           <div className="mt-3">
             <span>Số lượng</span>
             <button className="ml-4" onClick={() => handleAmount()}>
@@ -66,9 +72,21 @@ const ProductSheet = (props) => {
           </div>
           <div className="mt-3">
             <span>Tổng tiền: </span>
-            <span className="text-red-400">
-              {ConvertPrice(Number(product.price), amount)}đ
-            </span>
+            {product.sales[0].sale_percent == 0 ? (
+              <span className="text-red-400 pr-2 font-semibold text-lg">
+                {ConvertPrice(product.price, 1)}đ
+              </span>
+            ) : (
+              <>
+                <span className="text-black line-through">
+                  {ConvertPrice(product.price, 1)}đ{" "}
+                </span>
+                <br />
+                <span className="text-red-400 font-semibold text-lg">
+                  SALES: {ConvertPrice(props.salePrice, 1)}đ
+                </span>
+              </>
+            )}
           </div>
         </div>
       </Box>

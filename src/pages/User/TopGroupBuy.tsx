@@ -12,12 +12,12 @@ import { shareLinkTop } from "../../services/Order";
 import { handleIncreasePoint } from "../../services/Points";
 import TopGroupLogin from "../../components/Modal/TopGroupLogin";
 import { updatePoint } from "../../features/User/UserSlice";
+
 const TopGroupBuy = () => {
   const distpatch = useAppDispatch();
   const user = useAppSelector((store) => store.user);
 
   const [isLogined, setIsLogined] = useState<boolean>(true);
-  const navigate = useNavigate();
   const [number, setNumber] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [successShare, setSuccessShare] = useState<boolean>(false);
@@ -36,11 +36,8 @@ const TopGroupBuy = () => {
     setIsLogined(true);
   }
   function handleJoinCode(idGroupBuy: string) {
-    if (user.userInfo.name == "iNiTiAl") {
+    if (user.userInfo.name == "iNiTiAl" || !user.userInfo.id) {
       setIsLogined(false);
-      setTimeout(() => {
-        setIsLogined(true);
-      }, 2000);
       return;
     }
     if (!idGroupBuy) return;
@@ -53,9 +50,6 @@ const TopGroupBuy = () => {
   function handleShareCode(idGroupBuy: string) {
     if (user.userInfo.name == "iNiTiAl") {
       setIsLogined(false);
-      setTimeout(() => {
-        setIsLogined(true);
-      }, 2000);
       return;
     }
     if (!idGroupBuy) return;
@@ -87,13 +81,11 @@ const TopGroupBuy = () => {
   );
   return (
     <Page hideScrollbar={true}>
-      {!isLogined ? (
+      {!isLogined && (
         <TopGroupLogin handleSignin={handleSignin} signInOnModal={true} />
-      ) : null}
-      {successShare && number ? <PopUpModal title={successText} /> : null}
-      {successJoin ? (
-        <PopUpModal title="Tham gia mã mua chung thành công" />
-      ) : null}
+      )}
+      {successShare && number && <PopUpModal title={successText} />}
+      {successJoin && <PopUpModal title="Tham gia mã mua chung thành công" />}
       {isLoaded ? (
         data.length > 0 ? (
           data?.map((groupBuy) => {
