@@ -18,7 +18,6 @@ const TopGroupBuy = () => {
   const user = useAppSelector((store) => store.user);
 
   const [isLogined, setIsLogined] = useState<boolean>(true);
-  const [number, setNumber] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [successShare, setSuccessShare] = useState<boolean>(false);
   const [successJoin, setSuccessJoin] = useState<boolean>(false);
@@ -55,12 +54,10 @@ const TopGroupBuy = () => {
     if (!idGroupBuy) return;
     async function handleShareLinkTop() {
       const resp = await shareLinkTop(user.userInfo.name, idGroupBuy);
-      console.log(resp);
-      if (resp !== -1) {
+      if (resp == 2) {
         setSuccessShare(true);
-        setNumber(resp);
-        setSuccessText(`Chia sẻ mã mua chung cho ${resp} người thành công!`);
-        const changePoint = await handleIncreasePoint(user.userInfo.id, resp);
+        setSuccessText(`Chia sẻ mã mua chung thành công!`);
+        const changePoint = await handleIncreasePoint(user.userInfo.id, 1);
         distpatch(updatePoint(changePoint.point));
         setTimeout(() => {
           setSuccessShare(false);
@@ -84,7 +81,7 @@ const TopGroupBuy = () => {
       {!isLogined && (
         <TopGroupLogin handleSignin={handleSignin} signInOnModal={true} />
       )}
-      {successShare && number && <PopUpModal title={successText} />}
+      {successShare && <PopUpModal title={successText} />}
       {successJoin && <PopUpModal title="Tham gia mã mua chung thành công" />}
       {isLoaded ? (
         data.length > 0 ? (

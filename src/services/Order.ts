@@ -41,6 +41,7 @@ export const shareLinkGroupBuy = async (
       console.log(err);
     },
   });
+  console.log(res);
   return res.numberOfUser;
 };
 export const getOrderFromUser = async (userId: string, orderId: string) => {
@@ -70,8 +71,7 @@ export const shareLinkTop = async (username: string, idGroupBuy: string) => {
       return -1;
     },
   });
-  console.log(resp);
-  return resp.numberOfUser;
+  return resp.status;
 };
 export const getAmountUser = async (idGroupBuy: string) => {
   try {
