@@ -6,7 +6,7 @@ let initCodeList: CodeModel[] = [];
 const initialState = {
   code: initCodeList,
   isLoaded: false,
-  isPatched: 1, //1 init , 2 success , 3 fail , 4 over , 5 exist
+  isPatched: 1, //1 init , 2 success , 3 fail , 4 over , 5 exist, 6 not found
 };
 
 // export const DeleteAll = createAsyncThunk("code/DeleteAll", async () => {
@@ -135,6 +135,10 @@ const codeSlice = createSlice({
         result.payload.resp.response.data.message == "User already exists"
       ) {
         state.isPatched = 5;
+      } else if (
+        result.payload.resp.response.data.message == "Cannot find group buy"
+      ) {
+        state.isPatched = 6;
       } else {
         state.isPatched = 3;
       }

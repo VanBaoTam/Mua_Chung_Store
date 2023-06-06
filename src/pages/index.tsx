@@ -7,6 +7,7 @@ import Carousel from "../components/Testing/Slider";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { useLocation } from "react-router-dom";
 import {
+  setFromChatBot,
   setGroupbuyId,
   setOrderId,
   setUserId,
@@ -15,6 +16,7 @@ import PreviousModal from "../components/Modal/PreviousModal";
 import { getOrderFromUser } from "../services/Order";
 import { Avatar } from "@mui/material";
 import { setOrderCode } from "../features/Order/OrderSlice";
+import PopUpModal from "../components/Modal/PopUpModal";
 interface previousOrderModel {
   groupbuyId: string;
   order: [];
@@ -42,6 +44,9 @@ const HomePage: React.FunctionComponent = () => {
       if (key == "userId" && value) {
         dispatch(setUserId(value));
       }
+      if (key == "fromchatbot" && value && previous.fromchatbot == 0) {
+        dispatch(setFromChatBot(1));
+      }
     }
   }, []);
   useEffect(() => {
@@ -65,7 +70,10 @@ const HomePage: React.FunctionComponent = () => {
   }, [previous]);
   return (
     <Page hideScrollbar={true} className="p-3">
-      {isPrevious ? <PreviousModal {...previousOrder} /> : null}
+      {previous.fromchatbot == 1 && (
+        <PopUpModal title="Bạn được tặng 1 điểm, hãy đăng nhập để nhận ngay" />
+      )}
+      {isPrevious && <PreviousModal {...previousOrder} />}
       {products.page === 0 && (
         <img
           alt="Animated GIF"

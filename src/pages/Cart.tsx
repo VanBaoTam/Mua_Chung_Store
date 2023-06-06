@@ -16,8 +16,8 @@ import {
   ConvertCartProductModelsToGHTK,
   ConvertCartProductModelsToOrderInfoModels,
 } from "../utils/ConvertOrder";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { clearCart, setOrderCode } from "../features/Order/OrderSlice";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../features/Order/OrderSlice";
 import OrderSuccess from "../components/Sheet/OrderSucess";
 import {
   HandleUpGetShipmentFee,
@@ -61,6 +61,7 @@ const Cart = () => {
   const [isLogined, setIsLogined] = useState<boolean>(false);
   const [GBOver, setGBOver] = useState<boolean>(false);
   const [userExist, setUserExist] = useState<boolean>(false);
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   const [paymentMethod, setPaymentMethod] = useState<any>(null);
   const [code, setCode] = useState<string>(OrderCode);
@@ -134,6 +135,7 @@ const Cart = () => {
       }
       case 3: {
         dispatch(Patched(3));
+        setIsLoaded(true);
         setTimeout(() => {
           dispatch(setInitPatched());
           handleOrderFail();
@@ -143,6 +145,7 @@ const Cart = () => {
       case 4: {
         dispatch(Patched(4));
         setGBOver(true);
+        setIsLoaded(true);
         setTimeout(() => {
           dispatch(setInitPatched());
           setGBOver(false);
@@ -152,9 +155,20 @@ const Cart = () => {
       case 5: {
         dispatch(Patched(5));
         setUserExist(true);
+        setIsLoaded(true);
         setTimeout(() => {
           dispatch(setInitPatched());
           setUserExist(false);
+        }, 3000);
+        break;
+      }
+      case 6: {
+        dispatch(Patched(6));
+        setNotFound(true);
+        setIsLoaded(true);
+        setTimeout(() => {
+          dispatch(setInitPatched());
+          setNotFound(true);
         }, 3000);
         break;
       }
@@ -371,6 +385,9 @@ const Cart = () => {
       ) : (
         <>
           <Box>
+            {notFound ? (
+              <PopUpModal title="Không tồn tại mã mua chung này!" />
+            ) : null}
             {GBOver ? <PopUpModal title="Mã mua chung đã hết hạn!" /> : null}
             {userExist ? (
               <PopUpModal title="Người dùng đã tham gia mã!" />
@@ -699,19 +716,26 @@ const Cart = () => {
         setCodeRequired(false);
       }, 3000);
     } else {
-      for (const char of phonenumber) {
-        if (
-          isNaN(parseInt(char)) ||
-          (parseInt(char) <= 0 && parseInt(char) >= 9)
-        ) {
-          setPhoneNumberFormat(true);
-          firstCheck = false;
-          setTimeout(() => {
-            setPhoneNumberFormat(false);
-          }, 3000);
-          break;
+      if (phonenumber.length != 10) {
+        setPhoneNumberFormat(true);
+        firstCheck = false;
+        setTimeout(() => {
+          setPhoneNumberFormat(false);
+        }, 3000);
+      } else
+        for (const char of phonenumber) {
+          if (
+            isNaN(parseInt(char)) ||
+            (parseInt(char) <= 0 && parseInt(char) >= 9)
+          ) {
+            setPhoneNumberFormat(true);
+            firstCheck = false;
+            setTimeout(() => {
+              setPhoneNumberFormat(false);
+            }, 3000);
+            break;
+          }
         }
-      }
     }
     if (firstCheck) {
       if (currentAddress == "") {

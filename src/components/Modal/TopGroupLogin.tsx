@@ -8,15 +8,22 @@ import {
   setFollowed,
   setFirstTime,
 } from "../../features/User/UserSlice";
+import { handleIncreasePoint } from "../../services/Points";
+import { setFromChatBot } from "../../features/PreviousUser/PreviousSlice";
 
 export default function TopGroupLogin(props) {
   const [popupVisible, setPopupVisible] = useState(true);
   const { handleSignin, signInOnModal } = props;
+  const previous = useAppSelector((store) => store.previous);
   const user = useAppSelector((store) => store.user);
   const dispatch = useAppDispatch();
   useEffect(() => {
     async function handleGetUserBE() {
       handlegetUserInfo();
+      if (previous.fromchatbot == 1) {
+        const resp = await handleIncreasePoint(user.userInfo.id, 1);
+        dispatch(setFromChatBot(2));
+      }
       const extraUserInfo = await handleGetUserInfoFromBE(user.userInfo.id);
       if (extraUserInfo)
         setTimeout(() => {

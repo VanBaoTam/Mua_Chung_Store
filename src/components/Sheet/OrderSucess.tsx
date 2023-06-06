@@ -5,11 +5,13 @@ import {
   shareLinkGroupBuy,
   shareLinkTop,
 } from "../../services/Order";
-import { useAppSelector } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import Loading from "../Modal/Loading";
 import { handleIncreasePoint } from "../../services/Points";
+import { updatePoint } from "../../features/User/UserSlice";
 
 export default function OrderSuccess(props) {
+  const dispatch = useAppDispatch();
   const [amount, setAmount] = useState<number>(0);
   const [popupVisible, setPopupVisible] = useState(true);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -52,23 +54,19 @@ export default function OrderSuccess(props) {
           <Box>
             <Button
               onClick={async () => {
-                await shareLinkGroupBuy(
+                const resp = await shareLinkGroupBuy(
                   userInfo.userInfo.name,
                   props.code,
                   props.orderId,
                   userInfo.userInfo.id
                 );
-                const resp = await shareLinkTop(
-                  userInfo.userInfo.name,
-                  props.code
+
+                const changePoint = await handleIncreasePoint(
+                  userInfo.userInfo.id,
+                  1
                 );
-                console.log(resp);
-                if (resp >= 0) {
-                  const changePoint = await handleIncreasePoint(
-                    userInfo.userInfo.id,
-                    resp
-                  );
-                }
+                dispatch(updatePoint(changePoint.point));
+
                 setPopupVisible(false);
                 props.handleFinish();
               }}

@@ -15,6 +15,7 @@ import UserOrders from "../pages/User/Orders";
 import Discovery from "../pages/Discovery";
 import TopGroupBuy from "../pages/User/TopGroupBuy";
 import OrderDetails from "../pages/User/OrderDetails";
+import FollowOABubble from "./Layout/FollowOA";
 
 const MyApp = () => {
   return (
@@ -24,6 +25,7 @@ const MyApp = () => {
           <ZMPRouter>
             <Header />
             <Initializer type="Products" />
+            <FollowOABubble />
             <AnimationRoutes>
               <Route path="/" element={<HomePage />} />
               <Route path="/user" element={<User />} />

@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, Button } from "zmp-ui";
 import { shareLinkGroupBuy } from "../../services/Order";
+import { handleIncreasePoint } from "../../services/Points";
+import { updatePoint } from "../../features/User/UserSlice";
+import { useAppDispatch } from "../../hooks/hooks";
 const ShareId = (props) => {
   const { username, idGroupBuy, orderId, userId } = props;
+  const dispatch = useAppDispatch();
   async function handleShareId() {
     const resp = await shareLinkGroupBuy(username, idGroupBuy, orderId, userId);
+
+    const changePoint = await handleIncreasePoint(userId, 1);
+    dispatch(updatePoint(changePoint.point));
   }
   return (
     <Box p={4} className="absolute bottom-0 left-0 w-full bg-white">

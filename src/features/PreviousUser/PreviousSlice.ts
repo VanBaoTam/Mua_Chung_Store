@@ -5,12 +5,14 @@ interface PreviousState {
   userId: string;
   orderId: string;
   isShown: boolean;
+  fromchatbot: number;
 }
 const initialState = {
   groupbuyId: "",
   userId: "",
   orderId: "",
   isShown: false,
+  fromchatbot: 0, // 0: init, 1: from chatbot, 2: already paid
 };
 
 const PreviousSlice = createSlice({
@@ -35,8 +37,17 @@ const PreviousSlice = createSlice({
     setIsShown: (state) => {
       state.isShown = true;
     },
+    setFromChatBot: (state, action: PayloadAction<number>) => {
+      state.fromchatbot = action.payload;
+    },
   },
 });
-export const { setInfo, setGroupbuyId, setUserId, setOrderId, setIsShown } =
-  PreviousSlice.actions;
+export const {
+  setInfo,
+  setGroupbuyId,
+  setUserId,
+  setOrderId,
+  setIsShown,
+  setFromChatBot,
+} = PreviousSlice.actions;
 export default PreviousSlice.reducer;

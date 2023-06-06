@@ -54,15 +54,13 @@ const TopGroupBuy = () => {
     if (!idGroupBuy) return;
     async function handleShareLinkTop() {
       const resp = await shareLinkTop(user.userInfo.name, idGroupBuy);
-      if (resp == 2) {
-        setSuccessShare(true);
-        setSuccessText(`Chia sẻ mã mua chung thành công!`);
-        const changePoint = await handleIncreasePoint(user.userInfo.id, 1);
-        distpatch(updatePoint(changePoint.point));
-        setTimeout(() => {
-          setSuccessShare(false);
-        }, 5000);
-      }
+      setSuccessShare(true);
+      setSuccessText(`Chia sẻ mã mua chung thành công!`);
+      const changePoint = await handleIncreasePoint(user.userInfo.id, 1);
+      distpatch(updatePoint(changePoint.point));
+      setTimeout(() => {
+        setSuccessShare(false);
+      }, 5000);
     }
     handleShareLinkTop();
   }

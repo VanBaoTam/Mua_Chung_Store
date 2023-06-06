@@ -15,11 +15,14 @@ import { BsChevronRight } from "react-icons/bs";
 import Loading from "../../components/Modal/Loading";
 import FollowOA from "../../components/User/FollowOA";
 import UnFollowOA from "../../components/User/UnfollowOA";
+import { handleIncreasePoint } from "../../services/Points";
+import { setFromChatBot } from "../../features/PreviousUser/PreviousSlice";
 const User = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userInfo = useAppSelector((store) => store.user);
+  const previous = useAppSelector((store) => store.previous);
   const [userId, setUserId] = useState<string>("");
   function handleLogOut() {
     dispatch(Logout());
@@ -32,9 +35,12 @@ const User = () => {
     setUserId(userInfo.userInfo.id);
   }, [userInfo]);
   useEffect(() => {
-    console.log("HERE");
     async function handleGetPoint() {
       setIsLoaded(false);
+      if (previous.fromchatbot == 1) {
+        const resp = await handleIncreasePoint(userId, 1);
+        dispatch(setFromChatBot(2));
+      }
       const extraUserInfo = await handleGetUserInfoFromBE(userId);
       console.log(extraUserInfo);
       setTimeout(() => {
